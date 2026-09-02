@@ -389,9 +389,12 @@ h3 {
   width: min(290px, calc(100vw - 36px));
   padding: 10px;
   color: var(--ink);
-  background: var(--white);
-  border-radius: 4px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.24);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  box-shadow: 0 24px 60px -12px rgba(7, 10, 11, 0.4), 0 8px 20px -6px rgba(7, 10, 11, 0.24);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
 }
 
 .mobile-nav nav a {
@@ -487,6 +490,11 @@ h3 {
   padding: 0 22px;
   border: 1px solid transparent;
   font-size: 15px;
+  transition: background 180ms ease, border-color 180ms ease, transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms ease;
+}
+
+.header-cta {
+  transition: background 180ms ease, transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms ease;
 }
 
 .button-primary {
@@ -505,12 +513,15 @@ h3 {
 .header-cta:focus-visible,
 .button-primary:focus-visible {
   background: var(--orange-light);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px -10px rgba(255, 91, 36, 0.5);
 }
 
 .button-secondary:hover,
 .button-secondary:focus-visible {
   border-color: var(--white);
   background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
 }
 
 .experience {
@@ -765,12 +776,36 @@ h3 {
   width: 100%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
+  box-shadow: 0 1px 2px rgba(7, 10, 11, 0.08);
+  transition: box-shadow 380ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.work-image::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  background: linear-gradient(0deg, rgba(17, 22, 23, 0.5) 0%, rgba(17, 22, 23, 0) 48%);
+  opacity: 0;
+  transition: opacity 380ms ease;
 }
 
 .work-tile img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.work-tile:hover .work-image {
+  box-shadow: 0 28px 48px -16px rgba(7, 10, 11, 0.32), 0 10px 20px -8px rgba(7, 10, 11, 0.2);
+}
+
+.work-tile:hover .work-image::after {
+  opacity: 1;
+}
+
+.work-tile:hover img {
+  transform: scale(1.06);
 }
 
 .work-tile > div:last-child,
@@ -1240,12 +1275,36 @@ h3 {
   width: 100%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
+  box-shadow: 0 1px 2px rgba(7, 10, 11, 0.08);
+  transition: box-shadow 380ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.portfolio-image::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  background: linear-gradient(0deg, rgba(17, 22, 23, 0.5) 0%, rgba(17, 22, 23, 0) 48%);
+  opacity: 0;
+  transition: opacity 380ms ease;
 }
 
 .portfolio-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.portfolio-item:hover .portfolio-image {
+  box-shadow: 0 28px 48px -16px rgba(7, 10, 11, 0.32), 0 10px 20px -8px rgba(7, 10, 11, 0.2);
+}
+
+.portfolio-item:hover .portfolio-image::after {
+  opacity: 1;
+}
+
+.portfolio-item:hover img {
+  transform: scale(1.06);
 }
 
 .portfolio-item:nth-child(3n) .portfolio-image {
@@ -1542,10 +1601,72 @@ h3 {
   border-radius: 4px;
   font-family: Inter, Arial, sans-serif;
   font-size: 15px;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
 }
 
 .form-field textarea {
   resize: vertical;
+}
+
+.form-field.is-valid input,
+.form-field.is-valid select,
+.form-field.is-valid textarea {
+  border-color: #2f9e5b;
+  box-shadow: 0 0 0 3px rgba(47, 158, 91, 0.14);
+}
+
+.form-field.is-invalid input,
+.form-field.is-invalid select,
+.form-field.is-invalid textarea {
+  border-color: #e5484d;
+  box-shadow: 0 0 0 3px rgba(229, 72, 77, 0.14);
+}
+
+.form-field.is-invalid.shake {
+  animation: field-shake 380ms ease;
+}
+
+@keyframes field-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(3px); }
+}
+
+.field-error {
+  display: none;
+  margin-top: 6px;
+  color: #e5484d;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.form-field.is-invalid .field-error {
+  display: block;
+}
+
+.form-status {
+  display: none;
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.form-status.is-visible {
+  display: block;
+}
+
+.form-status.is-error {
+  color: #b3261e;
+  background: rgba(229, 72, 77, 0.12);
+}
+
+.form-status.is-success {
+  color: #1f7a43;
+  background: rgba(47, 158, 91, 0.14);
 }
 
 .contact-form button.button-primary {

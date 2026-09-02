@@ -11,9 +11,60 @@ document.querySelectorAll('.mobile-nav a').forEach((link) => {
 
 const contactForm = document.getElementById('contact-form');
 if (contactForm) {
+  const validators = {
+    nome: (value) => (value.trim().length < 2 ? 'Digite seu nome.' : ''),
+    telefone: (value) => (value.replace(/\D/g, '').length < 10 ? 'Digite um telefone válido com DDD.' : ''),
+    mensagem: (value) => (value.trim().length < 10 ? 'Conte um pouco mais sobre o projeto.' : ''),
+  };
+  const formStatus = document.getElementById('form-status');
+
+  const validateField = (field) => {
+    const validate = validators[field.name];
+    if (!validate) return true;
+    const wrapper = field.closest('.form-field');
+    const errorEl = wrapper.querySelector('.field-error');
+    const message = validate(field.value);
+    wrapper.classList.toggle('is-invalid', Boolean(message));
+    wrapper.classList.toggle('is-valid', !message && field.value.trim().length > 0);
+    if (errorEl) errorEl.textContent = message;
+    field.setAttribute('aria-invalid', message ? 'true' : 'false');
+    return !message;
+  };
+
+  Object.keys(validators).forEach((name) => {
+    const field = contactForm.elements.namedItem(name);
+    if (!field) return;
+    field.addEventListener('blur', () => validateField(field));
+    field.addEventListener('input', () => {
+      if (field.closest('.form-field').classList.contains('is-invalid')) validateField(field);
+    });
+  });
+
   contactForm.addEventListener('submit', (event) => {
     event.preventDefault();
     const data = new FormData(contactForm);
+    let firstInvalid = null;
+    Object.keys(validators).forEach((name) => {
+      const field = contactForm.elements.namedItem(name);
+      if (!field) return;
+      const valid = validateField(field);
+      if (!valid && !firstInvalid) firstInvalid = field;
+      if (!valid) {
+        const wrapper = field.closest('.form-field');
+        wrapper.classList.remove('shake');
+        // eslint-disable-next-line no-unused-expressions
+        wrapper.offsetWidth;
+        wrapper.classList.add('shake');
+      }
+    });
+
+    if (firstInvalid) {
+      formStatus.textContent = 'Verifique os campos destacados antes de enviar.';
+      formStatus.className = 'form-status is-visible is-error';
+      firstInvalid.focus();
+      return;
+    }
+
     const nome = String(data.get('nome') || '').trim();
     const telefone = String(data.get('telefone') || '').trim();
     const tipo = String(data.get('tipo') || '').trim();
@@ -26,6 +77,8 @@ if (contactForm) {
       mensagem,
     ];
     const text = encodeURIComponent(lines.join('\n'));
+    formStatus.textContent = 'Tudo certo! Abrindo o WhatsApp com sua mensagem...';
+    formStatus.className = 'form-status is-visible is-success';
     window.open(`https://wa.me/5521965906030?text=${text}`, '_blank', 'noopener,noreferrer');
   });
 }
