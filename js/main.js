@@ -129,7 +129,8 @@ if ('IntersectionObserver' in window) {
     '.about-portrait, .about-copy, .track-list, .contact-cta > div, .contact-cta > a, ' +
     '.profile-image, .profile-copy, .values-layout > div, .values-layout li, .numbers-section > div, ' +
     '.service-detail-row, .process-list li, .portfolio-item, .record-layout > div, ' +
-    '.contact-form, .contact-options, .address-layout, .faq-item, .map-embed, .project-preview a'
+    '.contact-form, .contact-options, .address-layout, .faq-item, .map-embed, .project-preview a, ' +
+    '.reinforcement-card, .partner-card'
   );
 
   if (prefersReducedMotion) {
