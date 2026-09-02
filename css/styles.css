@@ -957,7 +957,17 @@ h3 {
   text-align: center;
   border-right: 1px solid var(--line-dark);
   border-bottom: 1px solid var(--line-dark);
+  color: rgba(17, 22, 23, 0.5);
+  font-family: Archivo, Arial, sans-serif;
+  font-size: 17px;
   font-weight: 700;
+  letter-spacing: 0.01em;
+  transition: color 220ms ease, background 220ms ease;
+}
+
+.track-list span:hover {
+  color: var(--ink);
+  background: rgba(255, 91, 36, 0.06);
 }
 
 .contact-cta {
@@ -1428,7 +1438,17 @@ h3 {
   text-align: center;
   border-right: 1px solid var(--line-light);
   border-bottom: 1px solid var(--line-light);
+  color: rgba(255, 255, 255, 0.55);
+  font-family: Archivo, Arial, sans-serif;
+  font-size: 16px;
   font-weight: 700;
+  letter-spacing: 0.01em;
+  transition: color 220ms ease, background 220ms ease;
+}
+
+.record-names span:hover {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .profile-section {
