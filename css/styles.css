@@ -1115,15 +1115,40 @@ h3 {
   display: grid;
   grid-template-columns: 72px minmax(0, 1fr) minmax(280px, 0.8fr);
   gap: 44px;
-  padding: 44px 0;
+  padding: 44px 24px;
+  margin-inline: -24px;
   border-bottom: 1px solid var(--line-dark);
+  transition: background 220ms ease;
+}
+
+.service-detail-row:hover {
+  background: rgba(17, 22, 23, 0.03);
 }
 
 .service-detail-row:first-child {
   border-top: 1px solid var(--line-dark);
 }
 
+.service-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  color: var(--orange);
+  background: rgba(255, 91, 36, 0.1);
+  border-radius: 14px;
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1), background 260ms ease;
+}
+
+.service-detail-row:hover .service-icon {
+  background: var(--orange);
+  color: var(--ink);
+  transform: rotate(-6deg) scale(1.06);
+}
+
 .service-number {
+  display: block;
+  margin-top: 12px;
   color: var(--orange);
   font-weight: 800;
 }
@@ -1187,16 +1212,35 @@ h3 {
   padding: 28px;
   border-right: 1px solid var(--line-light);
   border-bottom: 1px solid var(--line-light);
+  transition: background 220ms ease;
+}
+
+.process-list li:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.process-list li > svg {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 9px;
+  color: var(--orange);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  box-sizing: border-box;
 }
 
 .process-list li > span {
+  margin-top: 18px;
   color: var(--orange);
   font-size: 12px;
   font-weight: 800;
 }
 
 .process-list strong {
-  margin-top: 48px;
+  margin-top: 10px;
   font-family: Archivo, Arial, sans-serif;
   font-size: 20px;
 }
@@ -1266,8 +1310,12 @@ h3 {
   gap: 64px 24px;
 }
 
-.portfolio-item:nth-child(3n) {
+.portfolio-item--featured {
   grid-column: 1 / -1;
+}
+
+.portfolio-item--featured .portfolio-image {
+  aspect-ratio: 21 / 9;
 }
 
 .portfolio-image {
@@ -1277,6 +1325,47 @@ h3 {
   overflow: hidden;
   box-shadow: 0 1px 2px rgba(7, 10, 11, 0.08);
   transition: box-shadow 380ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.category-badge,
+.featured-badge {
+  position: absolute;
+  z-index: 1;
+  padding: 6px 13px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.category-badge {
+  top: 16px;
+  left: 16px;
+  color: var(--white);
+  background: var(--steel-dark);
+}
+
+.portfolio-item[data-category='corporativo'] .category-badge {
+  color: var(--ink);
+  background: var(--orange);
+}
+
+.portfolio-item[data-category='infraestrutura'] .category-badge {
+  color: var(--white);
+  background: var(--steel);
+}
+
+.portfolio-item[data-category='acessibilidade'] .category-badge {
+  color: var(--white);
+  background: #2f9e5b;
+}
+
+.featured-badge {
+  top: 16px;
+  right: 16px;
+  color: var(--ink);
+  background: var(--white);
 }
 
 .portfolio-image::after {
@@ -1307,9 +1396,6 @@ h3 {
   transform: scale(1.06);
 }
 
-.portfolio-item:nth-child(3n) .portfolio-image {
-  aspect-ratio: 16 / 7;
-}
 
 .experience-record {
   padding: 100px 0;
@@ -1428,6 +1514,55 @@ h3 {
 .values-layout li span {
   color: rgba(255, 255, 255, 0.68);
   line-height: 1.5;
+}
+
+.quote-section {
+  padding: 90px 0 110px;
+}
+
+.quote-section blockquote {
+  position: relative;
+  max-width: 820px;
+  margin: 0 auto;
+  padding-left: 40px;
+  border-left: 3px solid var(--orange);
+}
+
+.quote-section blockquote::before {
+  position: absolute;
+  top: -46px;
+  left: 24px;
+  color: rgba(255, 91, 36, 0.22);
+  content: '\201C';
+  font-family: Archivo, Arial, sans-serif;
+  font-size: 140px;
+  line-height: 1;
+}
+
+.quote-section p {
+  position: relative;
+  margin: 0;
+  color: var(--ink);
+  font-family: Archivo, Arial, sans-serif;
+  font-size: clamp(23px, 2.6vw, 30px);
+  font-weight: 500;
+  line-height: 1.42;
+}
+
+.quote-section footer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.quote-section footer strong {
+  font-size: 15px;
+}
+
+.quote-section footer span {
+  color: var(--muted);
+  font-size: 14px;
 }
 
 .numbers-section {
@@ -2111,11 +2246,11 @@ h3 {
     gap: 24px;
   }
 
-  .portfolio-item:nth-child(3n) {
+  .portfolio-item--featured {
     grid-column: auto;
   }
 
-  .portfolio-item:nth-child(3n) .portfolio-image {
+  .portfolio-item--featured .portfolio-image {
     aspect-ratio: 4 / 3;
   }
 
