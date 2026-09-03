@@ -943,7 +943,7 @@ h3 {
 
 .track-list {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-top: 52px;
   border-top: 1px solid var(--line-dark);
   border-left: 1px solid var(--line-dark);
@@ -968,10 +968,6 @@ h3 {
 .track-list span:hover {
   color: var(--ink);
   background: rgba(255, 91, 36, 0.06);
-}
-
-.track-list span:nth-child(4n+1):last-child {
-  grid-column: 1 / -1;
 }
 
 .contact-cta {
@@ -1129,6 +1125,7 @@ h3 {
   display: grid;
   grid-template-columns: 72px minmax(0, 1fr) minmax(280px, 0.8fr);
   gap: 44px;
+  min-height: 246px;
   padding: 44px 24px;
   margin-inline: -24px;
   border-bottom: 1px solid var(--line-dark);
@@ -1548,13 +1545,9 @@ h3 {
 
 .record-names {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   border-top: 1px solid var(--line-light);
   border-left: 1px solid var(--line-light);
-}
-
-.record-names span:nth-child(2n+1):last-child {
-  grid-column: 1 / -1;
 }
 
 .record-names span {
@@ -1625,6 +1618,13 @@ h3 {
 
 .values-layout h2 {
   margin-top: 20px;
+}
+
+.values-layout > div > p {
+  max-width: 420px;
+  margin: 18px 0 0;
+  color: rgba(255, 255, 255, 0.68);
+  line-height: 1.6;
 }
 
 .values-layout ul {
@@ -1744,8 +1744,8 @@ h3 {
 .partner-card {
   display: grid;
   place-items: center;
-  min-height: 150px;
-  padding: 24px;
+  min-height: 190px;
+  padding: 20px;
   background: var(--white);
   border-radius: 6px;
   box-shadow: 0 1px 2px rgba(7, 10, 11, 0.08);
@@ -1759,11 +1759,16 @@ h3 {
 
 .partner-card img {
   max-width: 100%;
-  max-height: 84px;
+  max-height: 88px;
   object-fit: contain;
   filter: grayscale(1);
   opacity: 0.72;
   transition: filter 260ms ease, opacity 260ms ease;
+}
+
+.partner-card img[alt*='Cassar'],
+.partner-card img[alt*='JPW'] {
+  max-height: 132px;
 }
 
 .partner-card:hover img {
@@ -2193,10 +2198,6 @@ h3 {
   .about-portrait,
   .profile-image {
     max-width: 600px;
-  }
-
-  .track-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .service-detail-row {
