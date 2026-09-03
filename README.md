@@ -2,6 +2,12 @@
 
 Site institucional estatico desenvolvido com HTML, CSS e JavaScript puro.
 
+## Deploy
+
+Publicado no Cloudflare Workers (static assets), com deploy automatico a cada push na branch `main`:
+
+https://construcoesferreira-site.pedroazevedoferreira2006.workers.dev/
+
 ## Requisitos
 
 - Qualquer servidor HTTP estatico (opcional para desenvolvimento)
