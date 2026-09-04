@@ -5,6 +5,7 @@ document.querySelectorAll('[data-year]').forEach((element) => {
 const themeToggle = document.querySelector('.theme-toggle');
 if (themeToggle) {
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+  const themeColorMeta = document.querySelector('meta[name="theme-color"]');
 
   const getEffectiveTheme = () => {
     const explicit = document.documentElement.getAttribute('data-theme');
@@ -12,17 +13,29 @@ if (themeToggle) {
     return prefersDark.matches ? 'dark' : 'light';
   };
 
-  const applyTheme = (theme) => {
-    document.documentElement.setAttribute('data-theme', theme);
-    themeToggle.setAttribute('aria-pressed', String(theme === 'dark'));
-    try {
-      localStorage.setItem('theme', theme);
-    } catch (error) {
-      // localStorage indisponivel: a escolha vale so para esta visita.
+  const syncThemeUi = (theme) => {
+    const isDark = theme === 'dark';
+    themeToggle.setAttribute('aria-pressed', String(isDark));
+    themeToggle.setAttribute('aria-label', isDark ? 'Ativar tema claro' : 'Ativar tema escuro');
+    themeToggle.setAttribute('title', isDark ? 'Ativar tema claro' : 'Ativar tema escuro');
+    if (themeColorMeta) {
+      themeColorMeta.setAttribute('content', isDark ? '#16191b' : '#f3f1eb');
     }
   };
 
-  themeToggle.setAttribute('aria-pressed', String(getEffectiveTheme() === 'dark'));
+  const applyTheme = (theme, persist = true) => {
+    document.documentElement.setAttribute('data-theme', theme);
+    syncThemeUi(theme);
+    if (persist) {
+      try {
+        localStorage.setItem('theme', theme);
+      } catch (error) {
+        // localStorage indisponivel: a escolha vale so para esta visita.
+      }
+    }
+  };
+
+  syncThemeUi(getEffectiveTheme());
 
   themeToggle.addEventListener('click', () => {
     applyTheme(getEffectiveTheme() === 'dark' ? 'light' : 'dark');
@@ -30,7 +43,7 @@ if (themeToggle) {
 
   prefersDark.addEventListener('change', () => {
     if (!document.documentElement.getAttribute('data-theme')) {
-      themeToggle.setAttribute('aria-pressed', String(getEffectiveTheme() === 'dark'));
+      syncThemeUi(getEffectiveTheme());
     }
   });
 }
