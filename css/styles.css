@@ -44,6 +44,15 @@
   /* Como --orange-text, mas para uso sobre --surface (que muda de tema). */
   --accent-text: var(--orange-text);
 
+  /* Blocos "sempre escuros" da marca (hero, footer, steel): no claro sao
+     exatamente as cores originais; no escuro ficam ainda mais escuros/
+     dessaturados, para nao lerem como um bloco "meio-termo" perdido entre
+     a superficie escura da pagina e o resto -- toda a pagina fica escura
+     de forma coerente, nao so as areas que eram claras antes. */
+  --block-ink: var(--ink);
+  --block-steel: var(--steel);
+  --block-steel-dark: var(--steel-dark);
+
   /* Estados de validacao do formulario: fundo solido (nao translucido) para
      nao depender da cor por tras, com par texto/fundo testado em AA nos dois temas. */
   --danger-bg: #fbe4e2;
@@ -64,6 +73,9 @@
     --success-bg: #163625;
     --success-text: #7ee3a8;
     --accent-text: var(--orange-text-on-dark);
+    --block-ink: #0d0f10;
+    --block-steel: #1e3138;
+    --block-steel-dark: #16232a;
   }
 }
 
@@ -78,6 +90,9 @@
   --success-bg: #163625;
   --success-text: #7ee3a8;
   --accent-text: var(--orange-text-on-dark);
+  --block-ink: #0d0f10;
+  --block-steel: #1e3138;
+  --block-steel-dark: #16232a;
 }
 
 * {
@@ -537,7 +552,7 @@ h3 {
   min-height: 82svh;
   overflow: hidden;
   color: var(--white);
-  background: var(--ink);
+  background: var(--block-ink);
   isolation: isolate;
 }
 
@@ -671,7 +686,7 @@ h3 {
   display: grid;
   grid-template-columns: 1.25fr 1fr 1fr;
   min-height: 18svh;
-  background: var(--ink);
+  background: var(--block-ink);
 }
 
 .project-preview a {
@@ -817,7 +832,7 @@ h3 {
 .services-section {
   padding: 104px 0;
   color: var(--white);
-  background: var(--steel-dark);
+  background: var(--block-steel-dark);
 }
 
 .section-heading {
@@ -955,7 +970,7 @@ h3 {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   color: var(--white);
-  background: var(--ink);
+  background: var(--block-ink);
 }
 
 .assurance-image {
@@ -1081,23 +1096,33 @@ h3 {
 
 .track-list span {
   display: grid;
-  min-height: 92px;
+  min-height: 108px;
   padding: 20px;
   place-items: center;
   text-align: center;
   border-right: 1px solid var(--line-subtle);
   border-bottom: 1px solid var(--line-subtle);
-  color: rgba(17, 22, 23, 0.68);
-  font-family: Archivo, Arial, sans-serif;
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  transition: color 220ms ease, background 220ms ease;
+  transition: background 220ms ease;
 }
 
 .track-list span:hover {
-  color: var(--ink);
   background: rgba(255, 91, 36, 0.06);
+}
+
+.track-list span img {
+  max-width: 140px;
+  max-height: 52px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  filter: grayscale(1);
+  opacity: 0.72;
+  transition: filter 220ms ease, opacity 220ms ease;
+}
+
+.track-list span:hover img {
+  filter: grayscale(0);
+  opacity: 1;
 }
 
 .contact-cta {
@@ -1135,7 +1160,7 @@ h3 {
 .site-footer {
   padding: 74px clamp(24px, 6vw, 96px) 24px;
   color: var(--white);
-  background: var(--ink);
+  background: var(--block-ink);
 }
 
 .footer-main {
@@ -1189,7 +1214,7 @@ h3 {
   min-height: 520px;
   overflow: hidden;
   color: var(--white);
-  background: var(--steel-dark);
+  background: var(--block-steel-dark);
   isolation: isolate;
 }
 
@@ -1328,7 +1353,7 @@ h3 {
 .process-section {
   padding: 100px 0;
   color: var(--white);
-  background: var(--steel);
+  background: var(--block-steel);
 }
 
 .process-section h2 {
@@ -1658,7 +1683,7 @@ h3 {
 .experience-record {
   padding: 100px 0;
   color: var(--white);
-  background: var(--steel-dark);
+  background: var(--block-steel-dark);
 }
 
 .record-layout {
@@ -1742,7 +1767,7 @@ h3 {
 .values-section {
   padding: 100px 0;
   color: var(--white);
-  background: var(--steel);
+  background: var(--block-steel);
 }
 
 .values-layout {
@@ -1850,7 +1875,7 @@ h3 {
 .partners-section {
   padding: 100px 0;
   color: var(--white);
-  background: var(--steel);
+  background: var(--block-steel);
 }
 
 .partners-section .eyebrow {
@@ -2001,7 +2026,7 @@ h3 {
 .address-section {
   padding: 78px 0;
   color: var(--white);
-  background: var(--steel-dark);
+  background: var(--block-steel-dark);
 }
 
 .address-layout {
@@ -2230,7 +2255,7 @@ h3 {
   padding: 160px clamp(24px, 8vw, 124px) 100px;
   text-align: center;
   color: var(--white);
-  background: var(--ink);
+  background: var(--block-ink);
 }
 
 .error-section p.error-code {
