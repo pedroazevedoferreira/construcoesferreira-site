@@ -2,6 +2,39 @@ document.querySelectorAll('[data-year]').forEach((element) => {
   element.textContent = String(new Date().getFullYear());
 });
 
+const themeToggle = document.querySelector('.theme-toggle');
+if (themeToggle) {
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+  const getEffectiveTheme = () => {
+    const explicit = document.documentElement.getAttribute('data-theme');
+    if (explicit === 'light' || explicit === 'dark') return explicit;
+    return prefersDark.matches ? 'dark' : 'light';
+  };
+
+  const applyTheme = (theme) => {
+    document.documentElement.setAttribute('data-theme', theme);
+    themeToggle.setAttribute('aria-pressed', String(theme === 'dark'));
+    try {
+      localStorage.setItem('theme', theme);
+    } catch (error) {
+      // localStorage indisponivel: a escolha vale so para esta visita.
+    }
+  };
+
+  themeToggle.setAttribute('aria-pressed', String(getEffectiveTheme() === 'dark'));
+
+  themeToggle.addEventListener('click', () => {
+    applyTheme(getEffectiveTheme() === 'dark' ? 'light' : 'dark');
+  });
+
+  prefersDark.addEventListener('change', () => {
+    if (!document.documentElement.getAttribute('data-theme')) {
+      themeToggle.setAttribute('aria-pressed', String(getEffectiveTheme() === 'dark'));
+    }
+  });
+}
+
 document.querySelectorAll('.mobile-nav a').forEach((link) => {
   link.addEventListener('click', () => {
     const menu = link.closest('details');
