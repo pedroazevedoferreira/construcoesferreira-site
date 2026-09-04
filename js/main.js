@@ -200,6 +200,21 @@ if ('IntersectionObserver' in window) {
   }
 }
 
+const processSection = document.querySelector('.process-section');
+if (processSection && !prefersReducedMotion) {
+  if ('IntersectionObserver' in window) {
+    const processObserver = new IntersectionObserver(
+      ([entry]) => {
+        processSection.classList.toggle('is-animated', entry.isIntersecting);
+      },
+      { threshold: 0.24 }
+    );
+    processObserver.observe(processSection);
+  } else {
+    processSection.classList.add('is-animated');
+  }
+}
+
 if ('IntersectionObserver' in window) {
   const counters = document.querySelectorAll('[data-count-to]');
   const animateCounter = (el) => {

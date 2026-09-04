@@ -386,7 +386,7 @@ h3 {
   width: 36px;
   height: 36px;
   flex: 0 0 36px;
-  background: url('../assets/favicon.png') center / contain no-repeat;
+  background: url('../assets/favicon.png') center / 145% no-repeat;
 }
 
 .brand-mark > span {
@@ -408,6 +408,25 @@ h3 {
 .brand-copy small {
   color: var(--hero-text-muted);
   font-size: 9px;
+}
+
+.site-header .brand {
+  gap: 15px;
+}
+
+.site-header .brand-mark {
+  width: 46px;
+  height: 46px;
+  flex-basis: 46px;
+}
+
+.site-header .brand-copy strong {
+  font-size: 19px;
+}
+
+.site-header .brand-copy small {
+  font-size: 10px;
+  font-weight: 600;
 }
 
 .desktop-nav {
@@ -1240,6 +1259,11 @@ h3 {
   font-size: 12px;
 }
 
+.footer-legal {
+  display: grid;
+  gap: 6px;
+}
+
 .inner-hero {
   position: relative;
   min-height: 520px;
@@ -1294,12 +1318,71 @@ h3 {
   line-height: 1.04;
 }
 
-.inner-hero-content > p:last-child {
+.inner-hero-content > p:not(.eyebrow) {
   max-width: 680px;
   margin: 24px 0 0;
   color: rgba(255, 255, 255, 0.88);
   font-size: 17px;
   line-height: 1.65;
+}
+
+.inner-hero--company {
+  min-height: 520px;
+}
+
+.inner-hero--company .inner-hero-image {
+  object-position: 70% center;
+  filter: saturate(0.84) contrast(1.04);
+}
+
+.inner-hero--company .inner-hero-overlay {
+  background:
+    linear-gradient(90deg, rgba(17, 31, 35, 0.99) 0%, rgba(17, 31, 35, 0.97) 38%, rgba(17, 31, 35, 0.72) 64%, rgba(17, 31, 35, 0.16) 100%),
+    linear-gradient(0deg, rgba(17, 31, 35, 0.48), rgba(17, 31, 35, 0.08));
+}
+
+.inner-hero--company .inner-hero-content {
+  justify-content: center;
+  min-height: 520px;
+  padding-top: 104px;
+  padding-bottom: 40px;
+}
+
+.inner-hero--company .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.inner-hero--company .eyebrow::before {
+  width: 30px;
+  height: 2px;
+  content: '';
+  background: var(--orange);
+}
+
+.company-hero-signature {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 42px;
+  max-width: 680px;
+  padding-top: 24px;
+  margin-top: 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.company-hero-signature span {
+  display: grid;
+  gap: 5px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.company-hero-signature strong {
+  color: var(--white);
+  font-family: Archivo, Arial, sans-serif;
+  font-size: 14px;
 }
 
 .service-details {
@@ -1446,12 +1529,41 @@ h3 {
   background: rgba(255, 255, 255, 0.24);
 }
 
+.process-list::after {
+  position: absolute;
+  z-index: 0;
+  top: 23px;
+  right: 12.5%;
+  left: 12.5%;
+  height: 2px;
+  content: '';
+  background: var(--orange);
+  box-shadow: 0 0 14px rgba(255, 91, 36, 0.46);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
 .process-list li {
+  --process-step-delay: 0s;
+  position: relative;
   display: grid;
   min-height: 220px;
   align-content: start;
   padding: 0 28px;
   transition: background 220ms ease;
+}
+
+.process-list li:nth-child(2) {
+  --process-step-delay: 1.3s;
+}
+
+.process-list li:nth-child(3) {
+  --process-step-delay: 2.6s;
+}
+
+.process-list li:nth-child(4) {
+  --process-step-delay: 3.9s;
 }
 
 .process-list li:hover {
@@ -1471,6 +1583,88 @@ h3 {
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   box-sizing: border-box;
+}
+
+.process-section.is-animated .process-list::after {
+  animation: process-line-flow 7.5s linear infinite;
+}
+
+.process-section.is-animated .process-list li > svg {
+  animation: process-step-pulse 7.5s ease-out var(--process-step-delay) infinite;
+}
+
+@keyframes process-line-flow {
+  0% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+
+  4% {
+    opacity: 1;
+  }
+
+  55%,
+  84% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  96%,
+  100% {
+    opacity: 0;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes process-line-flow-mobile {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+
+  4% {
+    opacity: 1;
+  }
+
+  55%,
+  84% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  96%,
+  100% {
+    opacity: 0;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes process-step-pulse {
+  0%,
+  14%,
+  100% {
+    color: var(--orange);
+    background: var(--block-steel);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 0 0 rgba(255, 91, 36, 0);
+    transform: scale(1);
+  }
+
+  3% {
+    color: var(--block-steel-dark);
+    background: var(--orange);
+    border-color: var(--orange);
+    box-shadow: 0 0 0 0 rgba(255, 91, 36, 0.45);
+    transform: scale(1.04);
+  }
+
+  9% {
+    color: var(--block-steel-dark);
+    background: var(--orange);
+    border-color: var(--orange);
+    box-shadow: 0 0 0 11px rgba(255, 91, 36, 0);
+    transform: scale(1.08);
+  }
 }
 
 .process-list li > span {
@@ -1837,7 +2031,7 @@ h3 {
   grid-template-columns: minmax(320px, 0.8fr) minmax(0, 1fr);
   align-items: center;
   gap: 90px;
-  padding-top: 110px;
+  padding-top: 64px;
   padding-bottom: 110px;
 }
 
@@ -2032,7 +2226,7 @@ h3 {
 
 .numbers-section {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   padding-top: 90px;
   padding-bottom: 90px;
 }
@@ -2424,6 +2618,10 @@ h3 {
     display: none;
   }
 
+  .process-list::after {
+    display: none;
+  }
+
   .process-list li {
     min-height: 220px;
     padding: 28px;
@@ -2431,7 +2629,7 @@ h3 {
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 980px) {
   .site-header {
     grid-template-columns: 1fr auto auto auto;
     gap: 14px;
@@ -2443,6 +2641,13 @@ h3 {
 
   .mobile-nav {
     display: block;
+  }
+}
+
+@media (max-width: 900px) {
+  .site-header {
+    grid-template-columns: 1fr auto auto auto;
+    gap: 14px;
   }
 
   .hero-content {
@@ -2504,6 +2709,17 @@ h3 {
     display: none;
   }
 
+  .site-header .brand-copy {
+    gap: 2px;
+  }
+
+  .site-header .brand-copy small {
+    display: block;
+    font-size: 7px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
   .hero {
     min-height: auto;
   }
@@ -2530,7 +2746,7 @@ h3 {
   }
 
   .hero-description,
-  .inner-hero-content > p:last-child {
+  .inner-hero-content > p:not(.eyebrow) {
     font-size: 16px;
   }
 
@@ -2696,6 +2912,34 @@ h3 {
     padding: 64px 22px 58px;
   }
 
+  .inner-hero--company,
+  .inner-hero--company .inner-hero-content {
+    min-height: 570px;
+  }
+
+  .inner-hero--company .inner-hero-image {
+    object-position: 66% center;
+  }
+
+  .inner-hero--company .inner-hero-overlay {
+    background:
+      linear-gradient(0deg, rgba(17, 31, 35, 0.99) 0%, rgba(17, 31, 35, 0.92) 58%, rgba(17, 31, 35, 0.56) 100%),
+      linear-gradient(90deg, rgba(17, 31, 35, 0.72), rgba(17, 31, 35, 0.24));
+  }
+
+  .inner-hero--company .inner-hero-content {
+    justify-content: flex-end;
+    padding: 104px 22px 44px;
+  }
+
+  .company-hero-signature {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    padding-top: 20px;
+    margin-top: 22px;
+  }
+
   .service-details,
   .portfolio-section {
     padding-top: 72px;
@@ -2776,6 +3020,22 @@ h3 {
     display: block;
     width: 1px;
     height: auto;
+  }
+
+  .process-list::after {
+    top: 24px;
+    right: auto;
+    bottom: 24px;
+    left: 22px;
+    display: block;
+    width: 2px;
+    height: auto;
+    transform: scaleY(0);
+    transform-origin: center top;
+  }
+
+  .process-section.is-animated .process-list::after {
+    animation-name: process-line-flow-mobile;
   }
 
   .process-list li {
@@ -2875,6 +3135,20 @@ h3 {
     width: 32px;
     height: 32px;
     flex-basis: 32px;
+  }
+
+  .site-header .brand {
+    gap: 10px;
+  }
+
+  .site-header .brand-mark {
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+  }
+
+  .site-header .brand-copy strong {
+    font-size: 16px;
   }
 
   .hero h1,
