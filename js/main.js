@@ -147,6 +147,37 @@ if (filterBar && portfolioItems.length) {
   });
 }
 
+document.querySelectorAll('[data-project-filter-scope]').forEach((scope) => {
+  const buttons = scope.querySelectorAll('button[data-project-filter]');
+  const projectCards = scope.querySelectorAll('[data-project-card]');
+  const status = scope.querySelector('[data-project-filter-status]');
+  if (!buttons.length || !projectCards.length) return;
+
+  scope.addEventListener('click', (event) => {
+    const button = event.target.closest('button[data-project-filter]');
+    if (!button || !scope.contains(button)) return;
+
+    buttons.forEach((item) => {
+      const isActive = item === button;
+      item.classList.toggle('is-active', isActive);
+      item.setAttribute('aria-pressed', String(isActive));
+    });
+
+    const filter = button.dataset.projectFilter;
+    let visibleCount = 0;
+    projectCards.forEach((card) => {
+      const categories = String(card.dataset.category || '').split(/\s+/);
+      const show = filter === 'all' || categories.includes(filter);
+      card.hidden = !show;
+      if (show) visibleCount += 1;
+    });
+
+    if (status) {
+      status.textContent = `${visibleCount} ${visibleCount === 1 ? 'item exibido' : 'itens exibidos'}.`;
+    }
+  });
+});
+
 const siteHeader = document.querySelector('.site-header');
 if (siteHeader) {
   const updateHeaderState = () => {
@@ -175,8 +206,8 @@ if ('IntersectionObserver' in window) {
     '.about-portrait, .about-copy, .track-list, .contact-cta > div, .contact-cta > a, ' +
     '.profile-image, .profile-copy, .values-layout > div, .values-layout li, .numbers-section > div, ' +
     '.service-detail-row, .process-list li, .portfolio-item, .record-layout > div, ' +
-    '.contact-form, .contact-options, .address-layout, .faq-item, .map-embed, .project-preview a, ' +
-    '.reinforcement-card, .partner-card'
+    '.contact-form, .contact-options, .address-layout, .faq-item, .map-embed, ' +
+    '.reinforcement-card, .partner-card, .home-projects-heading, .home-project-card'
   );
 
   if (prefersReducedMotion) {

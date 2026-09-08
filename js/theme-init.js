@@ -7,4 +7,16 @@
   } catch (error) {
     // localStorage indisponivel (modo privado etc): segue a preferencia do sistema.
   }
+
+  try {
+    var path = window.location.pathname.replace(/\/+$/, '');
+    var isHome = path === '' || /\/index\.html$/i.test(path);
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isHome && !reduceMotion && !sessionStorage.getItem('ferreira-home-intro-v2')) {
+      document.documentElement.classList.add('home-intro');
+      sessionStorage.setItem('ferreira-home-intro-v2', 'seen');
+    }
+  } catch (error) {
+    // sessionStorage indisponivel: a pagina continua visivel, sem depender da animacao.
+  }
 })();
