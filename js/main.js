@@ -19,7 +19,7 @@ if (themeToggle) {
     themeToggle.setAttribute('aria-label', isDark ? 'Ativar tema claro' : 'Ativar tema escuro');
     themeToggle.setAttribute('title', isDark ? 'Ativar tema claro' : 'Ativar tema escuro');
     if (themeColorMeta) {
-      themeColorMeta.setAttribute('content', isDark ? '#16191b' : '#f3f1eb');
+      themeColorMeta.setAttribute('content', isDark ? '#171717' : '#f7f7f5');
     }
   };
 
@@ -54,6 +54,18 @@ document.querySelectorAll('.mobile-nav a').forEach((link) => {
     if (menu) menu.removeAttribute('open');
   });
 });
+
+const mobileMenu = document.querySelector('.mobile-menu');
+if (mobileMenu) {
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape' || !mobileMenu.open) return;
+    mobileMenu.open = false;
+    mobileMenu.querySelector('summary').focus();
+  });
+  document.addEventListener('click', (event) => {
+    if (mobileMenu.open && !mobileMenu.contains(event.target)) mobileMenu.open = false;
+  });
+}
 
 const contactForm = document.getElementById('contact-form');
 if (contactForm) {
@@ -129,53 +141,57 @@ if (contactForm) {
   });
 }
 
-const filterBar = document.querySelector('.filter-bar');
-const portfolioItems = document.querySelectorAll('.portfolio-item');
-if (filterBar && portfolioItems.length) {
-  filterBar.addEventListener('click', (event) => {
-    const button = event.target.closest('button[data-filter]');
-    if (!button) return;
-    filterBar.querySelectorAll('button').forEach((btn) => {
-      btn.classList.toggle('is-active', btn === button);
-      btn.setAttribute('aria-pressed', String(btn === button));
-    });
-    const filter = button.dataset.filter;
-    portfolioItems.forEach((item) => {
-      const show = filter === 'all' || item.dataset.category === filter;
-      item.hidden = !show;
-    });
-  });
-}
-
 document.querySelectorAll('[data-project-filter-scope]').forEach((scope) => {
-  const buttons = scope.querySelectorAll('button[data-project-filter]');
-  const projectCards = scope.querySelectorAll('[data-project-card]');
+  const buttons = scope.querySelectorAll('[data-project-filter]');
+  const cards = Array.from(scope.querySelectorAll('[data-project-card]'));
+  const select = scope.querySelector('[data-project-select]');
+  const more = scope.querySelector('[data-project-more]');
   const status = scope.querySelector('[data-project-filter-status]');
-  if (!buttons.length || !projectCards.length) return;
+  const grid = scope.querySelector('.home-project-grid');
+  const limit = Number(scope.dataset.projectLimit) || cards.length;
+  let filter = 'all';
+  let expanded = false;
 
-  scope.addEventListener('click', (event) => {
-    const button = event.target.closest('button[data-project-filter]');
-    if (!button || !scope.contains(button)) return;
-
-    buttons.forEach((item) => {
-      const isActive = item === button;
-      item.classList.toggle('is-active', isActive);
-      item.setAttribute('aria-pressed', String(isActive));
-    });
-
-    const filter = button.dataset.projectFilter;
-    let visibleCount = 0;
-    projectCards.forEach((card) => {
-      const categories = String(card.dataset.category || '').split(/\s+/);
-      const show = filter === 'all' || categories.includes(filter);
-      card.hidden = !show;
-      if (show) visibleCount += 1;
-    });
-
-    if (status) {
-      status.textContent = `${visibleCount} ${visibleCount === 1 ? 'item exibido' : 'itens exibidos'}.`;
-    }
+  if (!cards.length || !grid) return;
+  scope.querySelectorAll('.home-project-filters, .project-filter-mobile').forEach((el) => {
+    el.hidden = false;
   });
+
+  const render = () => {
+    const matching = cards.filter((card) => filter === 'all' || card.dataset.category === filter);
+    const visible = expanded ? matching : matching.slice(0, limit);
+    cards.forEach((card) => { card.hidden = !visible.includes(card); });
+    buttons.forEach((button) => {
+      const active = button.dataset.projectFilter === filter;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    if (select) select.value = filter;
+    grid.dataset.visibleCount = String(visible.length);
+    if (status) status.textContent = visible.length < matching.length
+      ? `${visible.length} de ${matching.length}`
+      : `${matching.length} ${matching.length === 1 ? 'resultado' : 'resultados'}`;
+    if (more) {
+      more.hidden = matching.length <= limit;
+      more.setAttribute('aria-expanded', String(expanded));
+      more.textContent = expanded ? 'Mostrar menos' : 'Ver mais projetos';
+    }
+  };
+
+  const setFilter = (value) => {
+    filter = value;
+    expanded = false;
+    render();
+  };
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => setFilter(button.dataset.projectFilter));
+  });
+  if (select) select.addEventListener('change', () => setFilter(select.value));
+  if (more) more.addEventListener('click', () => {
+    expanded = !expanded;
+    render();
+  });
+  render();
 });
 
 const siteHeader = document.querySelector('.site-header');
@@ -286,7 +302,10 @@ if ('IntersectionObserver' in window) {
 const backToTop = document.querySelector('.back-to-top');
 if (backToTop) {
   const updateBackToTop = () => {
-    backToTop.classList.toggle('is-visible', window.scrollY > window.innerHeight * 0.8);
+    const visible = window.scrollY > window.innerHeight * 0.8;
+    backToTop.classList.toggle('is-visible', visible);
+    backToTop.tabIndex = visible ? 0 : -1;
+    backToTop.setAttribute('aria-hidden', String(!visible));
   };
   updateBackToTop();
   window.addEventListener('scroll', updateBackToTop, { passive: true });
