@@ -378,8 +378,12 @@ h3 {
   -webkit-backdrop-filter: blur(10px);
 }
 
-/* As paginas internas sempre começam sobre uma hero escura, inclusive no tema claro. */
-.site-header:not(.is-scrolled):has(+ .inner-hero--image) {
+/* As paginas internas sempre começam sobre uma hero escura, inclusive no tema claro.
+   Nas paginas onde a hero fica dentro de <main> (home e 404), o seletor precisa
+   olhar atraves do <main> para achar a secao escura. */
+.site-header:not(.is-scrolled):has(+ .inner-hero--image),
+.site-header:not(.is-scrolled):has(+ main .hero),
+.site-header:not(.is-scrolled):has(+ main .error-section) {
   --hero-text: var(--white);
   --hero-text-muted: rgba(255, 255, 255, 0.88);
   --hero-line: rgba(255, 255, 255, 0.3);
@@ -966,6 +970,12 @@ h3 {
 
 .home-project-card[hidden] {
   display: none;
+}
+
+@media (min-width: 1021px) {
+  .home-project-card.is-row-orphan {
+    grid-column: 2;
+  }
 }
 
 .home-project-card > a {

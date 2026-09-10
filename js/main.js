@@ -160,7 +160,11 @@ document.querySelectorAll('[data-project-filter-scope]').forEach((scope) => {
   const render = () => {
     const matching = cards.filter((card) => filter === 'all' || card.dataset.category === filter);
     const visible = expanded ? matching : matching.slice(0, limit);
-    cards.forEach((card) => { card.hidden = !visible.includes(card); });
+    const orphan = visible.length % 3 === 1 ? visible[visible.length - 1] : null;
+    cards.forEach((card) => {
+      card.hidden = !visible.includes(card);
+      card.classList.toggle('is-row-orphan', card === orphan);
+    });
     buttons.forEach((button) => {
       const active = button.dataset.projectFilter === filter;
       button.classList.toggle('is-active', active);
