@@ -69,6 +69,18 @@
   --danger-text: #b3261e;
   --success-bg: #dff3e6;
   --success-text: #1f7a43;
+
+  /* Selos de categoria do portfolio: par texto/fundo solido, testado em AA nos dois temas. */
+  --cat-corporativo-bg: #dbe8ea;
+  --cat-corporativo-text: #1d3a41;
+  --cat-residencial-bg: #f4e0d3;
+  --cat-residencial-text: #7a3410;
+  --cat-estruturas-bg: #e6e6e4;
+  --cat-estruturas-text: #3a3a3a;
+  --cat-infraestrutura-bg: #d9efe8;
+  --cat-infraestrutura-text: #155e4c;
+  --cat-acessibilidade-bg: #ecdcf5;
+  --cat-acessibilidade-text: #5b2a7a;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -96,6 +108,16 @@
     --block-ink: #101010;
     --block-steel: #202020;
     --block-steel-dark: #181818;
+    --cat-corporativo-bg: #123138;
+    --cat-corporativo-text: #8fd0dc;
+    --cat-residencial-bg: #3a2113;
+    --cat-residencial-text: #f2b389;
+    --cat-estruturas-bg: #2b2b2a;
+    --cat-estruturas-text: #c9c9c6;
+    --cat-infraestrutura-bg: #0f2e26;
+    --cat-infraestrutura-text: #7fd9bd;
+    --cat-acessibilidade-bg: #301a3d;
+    --cat-acessibilidade-text: #d3a6ec;
   }
 }
 
@@ -123,6 +145,16 @@
   --block-ink: #101010;
   --block-steel: #202020;
   --block-steel-dark: #181818;
+  --cat-corporativo-bg: #123138;
+  --cat-corporativo-text: #8fd0dc;
+  --cat-residencial-bg: #3a2113;
+  --cat-residencial-text: #f2b389;
+  --cat-estruturas-bg: #2b2b2a;
+  --cat-estruturas-text: #c9c9c6;
+  --cat-infraestrutura-bg: #0f2e26;
+  --cat-infraestrutura-text: #7fd9bd;
+  --cat-acessibilidade-bg: #301a3d;
+  --cat-acessibilidade-text: #d3a6ec;
 }
 
 * {
@@ -278,6 +310,45 @@ img.is-loaded {
 .back-to-top:focus-visible {
   background: var(--orange);
   color: var(--ink);
+}
+
+.whatsapp-float {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 90;
+  display: none;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  color: #fff;
+  background: #25d366;
+  border-radius: 999px;
+  box-shadow: 0 14px 30px rgba(16, 16, 16, 0.32);
+  animation: whatsapp-float-in 420ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both;
+}
+
+.whatsapp-float:hover,
+.whatsapp-float:focus-visible {
+  background: #1fb257;
+}
+
+@keyframes whatsapp-float-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 720px) {
+  .whatsapp-float {
+    display: grid;
+  }
 }
 
 .scroll-indicator {
@@ -526,33 +597,39 @@ h3 {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transition: opacity 220ms ease, transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .theme-toggle .icon-sun {
-  display: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(-90deg) scale(0.5);
 }
 
 .theme-toggle .icon-moon {
-  display: block;
+  opacity: 1;
+  transform: translate(-50%, -50%) rotate(0deg) scale(1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) .theme-toggle .icon-sun {
-    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
   }
 
   :root:not([data-theme='light']) .theme-toggle .icon-moon {
-    display: none;
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(90deg) scale(0.5);
   }
 }
 
 :root[data-theme='dark'] .theme-toggle .icon-sun {
-  display: block;
+  opacity: 1;
+  transform: translate(-50%, -50%) rotate(0deg) scale(1);
 }
 
 :root[data-theme='dark'] .theme-toggle .icon-moon {
-  display: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(90deg) scale(0.5);
 }
 
 .mobile-nav {
@@ -712,6 +789,18 @@ h3 {
   background: var(--orange-light);
   transform: translateY(-2px);
   box-shadow: 0 14px 28px -10px rgba(255, 91, 36, 0.5);
+}
+
+/* Brilho ambiente no CTA principal do hero: so no escuro, pra secao nao ficar
+   um bloco de cinza uniforme -- o laranja "respira" mesmo parado. */
+:root[data-theme='dark'] .hero .button-primary:not(:hover):not(:focus-visible) {
+  box-shadow: 0 0 36px 2px rgba(255, 91, 36, 0.32);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .hero .button-primary:not(:hover):not(:focus-visible) {
+    box-shadow: 0 0 36px 2px rgba(255, 91, 36, 0.32);
+  }
 }
 
 .button-secondary:hover,
@@ -961,7 +1050,7 @@ h3 {
 .home-project-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 54px 24px;
+  gap: 64px 28px;
 }
 
 .home-project-card {
@@ -1035,11 +1124,13 @@ h3 {
 }
 
 .home-project-meta {
-  display: flex;
+  display: inline-flex;
   justify-content: space-between;
   gap: 18px;
   margin: 0;
+  padding: 4px 10px;
   color: var(--accent-text);
+  border-radius: 20px;
   font-size: 11px;
   font-weight: 800;
   line-height: 1.4;
@@ -1049,6 +1140,31 @@ h3 {
 .home-project-meta > :last-child {
   color: var(--text-muted);
   text-align: right;
+}
+
+.home-project-card[data-category='corporativo'] .home-project-meta {
+  color: var(--cat-corporativo-text);
+  background: var(--cat-corporativo-bg);
+}
+
+.home-project-card[data-category='residencial'] .home-project-meta {
+  color: var(--cat-residencial-text);
+  background: var(--cat-residencial-bg);
+}
+
+.home-project-card[data-category='estruturas'] .home-project-meta {
+  color: var(--cat-estruturas-text);
+  background: var(--cat-estruturas-bg);
+}
+
+.home-project-card[data-category='infraestrutura'] .home-project-meta {
+  color: var(--cat-infraestrutura-text);
+  background: var(--cat-infraestrutura-bg);
+}
+
+.home-project-card[data-category='acessibilidade'] .home-project-meta {
+  color: var(--cat-acessibilidade-text);
+  background: var(--cat-acessibilidade-bg);
 }
 
 .home-project-card h3 {
@@ -1723,8 +1839,8 @@ h3 {
 }
 
 .service-details {
-  padding-top: 90px;
-  padding-bottom: 110px;
+  padding-top: 110px;
+  padding-bottom: 130px;
 }
 
 .service-detail-row {
@@ -2441,21 +2557,16 @@ h3 {
 .values-layout ul {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0;
+  gap: 40px 48px;
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--line-light);
-  border-left: 1px solid var(--line-light);
 }
 
 .values-layout li {
   display: flex;
-  min-height: 150px;
-  gap: 14px;
-  padding: 24px;
-  border-right: 1px solid var(--line-light);
-  border-bottom: 1px solid var(--line-light);
+  gap: 16px;
+  padding: 0;
 }
 
 .values-layout li > svg {
@@ -3817,6 +3928,7 @@ main, section, .hero-copy, .hero-content, .brand-copy { min-width: 0; }
 .track-list span { height: 80px; min-height: 80px; padding: 12px; border: 1px solid #e4e4e4; border-radius: 2px; background: #fff; }
 .track-list span img { max-height: 45px; max-width: 100%; width: auto; filter: none; opacity: 1; object-fit: contain; }
 .track-list span:hover, .track-list span:hover img { transform: none; filter: none; background: #fff; }
+.track-list span img[alt='TV SBT Rio'] { filter: saturate(0.55); }
 .track-note { margin-top: 16px; font-size: 11px; color: var(--text-muted); }
 .home-page .about-section { grid-template-columns: minmax(0, .8fr) minmax(0, 1fr); gap: 72px; padding-top: 72px; padding-bottom: 72px; align-items: center; }
 .home-page .about-portrait { aspect-ratio: 4 / 3; max-height: 440px; border-radius: 4px; }

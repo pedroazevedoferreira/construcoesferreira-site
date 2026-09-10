@@ -2,6 +2,12 @@ document.querySelectorAll('[data-year]').forEach((element) => {
   element.textContent = String(new Date().getFullYear());
 });
 
+if (document.documentElement.classList.contains('home-intro')) {
+  window.setTimeout(() => {
+    document.documentElement.classList.remove('home-intro');
+  }, 2000);
+}
+
 const themeToggle = document.querySelector('.theme-toggle');
 if (themeToggle) {
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
@@ -219,6 +225,23 @@ document.querySelectorAll('img:not([fetchpriority="high"])').forEach((img) => {
 });
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const heroImage = document.querySelector('.hero-image');
+if (heroImage && !prefersReducedMotion) {
+  let ticking = false;
+  const updateParallax = () => {
+    const offset = Math.min(window.scrollY * 0.12, 50);
+    heroImage.style.transform = `translateY(${offset}px) scale(1.08)`;
+    ticking = false;
+  };
+  updateParallax();
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(updateParallax);
+      ticking = true;
+    }
+  }, { passive: true });
+}
 
 if ('IntersectionObserver' in window) {
   const revealTargets = document.querySelectorAll(
