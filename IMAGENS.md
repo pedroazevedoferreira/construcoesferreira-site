@@ -28,7 +28,7 @@ Nao apague imagens antigas enquanto houver referencias a elas. Nenhuma compilaca
 | `projetos/ufrj.html`           | `obra-escritorio.jpg`                                                           | Ampliacao de laboratorio documentada; imagem ilustrativa.                                                           |
 | `projetos/technip.html`        | `hero-fachada.jpg`                                                              | Gerenciamento de reforma documentado; imagem ilustrativa.                                                           |
 | Empresa                        | `sandro-ferreira.png`                                                           | Retrato selecionado para esta pagina.                                                                               |
-| Home e Avaliacoes              | `otimizada-sandro-obra.webp`                                                    | Registro de Sandro no canteiro enviado pelo usuario.                                                                |
+| Home                           | `otimizada-sandro-obra.webp`                                                    | Registro de Sandro no canteiro enviado pelo usuario.                                                                |
 
 `ilustrativa-residencial.webp` tambem aparece na pagina Servicos. Uma mesma referencia pode ser usada em mais de um lugar: pesquise todas as ocorrencias antes de trocar o arquivo.
 

@@ -43,6 +43,17 @@ const mime = {
   ".xml": "application/xml",
   ".txt": "text/plain",
 };
+const redirects = new Map(
+  fs
+    .readFileSync(path.join(root, "_redirects"), "utf8")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("#"))
+    .map((line) => {
+      const [from, to, status] = line.split(/\s+/);
+      return [from, { to, status: Number(status) }];
+    }),
+);
 const server = http.createServer((request, response) => {
   let pathname;
   try {
@@ -51,6 +62,11 @@ const server = http.createServer((request, response) => {
     );
   } catch {
     response.writeHead(400).end();
+    return;
+  }
+  const redirect = redirects.get(pathname);
+  if (redirect) {
+    response.writeHead(redirect.status, { Location: redirect.to }).end();
     return;
   }
   let file = path.resolve(root, `.${pathname}`);
@@ -286,8 +302,51 @@ async function main() {
     );
     report.interactions.push("gallery navigation and focus restoration");
 
-    for (const file of ["contato.html", "avaliacoes.html"]) {
-      await page.goto(base + file);
+    await page.goto(base + "index.html#depoimento");
+    assert.equal(await page.locator(".client-quote").count(), 1);
+    assert.equal(
+      await page.locator(".client-quote figcaption strong").innerText(),
+      "Rafael Curvelo",
+    );
+    assert.equal(await page.locator(".review-stars svg").count(), 5);
+    assert.ok(
+      (await page.locator(".client-quote blockquote").innerText()).includes(
+        "Recomendo de olhos fechados.",
+      ),
+    );
+    assert.equal(
+      await page.locator(".client-quote a").getAttribute("href"),
+      "https://www.google.com/maps/contrib/106638283638179285536/reviews?hl=pt-BR",
+    );
+    assert.equal(
+      await page
+        .locator(".review-depth")
+        .evaluateAll((nodes) =>
+          nodes.every(
+            (node) =>
+              node.getAttribute("aria-hidden") === "true" &&
+              !node.textContent.trim() &&
+              !node.children.length,
+          ),
+        ),
+      true,
+    );
+    for (const oldPath of ["avaliacoes.html", "avaliacoes", "avaliacoes/"]) {
+      const response = await context.request.get(base + oldPath, {
+        maxRedirects: 0,
+      });
+      assert.equal(response.status(), 301);
+      assert.equal(response.headers().location, "/#depoimento");
+    }
+    await page.goto(base + "avaliacoes.html");
+    assert.equal(new URL(page.url()).hash, "#depoimento");
+    assert.equal(await page.locator(".client-quote").count(), 1);
+    report.interactions.push(
+      "single attributed testimonial, decorative-only depth, legacy redirects",
+    );
+
+    {
+      await page.goto(base + "contato.html");
       await page.evaluate(() => {
         window.open = () => null;
       });
@@ -301,18 +360,7 @@ async function main() {
       await page
         .locator("#mensagem")
         .fill("Teste local. Esta mensagem nao sera enviada.");
-      if (file === "contato.html") await page.locator("#local").fill("Tijuca");
-      else {
-        await page.locator("form button[type=submit]").click();
-        assert.equal(
-          await page
-            .locator("[name=nota]")
-            .first()
-            .getAttribute("aria-invalid"),
-          "true",
-        );
-        await page.locator('[name=nota][value="4"]').check();
-      }
+      await page.locator("#local").fill("Tijuca");
       await page.locator("form button[type=submit]").click();
       const prepared = new URL(
         await page.locator(".message-fallback").getAttribute("href"),
@@ -322,10 +370,6 @@ async function main() {
       assert.ok(
         prepared.searchParams.get("text").includes("Teste & Validação"),
       );
-      if (file === "avaliacoes.html")
-        assert.ok(
-          prepared.searchParams.get("text").includes("Avaliação: 4 de 5"),
-        );
       await page.locator("#mensagem").fill("Atualizacao da mensagem de teste.");
       assert.equal(
         await page.locator(".message-fallback").getAttribute("href"),
@@ -333,7 +377,7 @@ async function main() {
       );
     }
     report.interactions.push(
-      "contact and feedback validation, safe encoding, popup fallback",
+      "contact validation, safe encoding, popup fallback",
     );
     await page.goto(base + "servicos.html");
     await page.emulateMedia({ reducedMotion: "no-preference" });
@@ -370,6 +414,7 @@ async function main() {
     await nojs.route(mapUrl, mockMap);
     const staticPage = await nojs.newPage();
     await staticPage.goto(base);
+    assert.equal(await staticPage.locator(".client-quote").count(), 1);
     assert.equal(await staticPage.locator(".project-card:visible").count(), 9);
     await staticPage.locator(".mobile-nav summary").click();
     assert.equal(await staticPage.locator(".mobile-nav nav").isVisible(), true);

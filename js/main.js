@@ -154,7 +154,6 @@
   document.querySelectorAll("[data-wa-form]").forEach((form) => {
     const status = form.querySelector(".form-status");
     const fallback = form.querySelector(".message-fallback");
-    const feedback = form.dataset.kind === "feedback";
     const messageError = (name, message) => {
       form.querySelector(`#${name}-error`).textContent = message;
       form.querySelectorAll(`[name="${name}"]`).forEach((field) => {
@@ -183,20 +182,15 @@
         local: value("local"),
         tipo: value("tipo"),
         mensagem: value("mensagem"),
-        nota: value("nota"),
       };
       const errors = {};
       if (values.nome.length < 2 || values.nome.length > 100)
         errors.nome = "Informe seu nome, entre 2 e 100 caracteres.";
-      if (!feedback && (values.local.length < 2 || values.local.length > 100))
+      if (values.local.length < 2 || values.local.length > 100)
         errors.local = "Informe o bairro ou a cidade.";
-      if (feedback && !/^[1-5]$/.test(values.nota))
-        errors.nota = "Selecione uma nota de 1 a 5.";
       if (values.mensagem.length < 10 || values.mensagem.length > 2000)
         errors.mensagem = "Escreva entre 10 e 2.000 caracteres.";
-      const names = feedback
-        ? ["nome", "nota", "mensagem"]
-        : ["nome", "local", "mensagem"];
+      const names = ["nome", "local", "mensagem"];
       names.forEach((name) => messageError(name, errors[name] || ""));
       status.classList.toggle("is-error", Object.keys(errors).length > 0);
       if (Object.keys(errors).length) {
@@ -205,16 +199,12 @@
         return;
       }
       const lines = [
-        feedback
-          ? "Olá, gostaria de compartilhar minha experiência com a Ferreira."
-          : "Olá, gostaria de solicitar um orçamento.",
+        "Olá, gostaria de solicitar um orçamento.",
         "",
         `Nome: ${values.nome}`,
       ];
-      if (!feedback) lines.push(`Local: ${values.local}`);
-      if (values.tipo)
-        lines.push(`${feedback ? "Serviço" : "Projeto"}: ${values.tipo}`);
-      if (feedback) lines.push(`Avaliação: ${values.nota} de 5`);
+      lines.push(`Local: ${values.local}`);
+      if (values.tipo) lines.push(`Projeto: ${values.tipo}`);
       lines.push("", values.mensagem);
       const url = `https://wa.me/5521965906030?text=${encodeURIComponent(lines.join("\n"))}`;
       fallback.href = url;
@@ -225,41 +215,6 @@
     });
     form.hidden = false;
   });
-
-  const reviewsSection = document.querySelector("[data-published-reviews]");
-  if (reviewsSection && Array.isArray(window.FerreiraReviews)) {
-    const list = reviewsSection.querySelector("[data-review-list]");
-    window.FerreiraReviews.filter(
-      (review) =>
-        review &&
-        review.published === true &&
-        review.consent === true &&
-        typeof review.name === "string" &&
-        review.name.trim() &&
-        typeof review.text === "string" &&
-        review.text.trim() &&
-        Number.isInteger(review.rating) &&
-        review.rating >= 1 &&
-        review.rating <= 5,
-    ).forEach((review) => {
-      const article = document.createElement("article");
-      article.className = "review-card";
-      const score = document.createElement("p");
-      score.className = "review-score";
-      score.textContent = `${review.rating} de 5 estrelas`;
-      const quote = document.createElement("blockquote");
-      quote.textContent = review.text;
-      const name = document.createElement("cite");
-      name.textContent =
-        review.name +
-        (typeof review.service === "string" && review.service
-          ? ` · ${review.service}`
-          : "");
-      article.append(score, quote, name);
-      list.append(article);
-    });
-    reviewsSection.hidden = !list.children.length;
-  }
 
   const process = document.querySelector(".process-section");
   if (process) {

@@ -17,25 +17,25 @@ Abra `index.html` diretamente no navegador. As paginas e os contatos funcionam c
 - `index.html`: pagina inicial
 - `sobre.html`, `servicos.html`, `obras.html`, `contato.html`: paginas internas
 - `projetos/`: nove fichas de projetos e areas de atuacao, com galeria ampliavel
-- `avaliacoes.html`: feedback privado pelo WhatsApp e relatos autorizados
+- `index.html#depoimento`: avaliacao de Rafael Curvelo, com fonte no Google
 - `privacidade.html`: funcionamento dos contatos e armazenamento local
 - `css/styles.css`: estilos globais e responsivos
 - `js/main.js`: comportamentos pequenos, sem bibliotecas externas
 - `js/theme-init.js`: preferencia de tema antes da renderizacao
-- `js/avaliacoes.js`: somente relatos reais aprovados
 - `assets/`: imagens, fontes e favicon
 - `_headers`: politicas de seguranca do Cloudflare
+- `_redirects`: enderecos da antiga pagina de avaliacoes levam ao depoimento na home
 - `.assetsignore`: impede que backups, documentos internos e ferramentas entrem na hospedagem
 - `IMAGENS.md`: mapa das fotos, fontes dos dados e roteiro de substituicao
 - `tests/smoke.cjs`: teste de regressao, fora da publicacao
 
-## Formularios e avaliacoes
+## Contato e depoimento
 
-Os formularios validam os campos e preparam uma mensagem para o WhatsApp. O visitante confirma o envio no proprio WhatsApp; nao existe envio de e-mail ou cadastro no servidor. Se a nova janela for bloqueada, um link permite continuar. Rascunhos nao sao salvos.
+O formulario de contato valida os campos e prepara uma mensagem para o WhatsApp. O visitante confirma o envio no proprio WhatsApp; nao existe envio de e-mail ou cadastro no servidor. Se a nova janela for bloqueada, um link permite continuar. Rascunhos nao sao salvos.
 
-`js/avaliacoes.js` comeca vazio de proposito. Nao existem notas ou depoimentos ficticios. Para publicar um relato real, acrescente um objeto com `name`, `text`, `rating` (inteiro de 1 a 5), `service` (opcional), `consent: true` e `published: true`. Guarde a autorizacao fora do repositorio publico. O site nao verifica a autenticidade por conta propria: a empresa deve confirmar o relato e a autorizacao antes de inclui-lo.
+Ha um unico depoimento na home: Rafael Curvelo, nota individual de 5 de 5, texto e link do Google fornecidos pelo responsavel pelo site. O texto foi preservado integralmente; nao foi atribuido um resultado de verificacao automatica. O link leva ao perfil de avaliacoes do autor, nao a um identificador especifico da avaliacao. A data relativa "5 meses atras" foi omitida para nao envelhecer incorretamente.
 
-Somente relatos com autorizacao e publicacao habilitadas aparecem. A secao de relatos fica oculta enquanto nao houver dados. O formulario de feedback continua funcionando, inclusive para criticas, sem selecao por nota.
+Edite o depoimento diretamente em `index.html`, na secao `#depoimento`. A nota pertence apenas a esse relato: nao e uma media da empresa nem um contador de clientes. As aspas desfocadas nas laterais sao decoracao sem nomes, estrelas ou textos de avaliacoes ficticias. Nao ha carrossel, paginas ou depoimentos ocultos. A apresentacao funciona sem JavaScript.
 
 ## Seguranca e manutencao
 
@@ -58,4 +58,4 @@ node tests/smoke.cjs "$env:TEMP/ferreira-tests/node_modules"
 
 O teste usa o Microsoft Edge instalado no Windows. Em outro ambiente, defina `BROWSER_PATH` para um Chromium instalado ou instale o navegador do Playwright. O servidor de teste e temporario, escuta somente em `127.0.0.1` e e encerrado ao terminar. Nenhuma mensagem real e enviada.
 
-O teste verifica 17 paginas, sete larguras, dois temas, links locais, imagens, acessibilidade automatizada, filtros, menu, galeria e formularios. Inclui navegacao sem JavaScript e pausa das animacoes. O conteudo de terceiros do mapa e simulado no teste automatizado; confira o carregamento real do Google Maps no navegador antes de publicar alteracoes no mapa. Isso nao substitui testes manuais com leitores de tela, dispositivos fisicos ou uma auditoria de seguranca independente.
+O teste verifica 16 paginas, sete larguras, dois temas, links locais, imagens, acessibilidade automatizada, filtros, menu, galeria e formulario. Inclui navegacao sem JavaScript, o depoimento unico com fonte e pausa das animacoes. O conteudo de terceiros do mapa e simulado no teste automatizado; confira o carregamento real do Google Maps no navegador antes de publicar alteracoes no mapa. Isso nao substitui testes manuais com leitores de tela, dispositivos fisicos ou uma auditoria de seguranca independente.
