@@ -2755,7 +2755,9 @@ h3 {
 .testimonial-stage {
   position: relative;
   isolation: isolate;
-  padding: 12px 48px;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: 96px 48px 36px;
   overflow: hidden;
 }
 .client-quote {
@@ -2768,6 +2770,7 @@ h3 {
   border-top: 3px solid var(--orange);
   border-radius: 4px;
   background: var(--surface);
+  box-shadow: 0 16px 32px rgb(0 0 0 / 8%);
 }
 .client-quote-rating {
   display: flex;
@@ -2820,40 +2823,30 @@ h3 {
   font-size: 14px;
   gap: 16px;
 }
-/* Abstract quotation marks add depth; there are no placeholder testimonials. */
+/* Empty, noninteractive panels create depth without implying more reviews. */
 .review-depth {
   position: absolute;
-  top: 50%;
-  width: 180px;
-  height: 240px;
-  color: var(--accent);
-  opacity: 0.16;
-  filter: blur(4px);
+  top: 24px;
+  width: min(44%, 520px);
+  height: 300px;
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--orange);
+  border-radius: 4px;
+  background: var(--soft);
+  box-shadow: 0 12px 28px rgb(0 0 0 / 6%);
+  opacity: 0.48;
+  filter: blur(3px);
   pointer-events: none;
-  font-family: Georgia, serif;
-  font-size: 280px;
-  line-height: 1;
 }
 .review-depth-left {
-  right: calc(50% + 340px);
-  transform: translateY(-45%) rotate(-12deg);
-}
-.review-depth-left::before {
-  content: "\201C";
+  left: 24px;
 }
 .review-depth-right {
-  left: calc(50% + 360px);
-  transform: translateY(-20%) rotate(12deg);
-}
-.review-depth-right::before {
-  content: "\201D";
+  right: 24px;
 }
 @media (max-width: 900px) {
-  .review-depth-left {
-    right: calc(50% + 230px);
-  }
-  .review-depth-right {
-    left: calc(50% + 230px);
+  .testimonial-stage {
+    padding-top: 72px;
   }
   .client-quote {
     max-width: 650px;
@@ -2868,7 +2861,7 @@ h3 {
     font-size: 32px;
   }
   .testimonial-stage {
-    padding: 8px 20px;
+    padding: 44px 20px 24px;
   }
   .client-quote {
     padding: 24px;
@@ -2893,21 +2886,17 @@ h3 {
     font-size: 16px;
   }
   .review-depth {
-    font-size: 190px;
-    width: 100px;
-    height: 180px;
-    opacity: 0.2;
-    filter: blur(3px);
+    top: 12px;
+    width: 64%;
+    height: 240px;
+    opacity: 0.4;
+    filter: blur(2px);
   }
   .review-depth-left {
-    right: auto;
-    left: -26px;
-    top: 16%;
+    left: 8px;
   }
   .review-depth-right {
-    left: auto;
-    right: -30px;
-    top: 73%;
+    right: 8px;
   }
 }
 @media (max-width: 360px) {

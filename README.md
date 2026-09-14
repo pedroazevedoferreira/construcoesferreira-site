@@ -35,7 +35,7 @@ O formulario de contato valida os campos e prepara uma mensagem para o WhatsApp.
 
 Ha um unico depoimento na home: Rafael Curvelo, nota individual de 5 de 5, texto e link do Google fornecidos pelo responsavel pelo site. O texto foi preservado integralmente; nao foi atribuido um resultado de verificacao automatica. O link leva ao perfil de avaliacoes do autor, nao a um identificador especifico da avaliacao. A data relativa "5 meses atras" foi omitida para nao envelhecer incorretamente.
 
-Edite o depoimento diretamente em `index.html`, na secao `#depoimento`. A nota pertence apenas a esse relato: nao e uma media da empresa nem um contador de clientes. As aspas desfocadas nas laterais sao decoracao sem nomes, estrelas ou textos de avaliacoes ficticias. Nao ha carrossel, paginas ou depoimentos ocultos. A apresentacao funciona sem JavaScript.
+Edite o depoimento diretamente em `index.html`, na secao `#depoimento`. A nota pertence apenas a esse relato: nao e uma media da empresa nem um contador de clientes. Os dois paineis vazios e desfocados atras do relato sao decoracao sem nomes, estrelas ou textos de avaliacoes ficticias. Nao ha carrossel, paginas ou depoimentos ocultos. A apresentacao funciona sem JavaScript.
 
 ## Seguranca e manutencao
 
