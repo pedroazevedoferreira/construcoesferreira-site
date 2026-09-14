@@ -39,7 +39,9 @@ Somente relatos com autorizacao e publicacao habilitadas aparecem. A secao de re
 
 ## Seguranca e manutencao
 
-O site nao possui painel administrativo, credenciais ou formularios processados pelo servidor. Fontes, imagens e scripts sao locais. A politica CSP nao permite scripts externos, frames, conexoes de dados ou submissao de formularios pelo navegador; as acoes de contato usam navegacao explicita para servicos externos.
+O site nao possui painel administrativo, credenciais ou formularios processados pelo servidor. Fontes, imagens e scripts proprios sao locais. A politica CSP nao permite scripts externos, conexoes de dados ou submissao de formularios na pagina principal. Frames sao permitidos somente nos dominios do Google usados pelo mapa incorporado na pagina de contato.
+
+O mapa carrega de forma adiada e mantem as cores originais para preservar sua legibilidade nos dois temas. Ao carregar, o iframe faz conexoes externas ao Google; a pagina Privacidade informa esse comportamento. O link "Como chegar" funciona tambem quando o mapa e bloqueado por uma extensao ou pela rede.
 
 O tema e salvo em `localStorage`; a animacao inicial usa `sessionStorage`. Bloquear o armazenamento nao impede a navegacao. Menus, paginas, portfolio e contatos diretos continuam utilizaveis sem JavaScript. Animacoes respeitam movimento reduzido.
 
@@ -56,4 +58,4 @@ node tests/smoke.cjs "$env:TEMP/ferreira-tests/node_modules"
 
 O teste usa o Microsoft Edge instalado no Windows. Em outro ambiente, defina `BROWSER_PATH` para um Chromium instalado ou instale o navegador do Playwright. O servidor de teste e temporario, escuta somente em `127.0.0.1` e e encerrado ao terminar. Nenhuma mensagem real e enviada.
 
-O teste verifica 17 paginas, sete larguras, dois temas, links locais, imagens, acessibilidade automatizada, filtros, menu, galeria e formularios. Inclui navegacao sem JavaScript e pausa das animacoes. Isso nao substitui testes manuais com leitores de tela, dispositivos fisicos ou uma auditoria de seguranca independente.
+O teste verifica 17 paginas, sete larguras, dois temas, links locais, imagens, acessibilidade automatizada, filtros, menu, galeria e formularios. Inclui navegacao sem JavaScript e pausa das animacoes. O conteudo de terceiros do mapa e simulado no teste automatizado; confira o carregamento real do Google Maps no navegador antes de publicar alteracoes no mapa. Isso nao substitui testes manuais com leitores de tela, dispositivos fisicos ou uma auditoria de seguranca independente.

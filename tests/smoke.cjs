@@ -76,6 +76,13 @@ const server = http.createServer((request, response) => {
   response.end(fs.readFileSync(file));
 });
 
+const mapUrl = /^https:\/\/(?:maps|www)\.google\.com\/maps(?:\?|\/|$)/;
+const mockMap = (route) =>
+  route.fulfill({
+    contentType: "text/html",
+    body: '<!doctype html><html lang="pt-BR"><head><title>Mapa de teste</title></head><body><main>Localizacao da Ferreira</main></body></html>',
+  });
+
 async function main() {
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   const base = `http://127.0.0.1:${server.address().port}/`;
@@ -97,6 +104,7 @@ async function main() {
   try {
     browser = await chromium.launch({ headless: true, executablePath });
     const context = await browser.newContext({ reducedMotion: "reduce" });
+    await context.route(mapUrl, mockMap);
     const page = await context.newPage();
     page.on("pageerror", (error) => report.errors.push(error.message));
     page.on("console", (message) => {
@@ -110,6 +118,16 @@ async function main() {
         for (const file of files) {
           await page.goto(base + file);
           await page.evaluate(() => document.fonts.ready);
+          if (file === "contato.html") {
+            const map = page.locator(".contact-map iframe");
+            assert.equal(await map.count(), 1);
+            assert.ok((await map.getAttribute("title")).includes("Tijuca"));
+            assert.equal(await map.getAttribute("loading"), "lazy");
+            assert.equal(
+              new URL(await map.getAttribute("src")).searchParams.get("output"),
+              "embed",
+            );
+          }
           const dimensions = await page.evaluate(() => ({
             overflow: document.documentElement.scrollWidth > innerWidth,
             brandRight: document.querySelector(".brand").getBoundingClientRect()
@@ -349,6 +367,7 @@ async function main() {
       javaScriptEnabled: false,
       viewport: { width: 390, height: 844 },
     });
+    await nojs.route(mapUrl, mockMap);
     const staticPage = await nojs.newPage();
     await staticPage.goto(base);
     assert.equal(await staticPage.locator(".project-card:visible").count(), 9);
