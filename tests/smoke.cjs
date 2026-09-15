@@ -121,14 +121,16 @@ async function checkArtwork(page) {
       for (const pseudo of styles) {
         const style = getComputedStyle(host, pseudo);
         const requiredDrawing =
-          element || (pseudo === "::before" && host.matches(".page-heading"));
+          innerWidth >= 1024 &&
+          (element ||
+            (pseudo === "::before" && host.hasAttribute("data-architecture")));
         if (
           requiredDrawing &&
           (style.display === "none" ||
             style.maskImage === "none" ||
             parseFloat(style.width) < 200 ||
             parseFloat(style.height) < 140 ||
-            Number(style.opacity) < 0.18)
+            Number(style.opacity) < 0.1)
         )
           failures.push("architectural drawing missing or imperceptible");
         if (style.display === "none" || (pseudo && style.content === "none"))
@@ -148,8 +150,10 @@ async function checkArtwork(page) {
           failures.push("interactive artwork");
         if (element && host.getAttribute("aria-hidden") !== "true")
           failures.push("unlabelled decoration");
-        if (style.maskImage !== "none" && Number(style.opacity) > 0.24)
+        if (style.maskImage !== "none" && Number(style.opacity) > 0.2)
           failures.push("artwork contrast too high");
+        if (innerWidth < 1024 && style.maskImage !== "none")
+          failures.push("artwork forced into a compact layout");
         const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT);
         let text;
         while ((text = walker.nextNode())) {
@@ -168,6 +172,40 @@ async function checkArtwork(page) {
         }
       }
     }
+    // Removing every decorative layer must leave content geometry unchanged.
+    const geometry = () =>
+      [
+        ...document.querySelectorAll(
+          "main > section, .page-heading > .section-shell, .testimonial-heading, .testimonial-carousel, .values-layout, .faq-layout",
+        ),
+      ].map((node) => {
+        const { x, y, width, height } = node.getBoundingClientRect();
+        return { x, y, width, height };
+      });
+    const before = geometry();
+    const attributes = [
+      ...document.querySelectorAll(
+        "[data-architecture], [data-technical-margin]",
+      ),
+    ].flatMap((node) =>
+      ["data-architecture", "data-technical-margin"]
+        .filter((name) => node.hasAttribute(name))
+        .map((name) => ({ node, name, value: node.getAttribute(name) })),
+    );
+    attributes.forEach(({ node, name }) => node.removeAttribute(name));
+    const blueprint = document.querySelector(".testimonial-blueprint");
+    const wasHidden = blueprint?.hidden;
+    if (blueprint) blueprint.hidden = true;
+    const withoutArtwork = geometry();
+    attributes.forEach(({ node, name, value }) =>
+      node.setAttribute(name, value),
+    );
+    if (blueprint) blueprint.hidden = wasHidden;
+    if (JSON.stringify(before) !== JSON.stringify(withoutArtwork))
+      failures.push("decoration creates layout space");
+    const heading = document.querySelector(".testimonial-heading");
+    if (heading && getComputedStyle(heading).paddingBottom !== "0px")
+      failures.push("testimonial heading reserves space for artwork");
     return failures;
   });
   assert.deepEqual(
@@ -382,7 +420,7 @@ async function main() {
         `invalid or external content in ${drawing}`,
       );
     }
-    for (const width of [901, 1199, 1200]) {
+    for (const width of [901, 1023, 1024, 1199, 1200, 1366]) {
       await page.setViewportSize({ width, height: 1000 });
       for (const file of [
         "index.html",
@@ -397,7 +435,7 @@ async function main() {
       }
     }
     report.interactions.push(
-      "six distinct local architectural drawings, visible on compact screens, no content overlap",
+      "architectural backgrounds fill desktop whitespace without changing geometry or overlapping content; no added mobile bands",
     );
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.goto(base);

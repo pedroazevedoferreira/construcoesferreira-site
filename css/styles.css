@@ -2764,16 +2764,17 @@ h3 {
   pointer-events: none;
   z-index: -1;
 }
-/* Decorative study, separated from the testimonial's reading area. */
+/* Cropped into the existing outer margin, outside the centered reading area. */
 .testimonial-blueprint {
   position: absolute;
-  top: 20px;
-  right: 24px;
-  width: 380px;
-  height: 230px;
+  top: 0;
+  right: 0;
+  width: min(620px, calc(50% - 300px));
+  height: 330px;
   background: var(--ink);
-  opacity: 0.22;
-  mask: url("../assets/drawings/pavilhao.svg") center / contain no-repeat;
+  opacity: 0.16;
+  mask: url("../assets/drawings/pavilhao.svg") -40px center / auto 150%
+    no-repeat;
   pointer-events: none;
   z-index: -1;
 }
@@ -3143,7 +3144,7 @@ h3 {
   }
 }
 
-/* Technical artwork occupies reserved whitespace, never a content layer. */
+/* Paint only: these layers must not add padding, height or columns to the layout. */
 [data-architecture],
 [data-technical-margin] {
   position: relative;
@@ -3165,50 +3166,48 @@ h3 {
   --architectural-drawing: url("../assets/drawings/detalhe.svg");
 }
 .page-heading[data-architecture]::before,
-.values-layout > [data-architecture]::before {
+.values-layout > [data-architecture]::before,
+.faq-layout > [data-architecture]::before {
   content: "";
   position: absolute;
   z-index: -1;
   pointer-events: none;
   background: var(--ink);
-  opacity: 0.22;
+  opacity: 0.16;
   mask: var(--architectural-drawing) center / contain no-repeat;
 }
 .page-heading[data-architecture]::before {
-  top: 12px;
-  bottom: 12px;
-  left: max(52%, 720px);
-  right: 24px;
-  mask-size: auto 108%;
+  top: 0;
+  bottom: 0;
+  left: max(50%, calc((100% - 1248px) / 2 + 660px), 704px);
+  right: 0;
+  mask-size: auto 170%;
+  mask-position: -72px 52%;
 }
 .page-heading[data-architecture="porticos"]::before {
-  bottom: 100px;
-  mask-size: auto 100%;
+  bottom: 108px;
+  mask-position: -48px 40%;
 }
 .page-heading[data-architecture="corte"]::before {
-  mask-size: auto 118%;
+  mask-size: auto 185%;
+  mask-position: -8px 40%;
 }
 .page-heading[data-architecture="planta"]::before {
-  mask-size: auto 128%;
+  mask-size: auto 205%;
+  mask-position: left 46%;
 }
-.page-heading[data-architecture]::after {
-  content: "";
-  position: absolute;
-  right: 32px;
-  bottom: 24px;
-  width: 12px;
-  height: 12px;
-  border-left: 1px solid var(--orange);
-  border-bottom: 1px solid var(--orange);
-  opacity: 0.5;
-  pointer-events: none;
-}
-.values-layout > [data-architecture]::before {
+.values-layout > [data-architecture]::before,
+.faq-layout > [data-architecture]::before {
   top: 176px;
   left: 0;
-  width: min(100%, 440px);
-  height: 220px;
-  opacity: 0.2;
+  right: 0;
+  bottom: 4px;
+  mask-size: 120% auto;
+  mask-position: -48px center;
+}
+.faq-layout > [data-architecture]::before {
+  mask-size: 125% auto;
+  mask-position: -40px 60%;
 }
 [data-technical-margin]::before,
 [data-technical-margin]::after {
@@ -3231,63 +3230,20 @@ h3 {
   background: var(--orange);
   opacity: 0.55;
 }
-@media (max-width: 1199px) {
-  .values-layout > [data-architecture]::before {
-    display: none;
-  }
-  .page-heading[data-architecture] {
-    --compact-drawing-height: 192px;
-    padding-bottom: calc(var(--compact-drawing-height) + 48px);
-  }
-  .page-heading[data-architecture]::before {
-    top: auto;
-    right: 24px;
-    bottom: 16px;
-    left: auto;
-    width: min(440px, calc(100% - 48px));
-    height: var(--compact-drawing-height);
-    mask-size: contain;
-  }
-  .page-heading[data-architecture]::after {
-    right: 24px;
-    bottom: 24px;
-  }
-  .testimonial-heading {
-    position: relative;
-    padding-bottom: 160px;
-    margin-bottom: 28px;
-  }
-  .testimonial-blueprint {
-    top: auto;
-    right: 0;
-    bottom: 0;
-    width: min(280px, 100%);
-    height: 140px;
-  }
+@media (max-width: 1023px) {
+  .page-heading[data-architecture]::before,
+  .values-layout > [data-architecture]::before,
+  .faq-layout > [data-architecture]::before,
+  .testimonial-blueprint,
   [data-technical-margin]::before,
   [data-technical-margin]::after {
     display: none;
   }
 }
-@media (max-width: 640px) {
-  .page-heading[data-architecture] {
-    --compact-drawing-height: 168px;
-    padding-bottom: calc(var(--compact-drawing-height) + 40px);
-  }
-  .page-heading[data-architecture]::before {
-    right: 16px;
-    width: calc(100% - 32px);
-  }
-  .page-heading[data-architecture]::after {
-    right: 20px;
-  }
-  .testimonial-blueprint {
-    right: calc(50% - min(140px, 50%));
-  }
-}
 @supports not (mask-image: url("")) {
   .page-heading[data-architecture]::before,
   .values-layout > [data-architecture]::before,
+  .faq-layout > [data-architecture]::before,
   .testimonial-blueprint {
     display: none;
   }
