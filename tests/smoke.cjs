@@ -120,6 +120,17 @@ async function checkArtwork(page) {
         : host;
       for (const pseudo of styles) {
         const style = getComputedStyle(host, pseudo);
+        const requiredDrawing =
+          element || (pseudo === "::before" && host.matches(".page-heading"));
+        if (
+          requiredDrawing &&
+          (style.display === "none" ||
+            style.maskImage === "none" ||
+            parseFloat(style.width) < 200 ||
+            parseFloat(style.height) < 140 ||
+            Number(style.opacity) < 0.18)
+        )
+          failures.push("architectural drawing missing or imperceptible");
         if (style.display === "none" || (pseudo && style.content === "none"))
           continue;
         const parent = host.getBoundingClientRect();
@@ -137,7 +148,7 @@ async function checkArtwork(page) {
           failures.push("interactive artwork");
         if (element && host.getAttribute("aria-hidden") !== "true")
           failures.push("unlabelled decoration");
-        if (style.maskImage !== "none" && Number(style.opacity) > 0.12)
+        if (style.maskImage !== "none" && Number(style.opacity) > 0.24)
           failures.push("artwork contrast too high");
         const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT);
         let text;
@@ -196,7 +207,7 @@ async function main() {
     const records = [];
     for (const theme of ["light", "dark"]) {
       await page.emulateMedia({ colorScheme: theme });
-      for (const width of [320, 390, 640, 768, 1024, 1440, 1920]) {
+      for (const width of [319, 320, 390, 640, 768, 1024, 1440, 1920]) {
         await page.setViewportSize({ width, height: width < 700 ? 844 : 1000 });
         for (const file of files) {
           await page.goto(base + file);
@@ -386,7 +397,7 @@ async function main() {
       }
     }
     report.interactions.push(
-      "six distinct local architectural drawings, no content overlap, compact-screen fallback",
+      "six distinct local architectural drawings, visible on compact screens, no content overlap",
     );
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.goto(base);

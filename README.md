@@ -53,11 +53,11 @@ As setas, os tres indicadores, o teclado (setas, Home e End) e o gesto horizonta
 
 ### Desenhos arquitetonicos
 
-Os seis SVGs locais em `assets/drawings/` sao estudos graficos decorativos, sem escala e sem relacao com obras executadas. Nao incluem scripts, imagens externas, gradientes ou cotas numericas. O CSS aplica os desenhos como mascaras monocromaticas com as cores existentes do tema e opacidade de ate 11%.
+Os seis SVGs locais em `assets/drawings/` sao estudos graficos decorativos, sem escala e sem relacao com obras executadas. Nao incluem scripts, imagens externas, gradientes ou cotas numericas. O CSS aplica os desenhos como mascaras monocromaticas com as cores existentes do tema e opacidade de 20% a 22%, mantendo os tracos leves, mas perceptiveis.
 
 Contato usa uma perspectiva residencial; Servicos, porticos estruturais; Empresa, um corte de edificio; Obras, uma planta. A home tem uma perspectiva de pavilhao no fundo do depoimento. Um detalhe construtivo ocupa somente o espaco livre abaixo do titulo da secao de valores em Empresa. As pequenas linhas de cota junto ao contato ficam fora da coluna do formulario.
 
-Abaixo de 1200px, os desenhos maiores deixam lugar a marcacoes tecnicas pequenas acima dos titulos. Fotos, galerias, formularios, conteudo legal e pagina de erro permanecem livres de fundos ilustrados. Nenhum desenho recebe foco ou captura cliques. Navegadores sem suporte a mascaras CSS mantem o fundo limpo. Nao foram alterados textos, espacamentos, dimensoes ou comportamento das secoes para acomodar a arte.
+Abaixo de 1200px, os desenhos continuam visiveis: as aberturas das paginas reservam uma faixa compacta abaixo do texto, e o depoimento mostra sua perspectiva entre a introducao e os cards. Esse espaco evita desenhos sobre textos ou controles, inclusive em janelas estreitas de previa. O detalhe secundario da secao de valores em Empresa e omitido nessas larguras. Fotos, galerias, formularios, conteudo legal e pagina de erro permanecem livres de fundos ilustrados. Nenhum desenho recebe foco ou captura cliques. Navegadores sem suporte a mascaras CSS mantem o fundo limpo.
 
 O site nao possui painel administrativo, credenciais ou formularios processados pelo servidor. Fontes, imagens e scripts proprios sao locais. A politica CSP nao permite scripts externos, conexoes de dados ou submissao de formularios na pagina principal. Frames sao permitidos somente nos dominios do Google usados pelo mapa incorporado na pagina de contato.
 
@@ -78,4 +78,4 @@ node tests/smoke.cjs "$env:TEMP/ferreira-tests/node_modules"
 
 O teste usa o Microsoft Edge instalado no Windows. Em outro ambiente, defina `BROWSER_PATH` para um Chromium instalado ou instale o navegador do Playwright. O servidor de teste e temporario, escuta somente em `127.0.0.1` e e encerrado ao terminar. Nenhuma mensagem real e enviada.
 
-O teste verifica 16 paginas, sete larguras, dois temas, links locais, imagens, acessibilidade automatizada, filtros, menu, galeria e formulario. Inclui navegacao sem JavaScript, o depoimento unico com fonte e pausa das animacoes. O conteudo de terceiros do mapa e simulado no teste automatizado; confira o carregamento real do Google Maps no navegador antes de publicar alteracoes no mapa. Isso nao substitui testes manuais com leitores de tela, dispositivos fisicos ou uma auditoria de seguranca independente.
+O teste verifica 16 paginas, oito larguras (incluindo a previa estreita de 319px), dois temas, links locais, imagens, acessibilidade automatizada, filtros, menu, galeria e formulario. Inclui navegacao sem JavaScript, o depoimento unico com fonte e pausa das animacoes. O conteudo de terceiros do mapa e simulado no teste automatizado; confira o carregamento real do Google Maps no navegador antes de publicar alteracoes no mapa. Isso nao substitui testes manuais com leitores de tela, dispositivos fisicos ou uma auditoria de seguranca independente.
