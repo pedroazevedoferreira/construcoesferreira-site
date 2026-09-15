@@ -99,6 +99,73 @@ const mockMap = (route) =>
     body: '<!doctype html><html lang="pt-BR"><head><title>Mapa de teste</title></head><body><main>Localizacao da Ferreira</main></body></html>',
   });
 
+async function checkArtwork(page) {
+  const problems = await page.evaluate(() => {
+    const failures = [];
+    const intersects = (a, b) =>
+      a.left < b.right &&
+      a.right > b.left &&
+      a.top < b.bottom &&
+      a.bottom > b.top;
+    const hosts = [
+      ...document.querySelectorAll(
+        "[data-architecture], [data-technical-margin], .testimonial-blueprint",
+      ),
+    ];
+    for (const host of hosts) {
+      const element = host.matches(".testimonial-blueprint");
+      const styles = element ? [null] : ["::before", "::after"];
+      const content = element
+        ? host.closest("section").querySelector(".testimonial-heading")
+        : host;
+      for (const pseudo of styles) {
+        const style = getComputedStyle(host, pseudo);
+        if (style.display === "none" || (pseudo && style.content === "none"))
+          continue;
+        const parent = host.getBoundingClientRect();
+        const left = element
+          ? parent.left
+          : parent.left + parseFloat(style.left);
+        const top = element ? parent.top : parent.top + parseFloat(style.top);
+        const box = {
+          left,
+          top,
+          right: left + parseFloat(style.width),
+          bottom: top + parseFloat(style.height),
+        };
+        if (style.pointerEvents !== "none")
+          failures.push("interactive artwork");
+        if (element && host.getAttribute("aria-hidden") !== "true")
+          failures.push("unlabelled decoration");
+        if (style.maskImage !== "none" && Number(style.opacity) > 0.12)
+          failures.push("artwork contrast too high");
+        const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT);
+        let text;
+        while ((text = walker.nextNode())) {
+          if (!text.textContent.trim()) continue;
+          const range = document.createRange();
+          range.selectNodeContents(text);
+          if (
+            [...range.getClientRects()].some(
+              (rect) => rect.width && rect.height && intersects(box, rect),
+            )
+          ) {
+            failures.push(
+              `${host.dataset.architecture || host.className}: drawing overlaps ${text.textContent.trim().slice(0, 45)}`,
+            );
+          }
+        }
+      }
+    }
+    return failures;
+  });
+  assert.deepEqual(
+    problems,
+    [],
+    "architectural artwork must stay outside content",
+  );
+}
+
 async function main() {
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   const base = `http://127.0.0.1:${server.address().port}/`;
@@ -152,6 +219,8 @@ async function main() {
               .querySelector(".header-actions")
               .getBoundingClientRect().left,
             h1: document.querySelectorAll("h1").length,
+            brandImage: getComputedStyle(document.querySelector(".brand-mark"))
+              .backgroundImage,
           }));
           assert.equal(
             dimensions.overflow,
@@ -163,6 +232,36 @@ async function main() {
             `${file}: header collision`,
           );
           assert.equal(dimensions.h1, 1, `${file}: heading`);
+          assert.ok(
+            dimensions.brandImage.includes("assets/images/brand-cube.png"),
+            `${file}: header logo must not share the tightly cropped favicon`,
+          );
+          const icons = await page
+            .locator('link[rel="icon"]')
+            .evaluateAll((nodes) =>
+              nodes.map((node) => ({
+                href: node.href,
+                type: node.type,
+                sizes: node.sizes.value,
+              })),
+            );
+          assert.equal(icons.length, 2, `${file}: favicon alternatives`);
+          assert.ok(
+            icons.some(
+              (icon) => icon.type === "image/svg+xml" && icon.sizes === "any",
+            ),
+          );
+          assert.ok(
+            icons.some(
+              (icon) => icon.type === "image/png" && icon.sizes === "64x64",
+            ),
+          );
+          assert.ok(
+            icons.every(
+              (icon) => new URL(icon.href).searchParams.get("v") === "cubo-2",
+            ),
+          );
+          await checkArtwork(page);
           report.layouts++;
           if (width === 390 || width === 1440) {
             await page.evaluate(async () => {
@@ -243,6 +342,52 @@ async function main() {
     console.log(
       "Layout, assets, links and accessibility passed. Checking interactions...",
     );
+    const drawings = fs
+      .readdirSync(path.join(root, "assets/drawings"))
+      .filter((file) => file.endsWith(".svg"));
+    assert.equal(drawings.length, 6);
+    assert.equal(
+      new Set(
+        drawings.map((file) =>
+          fs.readFileSync(path.join(root, "assets/drawings", file), "utf8"),
+        ),
+      ).size,
+      6,
+    );
+    for (const drawing of drawings) {
+      const response = await context.request.get(
+        `${base}assets/drawings/${drawing}`,
+      );
+      assert.equal(response.status(), 200);
+      const svg = await response.text();
+      assert.equal(
+        await page.evaluate((source) => {
+          const doc = new DOMParser().parseFromString(source, "image/svg+xml");
+          return !!doc.querySelector(
+            "parsererror, script, foreignObject, image, linearGradient, radialGradient, [href]",
+          );
+        }, svg),
+        false,
+        `invalid or external content in ${drawing}`,
+      );
+    }
+    for (const width of [901, 1199, 1200]) {
+      await page.setViewportSize({ width, height: 1000 });
+      for (const file of [
+        "index.html",
+        "sobre.html",
+        "servicos.html",
+        "obras.html",
+        "contato.html",
+      ]) {
+        await page.goto(base + file);
+        await page.evaluate(() => document.fonts.ready);
+        await checkArtwork(page);
+      }
+    }
+    report.interactions.push(
+      "six distinct local architectural drawings, no content overlap, compact-screen fallback",
+    );
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.goto(base);
     assert.equal(await page.locator(".project-card:visible").count(), 3);
@@ -309,27 +454,147 @@ async function main() {
       "Rafael Curvelo",
     );
     assert.equal(await page.locator(".review-stars svg").count(), 5);
-    assert.ok(
-      (await page.locator(".client-quote blockquote").innerText()).includes(
-        "Recomendo de olhos fechados.",
-      ),
+    assert.equal(
+      (await page.locator(".client-quote blockquote").innerText())
+        .replace(/\s+/g, " ")
+        .trim(),
+      "A Ferreira Projetos e Construções foi impecável na minha obra. Prazo, limpeza, execução e inclusive a educação dos funcionários. O Sandro é um excelente profissional. Recomendo de olhos fechados.",
     );
     assert.equal(
       await page.locator(".client-quote a").getAttribute("href"),
       "https://www.google.com/maps/contrib/106638283638179285536/reviews?hl=pt-BR",
     );
+    assert.equal(await page.locator("[data-testimonial-slide]").count(), 3);
+    assert.equal(await page.locator("[data-placeholder]").count(), 2);
     assert.equal(
       await page
-        .locator(".review-depth")
-        .evaluateAll((nodes) =>
-          nodes.every(
-            (node) =>
-              node.getAttribute("aria-hidden") === "true" &&
-              !node.textContent.trim() &&
-              !node.children.length,
-          ),
-        ),
+        .locator(
+          "[data-placeholder] .review-stars, [data-placeholder] a, [data-placeholder] blockquote",
+        )
+        .count(),
+      0,
+    );
+    for (const placeholder of await page.locator("[data-placeholder]").all())
+      assert.ok(
+        (await placeholder.textContent()).includes("Conteúdo demonstrativo"),
+      );
+    const activeSlide = () =>
+      page.locator('[data-testimonial-slide][data-position="active"]');
+    const activeDot = () =>
+      page.locator('[data-testimonial-dot][aria-current="true"]');
+    const initialHeight = (
+      await page.locator(".testimonial-stage").boundingBox()
+    ).height;
+    await page.locator("[data-testimonial-next]").click();
+    assert.equal(await activeSlide().getAttribute("data-placeholder"), "");
+    assert.ok(
+      (await activeDot().getAttribute("aria-label")).startsWith("2 de 3"),
+    );
+    assert.equal(
+      await page.locator(".client-quote").evaluate((node) => node.inert),
       true,
+    );
+    assert.equal(
+      await page.locator(".client-quote").getAttribute("aria-hidden"),
+      "true",
+    );
+    assert.equal(
+      (await page.locator(".testimonial-stage").boundingBox()).height,
+      initialHeight,
+    );
+    for (const width of [390, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const colorScheme of ["light", "dark"]) {
+        await page.evaluate(
+          (theme) => (document.documentElement.dataset.theme = theme),
+          colorScheme,
+        );
+        const audit = await new AxeBuilder({ page })
+          .include("#depoimento")
+          .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
+          .analyze();
+        assert.deepEqual(
+          audit.violations,
+          [],
+          `placeholder slide ${width} ${colorScheme}`,
+        );
+        report.accessibilityAudits++;
+      }
+    }
+    await page.locator("[data-testimonial-next]").click();
+    assert.ok(
+      (await activeDot().getAttribute("aria-label")).startsWith("3 de 3"),
+    );
+    await page.locator("[data-testimonial-next]").click();
+    assert.ok(
+      (await activeSlide().getAttribute("class")).includes("client-quote"),
+    );
+    await page.locator("[data-testimonial-prev]").click();
+    assert.ok(
+      (await activeDot().getAttribute("aria-label")).startsWith("3 de 3"),
+    );
+    await page.locator("[data-testimonial-dot]").first().click();
+    await page.locator(".client-quote a").focus();
+    await page.keyboard.press("ArrowRight");
+    assert.equal(
+      await page
+        .locator("[data-testimonial-dot]")
+        .nth(1)
+        .evaluate((node) => node === document.activeElement),
+      true,
+    );
+    await page.keyboard.press("End");
+    assert.ok(
+      (await activeDot().getAttribute("aria-label")).startsWith("3 de 3"),
+    );
+    await page.keyboard.press("Home");
+    assert.ok(
+      (await activeDot().getAttribute("aria-label")).startsWith("1 de 3"),
+    );
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.locator(".testimonial-stage").evaluate((node) => {
+      const touch = (x, y) =>
+        new Touch({ identifier: 1, target: node, clientX: x, clientY: y });
+      node.dispatchEvent(
+        new TouchEvent("touchstart", {
+          touches: [touch(290, 200)],
+          bubbles: true,
+        }),
+      );
+      node.dispatchEvent(
+        new TouchEvent("touchend", {
+          changedTouches: [touch(100, 205)],
+          bubbles: true,
+        }),
+      );
+    });
+    assert.ok(
+      (await activeDot().getAttribute("aria-label")).startsWith("2 de 3"),
+    );
+    await page.locator(".testimonial-stage").evaluate((node) => {
+      const touch = (x, y) =>
+        new Touch({ identifier: 1, target: node, clientX: x, clientY: y });
+      node.dispatchEvent(
+        new TouchEvent("touchstart", {
+          touches: [touch(200, 100)],
+          bubbles: true,
+        }),
+      );
+      node.dispatchEvent(
+        new TouchEvent("touchend", {
+          changedTouches: [touch(195, 300)],
+          bubbles: true,
+        }),
+      );
+    });
+    assert.ok(
+      (await activeDot().getAttribute("aria-label")).startsWith("2 de 3"),
+    );
+    assert.equal(
+      await activeSlide().evaluate(
+        (node) => getComputedStyle(node).transitionDuration,
+      ),
+      "0s",
     );
     for (const oldPath of ["avaliacoes.html", "avaliacoes", "avaliacoes/"]) {
       const response = await context.request.get(base + oldPath, {
@@ -342,7 +607,7 @@ async function main() {
     assert.equal(new URL(page.url()).hash, "#depoimento");
     assert.equal(await page.locator(".client-quote").count(), 1);
     report.interactions.push(
-      "single attributed testimonial, decorative-only depth, legacy redirects",
+      "testimonial carousel: real quote, disclosed placeholders, arrows, dots, keyboard, touch, stable height, reduced motion and legacy redirects",
     );
 
     {
@@ -415,6 +680,14 @@ async function main() {
     const staticPage = await nojs.newPage();
     await staticPage.goto(base);
     assert.equal(await staticPage.locator(".client-quote").count(), 1);
+    assert.equal(
+      await staticPage.locator("[data-testimonial-controls]").isVisible(),
+      false,
+    );
+    assert.equal(
+      await staticPage.locator("[data-placeholder]:visible").count(),
+      0,
+    );
     assert.equal(await staticPage.locator(".project-card:visible").count(), 9);
     await staticPage.locator(".mobile-nav summary").click();
     assert.equal(await staticPage.locator(".mobile-nav nav").isVisible(), true);

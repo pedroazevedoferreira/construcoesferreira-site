@@ -216,6 +216,92 @@
     form.hidden = false;
   });
 
+  const testimonial = document.querySelector("[data-testimonial-carousel]");
+  if (testimonial) {
+    const slides = [
+      ...testimonial.querySelectorAll("[data-testimonial-slide]"),
+    ];
+    const dots = [...testimonial.querySelectorAll("[data-testimonial-dot]")];
+    const stage = testimonial.querySelector(".testimonial-stage");
+    const status = testimonial.querySelector("[data-testimonial-status]");
+    let current = 0;
+    let touch = null;
+
+    function showSlide(index, announce = true) {
+      current = (index + slides.length) % slides.length;
+      // Move focus before making an outgoing slide inert.
+      if (slides.some((slide) => slide.contains(document.activeElement)))
+        dots[current].focus({ preventScroll: true });
+      slides.forEach((slide, position) => {
+        const offset = (position - current + slides.length) % slides.length;
+        const active = offset === 0;
+        slide.dataset.position = active
+          ? "active"
+          : offset === 1
+            ? "next"
+            : "previous";
+        slide.inert = !active;
+        slide.setAttribute("aria-hidden", String(!active));
+        slide.hidden = false;
+      });
+      dots.forEach((dot, index) => {
+        if (index === current) dot.setAttribute("aria-current", "true");
+        else dot.removeAttribute("aria-current");
+      });
+      if (announce)
+        status.textContent = `${current + 1} de ${slides.length}: ${slides[current].dataset.slideLabel}.`;
+    }
+
+    testimonial
+      .querySelector("[data-testimonial-prev]")
+      .addEventListener("click", () => showSlide(current - 1));
+    testimonial
+      .querySelector("[data-testimonial-next]")
+      .addEventListener("click", () => showSlide(current + 1));
+    dots.forEach((dot, index) =>
+      dot.addEventListener("click", () => showSlide(index)),
+    );
+    testimonial.addEventListener("keydown", (event) => {
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      const target = {
+        ArrowLeft: current - 1,
+        ArrowRight: current + 1,
+        Home: 0,
+        End: slides.length - 1,
+      }[event.key];
+      if (target === undefined) return;
+      event.preventDefault();
+      showSlide(target);
+    });
+    stage.addEventListener(
+      "touchstart",
+      (event) => {
+        touch =
+          event.touches.length === 1
+            ? { x: event.touches[0].clientX, y: event.touches[0].clientY }
+            : null;
+      },
+      { passive: true },
+    );
+    stage.addEventListener(
+      "touchend",
+      (event) => {
+        if (!touch || !event.changedTouches.length) return;
+        const dx = event.changedTouches[0].clientX - touch.x;
+        const dy = event.changedTouches[0].clientY - touch.y;
+        if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5)
+          showSlide(current + (dx < 0 ? 1 : -1));
+        touch = null;
+      },
+      { passive: true },
+    );
+    stage.addEventListener("touchcancel", () => {
+      touch = null;
+    });
+    showSlide(0, false);
+    testimonial.querySelector("[data-testimonial-controls]").hidden = false;
+  }
+
   const process = document.querySelector(".process-section");
   if (process) {
     const items = [...process.querySelectorAll(".process-list li")];

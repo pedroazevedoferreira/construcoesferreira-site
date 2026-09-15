@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 250" fill="none" stroke="#000" stroke-linecap="square" stroke-linejoin="miter">
+  <title>Detalhe construtivo decorativo, sem escala</title>
+  <g stroke-width=".8" opacity=".5" stroke-dasharray="5 8">
+    <path d="M35 117h419M139 27v196M281 27v196M35 187h419"/>
+  </g>
+  <g stroke-width="1.4">
+    <path d="M89 80h298v14H89zM131 94v85h16V94M272 94v85h16V94M110 179h58v17h-58zM251 179h58v17h-58zM97 196v15h84v-15M238 196v15h84v-15M61 213h352"/>
+    <path d="M123 94v23h32V94M264 94v23h32V94M155 110l69 69h-23l-46-46M264 110l-69 69h23l46-46"/>
+    <path d="M188 80V62h30v18M329 80V62h30v18"/>
+  </g>
+  <g stroke-width=".7" opacity=".65">
+    <path d="M89 39h298M89 27v24M387 27v24M84 44l10-10M382 44l10-10M424 80v131M412 80h24M412 211h24M419 85l10-10M419 216l10-10"/>
+    <path d="m112 186 10 10m2-17 16 17m3-17 17 17m94-10 10 10m2-17 16 17m3-17 17 17M449 46h22m-11-11v22"/>
+  </g>
+</svg>
