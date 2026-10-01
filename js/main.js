@@ -45,6 +45,30 @@
   document.querySelectorAll("[data-year]").forEach((node) => {
     node.textContent = new Date().getFullYear();
   });
+
+  // Conversion events become available as soon as GTM or Analytics provides dataLayer.
+  // The site keeps working normally when no analytics container has been configured.
+  document.querySelectorAll('a[href*="wa.me/"]').forEach((link) => {
+    link.addEventListener("click", () => {
+      window.dataLayer?.push({
+        event: link.dataset.analyticsEvent || "whatsapp_click",
+        source: window.location.pathname,
+      });
+    });
+  });
+
+  const floatingWhatsapp = document.createElement("a");
+  floatingWhatsapp.className = "floating-whatsapp";
+  floatingWhatsapp.href = "https://wa.me/5521965906030?text=Ol%C3%A1%21%20Conheci%20a%20Ferreira%20pelo%20site%20e%20gostaria%20de%20solicitar%20um%20or%C3%A7amento.";
+  floatingWhatsapp.target = "_blank";
+  floatingWhatsapp.rel = "noopener noreferrer";
+  floatingWhatsapp.dataset.analyticsEvent = "whatsapp_floating";
+  floatingWhatsapp.setAttribute("aria-label", "Falar com a Ferreira pelo WhatsApp");
+  floatingWhatsapp.innerHTML = '<span aria-hidden="true">◔</span><span>Falar com a Ferreira</span>';
+  document.body.append(floatingWhatsapp);
+  floatingWhatsapp.addEventListener("click", () => {
+    window.dataLayer?.push({ event: "whatsapp_floating", source: window.location.pathname });
+  });
   const menu = document.querySelector(".mobile-nav");
   if (menu) {
     const summary = menu.querySelector("summary");
@@ -207,6 +231,7 @@
       if (values.tipo) lines.push(`Projeto: ${values.tipo}`);
       lines.push("", values.mensagem);
       const url = `https://wa.me/5521965906030?text=${encodeURIComponent(lines.join("\n"))}`;
+      window.dataLayer?.push({ event: "quote_form_submit", source: window.location.pathname });
       fallback.href = url;
       fallback.hidden = false;
       status.textContent =

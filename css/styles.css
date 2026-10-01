@@ -2676,6 +2676,30 @@ h3 {
     font-size: 34px;
   }
 }
+
+.floating-whatsapp {
+  position: fixed;
+  z-index: 100;
+  right: 20px;
+  bottom: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 18px;
+  color: #fff;
+  background: #197a45;
+  border-radius: 999px;
+  box-shadow: 0 12px 28px rgb(0 0 0 / 24%);
+  font-size: 14px;
+  font-weight: 750;
+}
+.floating-whatsapp:hover { background: #126239; }
+.floating-whatsapp > span:first-child { font-size: 23px; line-height: 1; }
+@media (max-width: 640px) {
+  .floating-whatsapp { right: 14px; bottom: 14px; width: 52px; padding: 0; justify-content: center; }
+  .floating-whatsapp > span:last-child { display: none; }
+}
 @media (max-height: 800px) and (min-width: 641px) {
   .hero-layout {
     min-height: 0;
