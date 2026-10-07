@@ -24,6 +24,7 @@ Nao use `file://` para aprovar o visual: o navegador pode bloquear fontes locais
 
 - `index.html`: pagina inicial
 - `sobre.html`, `servicos.html`, `obras.html`, `contato.html`: paginas internas
+- `empresas.html`: pagina para empresas (atendimento corporativo), com eventos de conversao para GTM/Analytics quando houver `dataLayer`
 - `projetos/`: nove fichas de projetos e areas de atuacao, com galeria ampliavel
 - `index.html#depoimento`: avaliacao de Rafael Curvelo, com fonte no Google
 - Home: hero, experiencia, servicos, obras realizadas, como funciona, clientes, depoimentos, responsavel tecnico e chamada final
@@ -80,4 +81,4 @@ node tests/smoke.cjs "$env:TEMP/ferreira-tests/node_modules"
 
 O teste usa o Microsoft Edge instalado no Windows. Em outro ambiente, defina `BROWSER_PATH` para um Chromium instalado ou instale o navegador do Playwright. O servidor de teste e temporario, escuta somente em `127.0.0.1` e e encerrado ao terminar. Nenhuma mensagem real e enviada.
 
-O teste verifica 16 paginas, dez larguras (319 a 1920px, incluindo 375 e 430px), dois temas, links locais, imagens, acessibilidade automatizada, filtros, menu, galeria e formulario. Inclui navegacao sem JavaScript, o depoimento unico com fonte e pausa das animacoes. O conteudo de terceiros do mapa e simulado no teste automatizado; confira o carregamento real do Google Maps no navegador antes de publicar alteracoes no mapa. Isso nao substitui testes manuais com leitores de tela, dispositivos fisicos ou uma auditoria de seguranca independente.
+O teste verifica 17 paginas, dez larguras (319 a 1920px, incluindo 375 e 430px), dois temas, links locais, imagens, acessibilidade automatizada, filtros, menu, galeria e formulario. Inclui navegacao sem JavaScript, o depoimento unico com fonte e pausa das animacoes. O conteudo de terceiros do mapa e simulado no teste automatizado; confira o carregamento real do Google Maps no navegador antes de publicar alteracoes no mapa. Isso nao substitui testes manuais com leitores de tela, dispositivos fisicos ou uma auditoria de seguranca independente.

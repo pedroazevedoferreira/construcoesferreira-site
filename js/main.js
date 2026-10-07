@@ -45,6 +45,19 @@
   document.querySelectorAll("[data-year]").forEach((node) => {
     node.textContent = new Date().getFullYear();
   });
+
+  // Conversion events become available as soon as GTM or Analytics provides dataLayer.
+  // The site keeps working normally when no analytics container has been configured.
+  // One delegated listener also covers links created later (floating button, form fallback).
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest?.('a[href*="wa.me/"]');
+    if (!link) return;
+    window.dataLayer?.push({
+      event: link.dataset.analyticsEvent || "whatsapp_click",
+      source: window.location.pathname,
+    });
+  });
+
   const menu = document.querySelector(".mobile-nav");
   if (menu) {
     const summary = menu.querySelector("summary");
@@ -212,6 +225,10 @@
       lines.push("Gostaria de conversar sobre o meu projeto.");
       if (values.mensagem) lines.push("", values.mensagem);
       const url = `https://wa.me/5521965906030?text=${encodeURIComponent(lines.join("\n"))}`;
+      window.dataLayer?.push({
+        event: "quote_form_submit",
+        source: window.location.pathname,
+      });
       fallback.href = url;
       fallback.hidden = false;
       status.textContent =
@@ -681,6 +698,7 @@
   if (whatsapp) {
     // One WhatsApp shortcut, lower-right corner, on every screen size.
     float = shortcut("whatsapp-float", "Falar com a Ferreira pelo WhatsApp");
+    float.dataset.analyticsEvent = "whatsapp_floating";
     // WhatsApp glyph (Simple Icons, CC0).
     float.append(
       svgIcon(
