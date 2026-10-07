@@ -4,10 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="./js/theme-init.js"></script>
-    <title>Contato | Ferreira Projetos e Construções</title>
+    <title>Contato e Orçamento | Ferreira Projetos e Construções</title>
     <meta
       name="description"
-      content="Fale com a Ferreira sobre a sua obra, reforma ou projeto de engenharia no Rio de Janeiro."
+      content="Fale com a Ferreira pelo WhatsApp, telefone ou e-mail para conversar sobre a sua obra. Escritório na Tijuca e atendimento em todo o estado do Rio de Janeiro."
     />
     <meta name="theme-color" content="#f8f9f7" />
 
@@ -20,11 +20,11 @@
     <meta property="og:locale" content="pt_BR" />
     <meta
       property="og:title"
-      content="Contato | Ferreira Projetos e Construções"
+      content="Contato e Orçamento | Ferreira Projetos e Construções"
     />
     <meta
       property="og:description"
-      content="Fale com a Ferreira sobre a sua obra, reforma ou projeto de engenharia no Rio de Janeiro."
+      content="Fale com a Ferreira pelo WhatsApp, telefone ou e-mail para conversar sobre a sua obra. Escritório na Tijuca e atendimento em todo o estado do Rio de Janeiro."
     />
     <meta
       property="og:url"
@@ -62,6 +62,63 @@
       crossorigin
     />
     <link rel="stylesheet" href="./css/styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "GeneralContractor",
+        "@id": "https://www.construcoesferreira.com.br/#empresa",
+        "name": "Ferreira Projetos e Construções",
+        "legalName": "Ferreira Projetos e Construções LTDA",
+        "url": "https://www.construcoesferreira.com.br/",
+        "logo": "https://www.construcoesferreira.com.br/assets/images/brand-cube.png",
+        "image": "https://www.construcoesferreira.com.br/assets/images/otimizada-sandro-obra.webp",
+        "description": "Empresa de engenharia civil: projetos, construções, reformas e gerenciamento de obras em todo o estado do Rio de Janeiro.",
+        "telephone": "+55 21 96590-6030",
+        "email": "ferreira@construcoesferreira.com.br",
+        "foundingDate": "2019",
+        "taxID": "34.424.284/0001-65",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Rua Engenheiro Enaldo Cravo Peixoto, 155, Tijuca",
+          "addressLocality": "Rio de Janeiro",
+          "addressRegion": "RJ",
+          "postalCode": "20540-106",
+          "addressCountry": "BR"
+        },
+        "areaServed": {
+          "@type": "State",
+          "name": "Rio de Janeiro"
+        },
+        "employee": {
+          "@type": "Person",
+          "name": "Sandro Ferreira",
+          "jobTitle": "Engenheiro civil e responsável técnico"
+        },
+        "sameAs": [
+          "https://www.instagram.com/f.p.c_construtora/"
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Início",
+            "item": "https://www.construcoesferreira.com.br/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Contato",
+            "item": "https://www.construcoesferreira.com.br/contato.html"
+          }
+        ]
+      }
+    </script>
   </head>
   <body class="">
     <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
@@ -80,7 +137,7 @@
         <nav class="desktop-nav" aria-label="Navegação principal">
           <a href="./obras.html">Obras</a><a href="./servicos.html">Serviços</a
           ><a href="./sobre.html">Empresa</a
-          ><a href="./index.html#depoimento">Depoimento</a
+          ><a href="./index.html#depoimento">Depoimentos</a
           ><a href="./contato.html" aria-current="page">Contato</a>
         </nav>
         <div class="header-actions">
@@ -244,7 +301,7 @@
                   <path d="M7 7h10v10" />
                   <path d="M7 17 17 7" /></svg></a
               ><a href="./index.html#depoimento"
-                ><span class="menu-index">04</span>Depoimento<svg
+                ><span class="menu-index">04</span>Depoimentos<svg
                   aria-hidden="true"
                   focusable="false"
                   class="icon"
@@ -324,7 +381,7 @@
             href="https://wa.me/5521965906030?text=Ol%C3%A1%2C%20gostaria%20de%20solicitar%20um%20or%C3%A7amento."
             target="_blank"
             rel="noopener noreferrer"
-            >Solicitar orçamento<svg
+            >Falar com a Ferreira pelo WhatsApp<svg
               aria-hidden="true"
               focusable="false"
               class="icon"
@@ -520,7 +577,7 @@
               /><span class="field-error" id="nome-error"></span>
             </div>
             <div class="form-field">
-              <label for="local">Bairro ou cidade</label
+              <label for="local">Cidade ou bairro</label
               ><input
                 id="local"
                 name="local"
@@ -535,24 +592,32 @@
               <label for="tipo">Tipo de projeto</label
               ><select id="tipo" name="tipo">
                 <option value="">Selecione</option>
-                <option>Reforma</option>
                 <option>Construção</option>
-                <option>Projeto de engenharia</option>
-                <option>Reforço estrutural</option>
+                <option>Reforma</option>
+                <option>Projeto</option>
                 <option>Gerenciamento</option>
                 <option>Infraestrutura</option>
-                <option>Acessibilidade</option>
                 <option>Outro</option>
               </select>
             </div>
+            <div class="form-field">
+              <label for="prazo">Quando pretende começar?</label
+              ><select id="prazo" name="prazo">
+                <option value="">Selecione</option>
+                <option>O quanto antes</option>
+                <option>1–3 meses</option>
+                <option>3–6 meses</option>
+                <option>Ainda estou pesquisando</option>
+              </select>
+            </div>
             <div class="form-field form-full">
-              <label for="mensagem">O que você tem em mente?</label
+              <label for="mensagem"
+                >Conte um pouco sobre seu projeto
+                <span class="optional">(opcional)</span></label
               ><textarea
                 id="mensagem"
                 name="mensagem"
                 rows="4"
-                required
-                minlength="10"
                 maxlength="2000"
                 aria-describedby="mensagem-error"
               ></textarea
@@ -560,7 +625,7 @@
             </div>
             <div class="form-full">
               <button class="button button-primary" type="submit">
-                Continuar no WhatsApp<svg
+                Falar com a Ferreira pelo WhatsApp<svg
                   aria-hidden="true"
                   focusable="false"
                   class="icon"
@@ -579,8 +644,9 @@
                 </svg>
               </button>
               <p class="form-note">
-                A mensagem abre no WhatsApp. Você revisa e confirma o envio por
-                lá. Nada é publicado automaticamente.
+                Nada é enviado pelo site: a mensagem abre no WhatsApp com essas
+                informações, e você revisa antes de enviar. Não pedimos
+                documentos nem dados financeiros.
                 <a href="./privacidade.html">Privacidade</a>
               </p>
               <p class="form-status" role="status" aria-live="polite"></p>
@@ -643,6 +709,28 @@
             </a>
           </div>
           <div class="contact-map">
+            <div class="map-placeholder" aria-hidden="true">
+              <svg
+                class="icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+                />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              <strong>Rua Engenheiro Enaldo Cravo Peixoto, 155</strong>
+              <span>Tijuca, Rio de Janeiro · CEP 20540-106</span>
+              <small>Carregando o mapa. Se ele não aparecer, use “Como chegar”.</small>
+            </div>
             <iframe
               src="https://maps.google.com/maps?q=Rua+Engenheiro+Enaldo+Cravo+Peixoto,+155,+Tijuca,+Rio+de+Janeiro&amp;output=embed&amp;z=16"
               title="Localização da Ferreira: Rua Engenheiro Enaldo Cravo Peixoto, 155, Tijuca, Rio de Janeiro"
@@ -658,9 +746,109 @@
         <div class="section-shell faq-layout">
           <div data-architecture="planta">
             <p class="eyebrow">DÚVIDAS FREQUENTES</p>
-            <h2>Antes de<br />começar.</h2>
+            <h2>Antes de <br />começar</h2>
           </div>
           <div class="faq-list">
+            <details>
+              <summary>
+                Quem é o responsável técnico pela obra?<svg
+                  aria-hidden="true"
+                  focusable="false"
+                  class="icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="M12 5v14" />
+                </svg>
+              </summary>
+              <p>
+                Sandro Ferreira, engenheiro civil com mais de 25 anos de experiência.
+                Ele acompanha as decisões do projeto à execução.
+              </p>
+            </details>
+            <details>
+              <summary>
+                Preciso ter um projeto pronto para pedir orçamento?<svg
+                  aria-hidden="true"
+                  focusable="false"
+                  class="icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="M12 5v14" />
+                </svg>
+              </summary>
+              <p>
+                Não. Você pode começar contando a sua ideia. A conversa inicial ajuda
+                a definir o que é preciso, inclusive se há necessidade de projeto.
+              </p>
+            </details>
+            <details>
+              <summary>
+                Vou conseguir falar com alguém durante a obra?<svg
+                  aria-hidden="true"
+                  focusable="false"
+                  class="icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="M12 5v14" />
+                </svg>
+              </summary>
+              <p>
+                Sim. O contato é direto com a Ferreira, pelo WhatsApp, telefone ou
+                e-mail.
+              </p>
+            </details>
+            <details>
+              <summary>
+                O que está incluído no orçamento?<svg
+                  aria-hidden="true"
+                  focusable="false"
+                  class="icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="M12 5v14" />
+                </svg>
+              </summary>
+              <p>
+                A proposta descreve os serviços, o prazo e o valor definidos para o seu
+                escopo.
+              </p>
+            </details>
             <details>
               <summary>
                 Vocês atendem a minha região?<svg
@@ -805,14 +993,14 @@
               ></a
             >
             <p class="footer-tagline">
-              Engenharia ao seu alcance.<br />Em todo o Rio de Janeiro.
+              Engenharia ao seu alcance.<br />Atendimento em todo o estado do Rio de Janeiro.
             </p>
           </div>
           <nav class="footer-nav" aria-label="Navegação do rodapé">
             <a href="./obras.html">Obras</a
             ><a href="./servicos.html">Serviços</a
             ><a href="./sobre.html">Empresa</a
-            ><a href="./index.html#depoimento">Depoimento</a
+            ><a href="./index.html#depoimento">Depoimentos</a
             ><a href="./contato.html">Contato</a>
           </nav>
           <div class="footer-contact">
@@ -835,6 +1023,26 @@
                   d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"
                 /></svg
               ><span>(21) 96590-6030</span></a
+            ><a
+              href="https://wa.me/5521965906030?text=Ol%C3%A1%2C%20Ferreira!%20Gostaria%20de%20conversar%20sobre%20um%20projeto."
+              target="_blank"
+              rel="noopener noreferrer"
+              ><svg
+                aria-hidden="true"
+                focusable="false"
+                class="icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg
+              ><span>WhatsApp</span></a
             ><a href="mailto:ferreira@construcoesferreira.com.br"
               ><svg
                 aria-hidden="true"
@@ -857,7 +1065,7 @@
               href="https://www.instagram.com/f.p.c_construtora/"
               target="_blank"
               rel="noopener noreferrer"
-              >Instagram<svg
+              ><svg
                 aria-hidden="true"
                 focusable="false"
                 class="icon"
@@ -871,9 +1079,35 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
               >
-                <path d="M7 7h10v10" />
-                <path d="M7 17 17 7" /></svg
-            ></a>
+                <path
+                  d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"
+                />
+                <circle cx="12" cy="13" r="3" /></svg
+              ><span>@f.p.c_construtora</span></a
+            ><a
+              href="https://www.google.com/maps/search/?api=1&amp;query=Rua+Engenheiro+Enaldo+Cravo+Peixoto+155+Tijuca+Rio+de+Janeiro"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><svg
+                aria-hidden="true"
+                focusable="false"
+                class="icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+                />
+                <circle cx="12" cy="10" r="3" /></svg
+              ><span>Rua Eng. Enaldo Cravo Peixoto, 155 · Tijuca, Rio de Janeiro</span></a
+            >
           </div>
         </div>
         <div class="footer-bottom">

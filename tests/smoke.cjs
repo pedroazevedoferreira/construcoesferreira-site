@@ -172,11 +172,39 @@ async function checkArtwork(page) {
         }
       }
     }
+    // Construction line drawings beside headings: decorative, never over text.
+    for (const art of document.querySelectorAll(".site-art")) {
+      const style = getComputedStyle(art);
+      if (art.getAttribute("aria-hidden") !== "true")
+        failures.push("unlabelled construction drawing");
+      if (style.display === "none") continue;
+      if (innerWidth < 1024) failures.push("construction drawing on a compact layout");
+      if (style.pointerEvents !== "none") failures.push("interactive construction drawing");
+      const box = art.getBoundingClientRect();
+      const walker = document.createTreeWalker(
+        art.closest("section"),
+        NodeFilter.SHOW_TEXT,
+      );
+      let text;
+      while ((text = walker.nextNode())) {
+        if (!text.textContent.trim() || art.contains(text)) continue;
+        const range = document.createRange();
+        range.selectNodeContents(text);
+        if (
+          [...range.getClientRects()].some(
+            (rect) => rect.width && rect.height && intersects(box, rect),
+          )
+        )
+          failures.push(
+            `construction drawing overlaps ${text.textContent.trim().slice(0, 45)}`,
+          );
+      }
+    }
     // Removing every decorative layer must leave content geometry unchanged.
     const geometry = () =>
       [
         ...document.querySelectorAll(
-          "main > section, .page-heading > .section-shell, .testimonial-heading, .testimonial-carousel, .values-layout, .faq-layout",
+          "main > section, .page-heading > .section-shell, .testimonial-heading, .testimonial-feature, .values-layout, .faq-layout",
         ),
       ].map((node) => {
         const { x, y, width, height } = node.getBoundingClientRect();
@@ -196,7 +224,10 @@ async function checkArtwork(page) {
     const blueprint = document.querySelector(".testimonial-blueprint");
     const wasHidden = blueprint?.hidden;
     if (blueprint) blueprint.hidden = true;
+    const arts = [...document.querySelectorAll(".site-art")];
+    arts.forEach((art) => art.setAttribute("hidden", ""));
     const withoutArtwork = geometry();
+    arts.forEach((art) => art.removeAttribute("hidden"));
     attributes.forEach(({ node, name, value }) =>
       node.setAttribute(name, value),
     );
@@ -245,7 +276,7 @@ async function main() {
     const records = [];
     for (const theme of ["light", "dark"]) {
       await page.emulateMedia({ colorScheme: theme });
-      for (const width of [319, 320, 390, 640, 768, 1024, 1440, 1920]) {
+      for (const width of [319, 320, 375, 390, 430, 640, 768, 1024, 1440, 1920]) {
         await page.setViewportSize({ width, height: width < 700 ? 844 : 1000 });
         for (const file of files) {
           await page.goto(base + file);
@@ -441,7 +472,8 @@ async function main() {
     await page.goto(base);
     assert.equal(await page.locator(".project-card:visible").count(), 3);
     await page.locator("[data-show-more]").click();
-    assert.equal(await page.locator(".project-card:visible").count(), 9);
+    // The home lists completed works only; areas of practice live on Obras.
+    assert.equal(await page.locator(".project-card:visible").count(), 7);
     await page.locator("[data-show-more]").click();
     assert.equal(await page.locator(".project-card:visible").count(), 3);
     const collapsedButton = await page
@@ -459,7 +491,7 @@ async function main() {
     );
     await page.setViewportSize({ width: 390, height: 844 });
     await page.locator("[data-filter-select]").selectOption("infraestrutura");
-    assert.equal(await page.locator(".project-card:visible").count(), 2);
+    assert.equal(await page.locator(".project-card:visible").count(), 1);
     await page.locator(".mobile-nav summary").click();
     await page.keyboard.press("Escape");
     assert.equal(await page.locator(".mobile-nav").getAttribute("open"), null);
@@ -513,44 +545,10 @@ async function main() {
       await page.locator(".client-quote a").getAttribute("href"),
       "https://www.google.com/maps/contrib/106638283638179285536/reviews?hl=pt-BR",
     );
-    assert.equal(await page.locator("[data-testimonial-slide]").count(), 3);
-    assert.equal(await page.locator("[data-placeholder]").count(), 2);
-    assert.equal(
-      await page
-        .locator(
-          "[data-placeholder] .review-stars, [data-placeholder] a, [data-placeholder] blockquote",
-        )
-        .count(),
-      0,
-    );
-    for (const placeholder of await page.locator("[data-placeholder]").all())
-      assert.ok(
-        (await placeholder.textContent()).includes("Conteúdo demonstrativo"),
-      );
-    const activeSlide = () =>
-      page.locator('[data-testimonial-slide][data-position="active"]');
-    const activeDot = () =>
-      page.locator('[data-testimonial-dot][aria-current="true"]');
-    const initialHeight = (
-      await page.locator(".testimonial-stage").boundingBox()
-    ).height;
-    await page.locator("[data-testimonial-next]").click();
-    assert.equal(await activeSlide().getAttribute("data-placeholder"), "");
-    assert.ok(
-      (await activeDot().getAttribute("aria-label")).startsWith("2 de 3"),
-    );
-    assert.equal(
-      await page.locator(".client-quote").evaluate((node) => node.inert),
-      true,
-    );
-    assert.equal(
-      await page.locator(".client-quote").getAttribute("aria-hidden"),
-      "true",
-    );
-    assert.equal(
-      (await page.locator(".testimonial-stage").boundingBox()).height,
-      initialHeight,
-    );
+    // A single real review is shown on its own: no carousel, no empty cards.
+    assert.equal(await page.locator("[data-testimonial-slide]").count(), 0);
+    assert.equal(await page.locator("[data-placeholder]").count(), 0);
+    assert.equal(await page.locator("[data-testimonial-controls]").count(), 0);
     for (const width of [390, 1440]) {
       await page.setViewportSize({ width, height: 900 });
       for (const colorScheme of ["light", "dark"]) {
@@ -565,86 +563,11 @@ async function main() {
         assert.deepEqual(
           audit.violations,
           [],
-          `placeholder slide ${width} ${colorScheme}`,
+          `testimonial ${width} ${colorScheme}`,
         );
         report.accessibilityAudits++;
       }
     }
-    await page.locator("[data-testimonial-next]").click();
-    assert.ok(
-      (await activeDot().getAttribute("aria-label")).startsWith("3 de 3"),
-    );
-    await page.locator("[data-testimonial-next]").click();
-    assert.ok(
-      (await activeSlide().getAttribute("class")).includes("client-quote"),
-    );
-    await page.locator("[data-testimonial-prev]").click();
-    assert.ok(
-      (await activeDot().getAttribute("aria-label")).startsWith("3 de 3"),
-    );
-    await page.locator("[data-testimonial-dot]").first().click();
-    await page.locator(".client-quote a").focus();
-    await page.keyboard.press("ArrowRight");
-    assert.equal(
-      await page
-        .locator("[data-testimonial-dot]")
-        .nth(1)
-        .evaluate((node) => node === document.activeElement),
-      true,
-    );
-    await page.keyboard.press("End");
-    assert.ok(
-      (await activeDot().getAttribute("aria-label")).startsWith("3 de 3"),
-    );
-    await page.keyboard.press("Home");
-    assert.ok(
-      (await activeDot().getAttribute("aria-label")).startsWith("1 de 3"),
-    );
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.locator(".testimonial-stage").evaluate((node) => {
-      const touch = (x, y) =>
-        new Touch({ identifier: 1, target: node, clientX: x, clientY: y });
-      node.dispatchEvent(
-        new TouchEvent("touchstart", {
-          touches: [touch(290, 200)],
-          bubbles: true,
-        }),
-      );
-      node.dispatchEvent(
-        new TouchEvent("touchend", {
-          changedTouches: [touch(100, 205)],
-          bubbles: true,
-        }),
-      );
-    });
-    assert.ok(
-      (await activeDot().getAttribute("aria-label")).startsWith("2 de 3"),
-    );
-    await page.locator(".testimonial-stage").evaluate((node) => {
-      const touch = (x, y) =>
-        new Touch({ identifier: 1, target: node, clientX: x, clientY: y });
-      node.dispatchEvent(
-        new TouchEvent("touchstart", {
-          touches: [touch(200, 100)],
-          bubbles: true,
-        }),
-      );
-      node.dispatchEvent(
-        new TouchEvent("touchend", {
-          changedTouches: [touch(195, 300)],
-          bubbles: true,
-        }),
-      );
-    });
-    assert.ok(
-      (await activeDot().getAttribute("aria-label")).startsWith("2 de 3"),
-    );
-    assert.equal(
-      await activeSlide().evaluate(
-        (node) => getComputedStyle(node).transitionDuration,
-      ),
-      "0s",
-    );
     for (const oldPath of ["avaliacoes.html", "avaliacoes", "avaliacoes/"]) {
       const response = await context.request.get(base + oldPath, {
         maxRedirects: 0,
@@ -656,7 +579,7 @@ async function main() {
     assert.equal(new URL(page.url()).hash, "#depoimento");
     assert.equal(await page.locator(".client-quote").count(), 1);
     report.interactions.push(
-      "testimonial carousel: real quote, disclosed placeholders, arrows, dots, keyboard, touch, stable height, reduced motion and legacy redirects",
+      "testimonial: single real quote with source, no placeholders, both themes and legacy redirects",
     );
 
     {
@@ -684,6 +607,11 @@ async function main() {
       assert.ok(
         prepared.searchParams.get("text").includes("Teste & Validação"),
       );
+      assert.ok(
+        prepared.searchParams
+          .get("text")
+          .startsWith("Olá, Ferreira! Meu nome é Teste & Validação."),
+      );
       await page.locator("#mensagem").fill("Atualizacao da mensagem de teste.");
       assert.equal(
         await page.locator(".message-fallback").getAttribute("href"),
@@ -693,33 +621,38 @@ async function main() {
     report.interactions.push(
       "contact validation, safe encoding, popup fallback",
     );
-    await page.goto(base + "servicos.html");
-    await page.emulateMedia({ reducedMotion: "no-preference" });
-    await page.locator(".process-list").scrollIntoViewIfNeeded();
-    const first = await page
-      .locator(".process-list li.is-active .process-number")
-      .innerText();
-    await page.waitForFunction(
-      (first) =>
-        document.querySelector(".process-list li.is-active .process-number")
-          .textContent !== first,
-      first,
-    );
-    await page.locator(".process-toggle").click();
-    const paused = await page
-      .locator(".process-list li.is-active .process-number")
-      .innerText();
-    await new Promise((resolve) => setTimeout(resolve, 2200));
-    assert.equal(
-      await page
-        .locator(".process-list li.is-active .process-number")
-        .innerText(),
-      paused,
-    );
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.locator(".process-toggle").waitFor({ state: "hidden" });
-    assert.equal(await page.locator(".process-list li.is-active").count(), 0);
-    report.interactions.push("process animation, pause and reduced motion");
+    // "Como funciona" draws once when it comes into view; with reduced motion
+    // the finished state is shown straight away.
+    for (const file of ["index.html", "servicos.html"]) {
+      await page.emulateMedia({ reducedMotion: "no-preference" });
+      await page.goto(base + file);
+      assert.equal(
+        await page.locator(".process-list").evaluate((list) =>
+          getComputedStyle(list.querySelector("h3")).opacity,
+        ),
+        "0",
+      );
+      await page.locator(".process-list").scrollIntoViewIfNeeded();
+      await page.waitForFunction(() =>
+        document.querySelector(".process-list.is-drawn"),
+      );
+      await page.waitForFunction(
+        () =>
+          getComputedStyle(
+            document.querySelector(".process-list li:last-child h3"),
+          ).opacity === "1",
+      );
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.goto(base + file);
+      assert.equal(
+        await page
+          .locator(".process-list li:last-child h3")
+          .evaluate((node) => getComputedStyle(node).opacity),
+        "1",
+      );
+    }
+    assert.equal(await page.locator(".process-toggle").count(), 0);
+    report.interactions.push("process steps draw once; finished state with reduced motion");
 
     const nojs = await browser.newContext({
       javaScriptEnabled: false,
@@ -737,7 +670,7 @@ async function main() {
       await staticPage.locator("[data-placeholder]:visible").count(),
       0,
     );
-    assert.equal(await staticPage.locator(".project-card:visible").count(), 9);
+    assert.equal(await staticPage.locator(".project-card:visible").count(), 7);
     await staticPage.locator(".mobile-nav summary").click();
     assert.equal(await staticPage.locator(".mobile-nav nav").isVisible(), true);
     await staticPage.goto(base + "contato.html");

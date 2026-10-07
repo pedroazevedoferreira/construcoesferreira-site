@@ -4,10 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="./js/theme-init.js"></script>
-    <title>Obras | Ferreira Projetos e Construções</title>
+    <title>Obras e Projetos de Engenharia | Ferreira Projetos e Construções</title>
     <meta
       name="description"
-      content="Conheça obras, serviços executados e áreas de atuação da Ferreira Projetos e Construções."
+      content="Obras realizadas pela Ferreira no Rio de Janeiro, como reforço estrutural, reformas corporativas e acessibilidade, e as áreas em que atuamos."
     />
     <meta name="theme-color" content="#f8f9f7" />
 
@@ -20,11 +20,11 @@
     <meta property="og:locale" content="pt_BR" />
     <meta
       property="og:title"
-      content="Obras | Ferreira Projetos e Construções"
+      content="Obras e Projetos de Engenharia | Ferreira Projetos e Construções"
     />
     <meta
       property="og:description"
-      content="Conheça obras, serviços executados e áreas de atuação da Ferreira Projetos e Construções."
+      content="Obras realizadas pela Ferreira no Rio de Janeiro, como reforço estrutural, reformas corporativas e acessibilidade, e as áreas em que atuamos."
     />
     <meta
       property="og:url"
@@ -62,6 +62,26 @@
       crossorigin
     />
     <link rel="stylesheet" href="./css/styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Início",
+            "item": "https://www.construcoesferreira.com.br/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Obras",
+            "item": "https://www.construcoesferreira.com.br/obras.html"
+          }
+        ]
+      }
+    </script>
   </head>
   <body class="">
     <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
@@ -81,7 +101,7 @@
           <a href="./obras.html" aria-current="page">Obras</a
           ><a href="./servicos.html">Serviços</a
           ><a href="./sobre.html">Empresa</a
-          ><a href="./index.html#depoimento">Depoimento</a
+          ><a href="./index.html#depoimento">Depoimentos</a
           ><a href="./contato.html">Contato</a>
         </nav>
         <div class="header-actions">
@@ -245,7 +265,7 @@
                   <path d="M7 7h10v10" />
                   <path d="M7 17 17 7" /></svg></a
               ><a href="./index.html#depoimento"
-                ><span class="menu-index">04</span>Depoimento<svg
+                ><span class="menu-index">04</span>Depoimentos<svg
                   aria-hidden="true"
                   focusable="false"
                   class="icon"
@@ -310,14 +330,28 @@
       <section class="page-heading" data-architecture="planta">
         <div class="section-shell">
           <p class="eyebrow">PORTFÓLIO</p>
-          <h1>Obras e projetos.</h1>
+          <h1>Obras e projetos</h1>
           <p class="page-description">
-            Diferentes espaços. O mesmo compromisso com a execução.
+            Obras realizadas pela Ferreira e áreas em que atuamos no Rio de Janeiro.
           </p>
         </div>
       </section>
-      <section class="portfolio-section" data-filter-scope>
+      <section
+        class="portfolio-section"
+        id="obras-realizadas"
+        data-filter-scope
+      >
         <div class="section-shell">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">OBRAS REALIZADAS</p>
+              <h2>Trabalhos executados<br />pela Ferreira</h2>
+            </div>
+            <p class="section-aside">
+              Quando ainda não há foto da obra, a imagem é ilustrativa e está
+              identificada no card.
+            </p>
+          </div>
           <div class="project-toolbar">
             <div
               class="project-filters"
@@ -339,13 +373,6 @@
                 aria-controls="project-grid"
               >
                 Corporativo</button
-              ><button
-                type="button"
-                data-filter="residencial"
-                aria-pressed="false"
-                aria-controls="project-grid"
-              >
-                Residencial</button
               ><button
                 type="button"
                 data-filter="estruturas"
@@ -372,9 +399,8 @@
             <label class="project-select" hidden
               ><span class="sr-only">Tipo de projeto</span
               ><select data-filter-select aria-controls="project-grid">
-                <option value="all">Todos os projetos</option>
+                <option value="all">Todas as obras</option>
                 <option value="corporativo">Corporativo</option>
-                <option value="residencial">Residencial</option>
                 <option value="estruturas">Estruturas</option>
                 <option value="infraestrutura">Infraestrutura</option>
                 <option value="acessibilidade">Acessibilidade</option>
@@ -388,6 +414,180 @@
             ></p>
           </div>
           <div class="project-grid" id="project-grid">
+            <article
+              class="project-card"
+              id="projeto-otavio-kelly"
+              data-category="estruturas"
+            >
+              <a href="./projetos/otavio-kelly.html" class="project-link"
+                ><div class="project-image">
+                  <img
+                    src="./assets/images/obras/reforco-otavio-kelly.webp"
+                    alt="Registro de reforço estrutural metálico na Rua Otávio Kelly."
+                    width="1200"
+                    height="900"
+                    loading="lazy"
+                    decoding="async"
+                  /><span class="project-arrow"
+                    ><svg
+                      aria-hidden="true"
+                      focusable="false"
+                      class="icon"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M7 7h10v10" />
+                      <path d="M7 17 17 7" /></svg
+                  ></span>
+                </div>
+                <div class="project-caption">
+                  <div>
+                    <p class="project-type">Reforço estrutural</p>
+                    <h3>Otávio Kelly</h3>
+                    <p class="project-place">Tijuca, Rio de Janeiro · 2021</p>
+                  </div>
+                  <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    class="icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M7 7h10v10" />
+                    <path d="M7 17 17 7" />
+                  </svg></div
+              ></a>
+            </article>
+            <article
+              class="project-card"
+              id="projeto-campo-da-areia"
+              data-category="estruturas"
+            >
+              <a href="./projetos/campo-da-areia.html" class="project-link"
+                ><div class="project-image">
+                  <img
+                    src="./assets/images/obras/reforco-campo-da-areia.webp"
+                    alt="Imóvel da obra de reforço estrutural no Campo da Areia."
+                    width="1200"
+                    height="900"
+                    loading="lazy"
+                    decoding="async"
+                  /><span class="project-arrow"
+                    ><svg
+                      aria-hidden="true"
+                      focusable="false"
+                      class="icon"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M7 7h10v10" />
+                      <path d="M7 17 17 7" /></svg
+                  ></span>
+                </div>
+                <div class="project-caption">
+                  <div>
+                    <p class="project-type">Reforço estrutural</p>
+                    <h3>Campo da Areia</h3>
+                    <p class="project-place">Pechincha, Rio de Janeiro · 2020</p>
+                  </div>
+                  <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    class="icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M7 7h10v10" />
+                    <path d="M7 17 17 7" />
+                  </svg></div
+              ></a>
+            </article>
+            <article
+              class="project-card"
+              id="projeto-clinica-labs"
+              data-category="estruturas"
+            >
+              <a href="./projetos/clinica-labs.html" class="project-link"
+                ><div class="project-image">
+                  <img
+                    src="./assets/images/obras/reforco-clinica-labs.webp"
+                    alt="Plataforma técnica na obra de reforço estrutural da Clínica LAB'S."
+                    width="1200"
+                    height="900"
+                    loading="lazy"
+                    decoding="async"
+                  /><span class="project-arrow"
+                    ><svg
+                      aria-hidden="true"
+                      focusable="false"
+                      class="icon"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M7 7h10v10" />
+                      <path d="M7 17 17 7" /></svg
+                  ></span>
+                </div>
+                <div class="project-caption">
+                  <div>
+                    <p class="project-type">Reforço estrutural</p>
+                    <h3>Clínica LAB'S</h3>
+                    <p class="project-place">Duque de Caxias, RJ · 2021</p>
+                  </div>
+                  <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    class="icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M7 7h10v10" />
+                    <path d="M7 17 17 7" />
+                  </svg></div
+              ></a>
+            </article>
             <article
               class="project-card"
               id="projeto-corporativo"
@@ -449,14 +649,14 @@
             </article>
             <article
               class="project-card"
-              id="projeto-residencial"
-              data-category="residencial"
+              id="projeto-technip"
+              data-category="corporativo"
             >
-              <a href="./projetos/residencial.html" class="project-link"
+              <a href="./projetos/technip.html" class="project-link"
                 ><div class="project-image">
                   <img
-                    src="./assets/images/ilustrativa-residencial.webp"
-                    alt="Referência ilustrativa de residência de dois pavimentos."
+                    src="./assets/images/hero-fachada.webp"
+                    alt="Referência ilustrativa de fachada corporativa."
                     width="1200"
                     height="900"
                     loading="lazy"
@@ -483,301 +683,9 @@
                 </div>
                 <div class="project-caption">
                   <div>
-                    <p class="project-type">Construção e ampliação</p>
-                    <h3>Construção residencial</h3>
-                    <p class="project-place">Área de atuação</p>
-                  </div>
-                  <svg
-                    aria-hidden="true"
-                    focusable="false"
-                    class="icon"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M7 7h10v10" />
-                    <path d="M7 17 17 7" />
-                  </svg></div
-              ></a>
-            </article>
-            <article
-              class="project-card"
-              id="projeto-otavio-kelly"
-              data-category="estruturas"
-            >
-              <a href="./projetos/otavio-kelly.html" class="project-link"
-                ><div class="project-image">
-                  <img
-                    src="./assets/images/obras/reforco-otavio-kelly.webp"
-                    alt="Registro de reforço estrutural metálico na Rua Otávio Kelly."
-                    width="1200"
-                    height="900"
-                    loading="lazy"
-                    decoding="async"
-                  /><span class="project-arrow"
-                    ><svg
-                      aria-hidden="true"
-                      focusable="false"
-                      class="icon"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M7 7h10v10" />
-                      <path d="M7 17 17 7" /></svg
-                  ></span>
-                </div>
-                <div class="project-caption">
-                  <div>
-                    <p class="project-type">Reforço estrutural</p>
-                    <h3>Otávio Kelly</h3>
-                    <p class="project-place">Tijuca, Rio de Janeiro</p>
-                  </div>
-                  <svg
-                    aria-hidden="true"
-                    focusable="false"
-                    class="icon"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M7 7h10v10" />
-                    <path d="M7 17 17 7" />
-                  </svg></div
-              ></a>
-            </article>
-            <article
-              class="project-card"
-              id="projeto-campo-da-areia"
-              data-category="estruturas"
-            >
-              <a href="./projetos/campo-da-areia.html" class="project-link"
-                ><div class="project-image">
-                  <img
-                    src="./assets/images/obras/reforco-campo-da-areia.webp"
-                    alt="Imóvel da obra de reforço estrutural no Campo da Areia."
-                    width="1200"
-                    height="900"
-                    loading="lazy"
-                    decoding="async"
-                  /><span class="project-arrow"
-                    ><svg
-                      aria-hidden="true"
-                      focusable="false"
-                      class="icon"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M7 7h10v10" />
-                      <path d="M7 17 17 7" /></svg
-                  ></span>
-                </div>
-                <div class="project-caption">
-                  <div>
-                    <p class="project-type">Reforço estrutural</p>
-                    <h3>Campo da Areia</h3>
-                    <p class="project-place">Pechincha, Rio de Janeiro</p>
-                  </div>
-                  <svg
-                    aria-hidden="true"
-                    focusable="false"
-                    class="icon"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M7 7h10v10" />
-                    <path d="M7 17 17 7" />
-                  </svg></div
-              ></a>
-            </article>
-            <article
-              class="project-card"
-              id="projeto-clinica-labs"
-              data-category="estruturas"
-            >
-              <a href="./projetos/clinica-labs.html" class="project-link"
-                ><div class="project-image">
-                  <img
-                    src="./assets/images/obras/reforco-clinica-labs.webp"
-                    alt="Plataforma técnica na obra de reforço estrutural da Clínica LAB'S."
-                    width="1200"
-                    height="900"
-                    loading="lazy"
-                    decoding="async"
-                  /><span class="project-arrow"
-                    ><svg
-                      aria-hidden="true"
-                      focusable="false"
-                      class="icon"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M7 7h10v10" />
-                      <path d="M7 17 17 7" /></svg
-                  ></span>
-                </div>
-                <div class="project-caption">
-                  <div>
-                    <p class="project-type">Reforço estrutural</p>
-                    <h3>Clínica LAB'S</h3>
-                    <p class="project-place">Duque de Caxias, RJ</p>
-                  </div>
-                  <svg
-                    aria-hidden="true"
-                    focusable="false"
-                    class="icon"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M7 7h10v10" />
-                    <path d="M7 17 17 7" />
-                  </svg></div
-              ></a>
-            </article>
-            <article
-              class="project-card"
-              id="projeto-salas-tecnicas"
-              data-category="infraestrutura"
-            >
-              <a href="./projetos/salas-tecnicas.html" class="project-link"
-                ><div class="project-image">
-                  <img
-                    src="./assets/images/otimizada-cpd.webp"
-                    alt="Referência de sala técnica com equipamentos."
-                    width="1200"
-                    height="900"
-                    loading="lazy"
-                    decoding="async"
-                  /><span class="image-label">Imagem ilustrativa</span
-                  ><span class="project-arrow"
-                    ><svg
-                      aria-hidden="true"
-                      focusable="false"
-                      class="icon"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M7 7h10v10" />
-                      <path d="M7 17 17 7" /></svg
-                  ></span>
-                </div>
-                <div class="project-caption">
-                  <div>
-                    <p class="project-type">Infraestrutura técnica</p>
-                    <h3>Salas técnicas e CPD</h3>
-                    <p class="project-place">Área de atuação</p>
-                  </div>
-                  <svg
-                    aria-hidden="true"
-                    focusable="false"
-                    class="icon"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M7 7h10v10" />
-                    <path d="M7 17 17 7" />
-                  </svg></div
-              ></a>
-            </article>
-            <article
-              class="project-card"
-              id="projeto-acessibilidade"
-              data-category="acessibilidade"
-            >
-              <a href="./projetos/acessibilidade.html" class="project-link"
-                ><div class="project-image">
-                  <img
-                    src="./assets/images/otimizada-acessibilidade.webp"
-                    alt="Referência de rampa e corrimão para circulação acessível."
-                    width="1200"
-                    height="900"
-                    loading="lazy"
-                    decoding="async"
-                  /><span class="image-label">Imagem ilustrativa</span
-                  ><span class="project-arrow"
-                    ><svg
-                      aria-hidden="true"
-                      focusable="false"
-                      class="icon"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M7 7h10v10" />
-                      <path d="M7 17 17 7" /></svg
-                  ></span>
-                </div>
-                <div class="project-caption">
-                  <div>
-                    <p class="project-type">Acessibilidade e circulação</p>
-                    <h3>Caminho seguro · Ipiranga</h3>
-                    <p class="project-place">São Cristóvão, Rio de Janeiro</p>
+                    <p class="project-type">Coordenação e gerenciamento</p>
+                    <h3>Edifício corporativo · Technip</h3>
+                    <p class="project-place">Glória, Rio de Janeiro</p>
                   </div>
                   <svg
                     aria-hidden="true"
@@ -859,14 +767,14 @@
             </article>
             <article
               class="project-card"
-              id="projeto-technip"
-              data-category="corporativo"
+              id="projeto-acessibilidade"
+              data-category="acessibilidade"
             >
-              <a href="./projetos/technip.html" class="project-link"
+              <a href="./projetos/acessibilidade.html" class="project-link"
                 ><div class="project-image">
                   <img
-                    src="./assets/images/hero-fachada.jpg"
-                    alt="Referência ilustrativa de fachada corporativa."
+                    src="./assets/images/otimizada-acessibilidade.webp"
+                    alt="Referência de rampa e corrimão para circulação acessível."
                     width="1200"
                     height="900"
                     loading="lazy"
@@ -893,9 +801,9 @@
                 </div>
                 <div class="project-caption">
                   <div>
-                    <p class="project-type">Coordenação e gerenciamento</p>
-                    <h3>Edifício corporativo · Technip</h3>
-                    <p class="project-place">Glória, Rio de Janeiro</p>
+                    <p class="project-type">Acessibilidade e circulação</p>
+                    <h3>Caminho seguro · Ipiranga</h3>
+                    <p class="project-place">São Cristóvão, Rio de Janeiro</p>
                   </div>
                   <svg
                     aria-hidden="true"
@@ -917,11 +825,247 @@
               ></a>
             </article>
           </div>
-          <p class="catalog-note">
-            As imagens identificadas como ilustrativas são referências visuais,
-            não registros das obras. A ficha de cada projeto informa o escopo
-            documentado.
+        </div>
+      </section>
+      <section class="areas-section section-pad" id="areas-de-atuacao">
+        <div class="section-shell">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">ÁREAS DE ATUAÇÃO</p>
+              <h2>Outros serviços<br />que oferecemos</h2>
+            </div>
+            <p class="section-aside">
+              Tipos de trabalho da Ferreira apresentados com imagens
+              ilustrativas. Não são registros de obras realizadas.
+            </p>
+
+            <svg
+              class="site-art site-art-frame"
+              aria-hidden="true"
+              focusable="false"
+              viewBox="0 0 300 160"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path class="g d0" pathLength="1" d="M8 156H292" />
+              <path class="d0" pathLength="1" d="M40 156V50M120 156V50M200 156V90M270 156V124" />
+              <path class="d1" pathLength="1" d="M40 50H120M40 90H200M40 124H270" />
+              <path class="d2" pathLength="1" d="M40 90L120 50M120 124L200 90M40 124L120 90" />
+              <path class="d3" pathLength="1" d="M200 90L270 124" />
+              <path class="g d4" pathLength="1" d="M40 28H120M40 22V34M120 22V34" />
+              <path class="g d5" pathLength="1" d="M150 28H200M200 22V34M150 22V34" />
+            </svg>
+          </div>
+          <div class="project-grid area-grid">
+            <article
+              class="project-card area-card"
+              id="area-residencial"
+              data-category="residencial"
+            >
+              <a href="./projetos/residencial.html" class="project-link"
+                ><div class="project-image">
+                  <img
+                    src="./assets/images/ilustrativa-residencial.webp"
+                    alt="Referência ilustrativa de residência de dois pavimentos."
+                    width="1200"
+                    height="900"
+                    loading="lazy"
+                    decoding="async"
+                  /><span class="image-label">Imagem ilustrativa</span
+                  ><span class="project-arrow"
+                    ><svg
+                      aria-hidden="true"
+                      focusable="false"
+                      class="icon"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M7 7h10v10" />
+                      <path d="M7 17 17 7" /></svg
+                  ></span>
+                </div>
+                <div class="project-caption">
+                  <div>
+                    <p class="project-type">Construção e ampliação</p>
+                    <h3>Construção residencial</h3>
+                    <p class="project-place">Todo o estado do Rio de Janeiro</p>
+                  </div>
+                  <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    class="icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M7 7h10v10" />
+                    <path d="M7 17 17 7" />
+                  </svg></div
+              ></a>
+            </article>
+            <article
+              class="project-card area-card"
+              id="area-salas-tecnicas"
+              data-category="infraestrutura"
+            >
+              <a href="./projetos/salas-tecnicas.html" class="project-link"
+                ><div class="project-image">
+                  <img
+                    src="./assets/images/otimizada-cpd.webp"
+                    alt="Referência de sala técnica com equipamentos."
+                    width="1200"
+                    height="900"
+                    loading="lazy"
+                    decoding="async"
+                  /><span class="image-label">Imagem ilustrativa</span
+                  ><span class="project-arrow"
+                    ><svg
+                      aria-hidden="true"
+                      focusable="false"
+                      class="icon"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M7 7h10v10" />
+                      <path d="M7 17 17 7" /></svg
+                  ></span>
+                </div>
+                <div class="project-caption">
+                  <div>
+                    <p class="project-type">Infraestrutura técnica</p>
+                    <h3>Salas técnicas e CPD</h3>
+                    <p class="project-place">Todo o estado do Rio de Janeiro</p>
+                  </div>
+                  <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    class="icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M7 7h10v10" />
+                    <path d="M7 17 17 7" />
+                  </svg></div
+              ></a>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="photo-gallery section-pad" id="galeria" data-albums>
+        <div class="section-shell">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">REGISTROS DE OBRA</p>
+              <h2>Galeria de obras</h2>
+            </div>
+            <p class="section-aside">
+              Escolha uma categoria e abra uma obra para ver todas as fotos do
+              projeto.
+            </p>
+          </div>
+          <div
+            class="album-filters"
+            role="group"
+            aria-label="Categoria das obras"
+            data-album-filters
+            hidden
+          ></div>
+          <!--
+            Cada obra é um <article class="album">. Para incluir fotos de uma
+            obra, acrescente um <li> com a <img> dentro de album-photos: a
+            primeira foto é a capa. Para uma obra nova, copie um bloco inteiro e
+            troque id, data-categoria, título, local e fotos. Categorias iguais
+            viram um filtro automaticamente. Veja IMAGENS.md.
+          -->
+          <div class="album-grid" data-album-grid>
+          <article
+            class="album"
+            id="album-otavio-kelly"
+            data-categoria="Reforço estrutural"
+          >
+            <h3 class="album-title">Otávio Kelly</h3>
+            <p class="album-meta">Reforço estrutural · Tijuca, Rio de Janeiro · 2021</p>
+            <ul class="album-photos">
+              <li>
+                <img
+                  src="./assets/images/obras/reforco-otavio-kelly.webp"
+                  alt="Registro de reforço estrutural metálico na Rua Otávio Kelly."
+                  width="1200"
+                  height="900"
+                  loading="lazy"
+                />
+              </li>
+            </ul>
+          </article>
+          <article
+            class="album"
+            id="album-campo-da-areia"
+            data-categoria="Reforço estrutural"
+          >
+            <h3 class="album-title">Campo da Areia</h3>
+            <p class="album-meta">Reforço estrutural · Pechincha, Rio de Janeiro · 2020</p>
+            <ul class="album-photos">
+              <li>
+                <img
+                  src="./assets/images/obras/reforco-campo-da-areia.webp"
+                  alt="Imóvel da obra de reforço estrutural no Campo da Areia."
+                  width="1200"
+                  height="900"
+                  loading="lazy"
+                />
+              </li>
+            </ul>
+          </article>
+          <article
+            class="album"
+            id="album-clinica-labs"
+            data-categoria="Reforço estrutural"
+          >
+            <h3 class="album-title">Clínica LAB'S</h3>
+            <p class="album-meta">Reforço estrutural · Duque de Caxias, RJ · 2021</p>
+            <ul class="album-photos">
+              <li>
+                <img
+                  src="./assets/images/obras/reforco-clinica-labs.webp"
+                  alt="Plataforma técnica na obra de reforço estrutural da Clínica LAB'S."
+                  width="1200"
+                  height="900"
+                  loading="lazy"
+                />
+              </li>
+            </ul>
+          </article>
+          </div>
+          <p class="album-empty" data-album-empty hidden>
+            Novas fotos de obras serão publicadas em breve.
           </p>
+          <p class="sr-only" role="status" aria-live="polite" data-album-status></p>
         </div>
       </section>
       <section class="trust-section">
@@ -929,92 +1073,101 @@
           <div class="section-heading">
             <div>
               <p class="eyebrow">EXPERIÊNCIA NA PRÁTICA</p>
-              <h2>Empresas e instituições<br />na nossa trajetória.</h2>
+              <h2>Empresas e instituições<br />na nossa trajetória</h2>
             </div>
             <p class="section-aside">
-              Trabalhos realizados diretamente<br />ou em parceria com empresas
+              Trabalhos realizados diretamente <br />ou em parceria com empresas
               de engenharia.
             </p>
           </div>
           <div class="logo-strip">
             <div>
               <img
-                src="./assets/images/logos/sbt-rio.png"
+                src="./assets/images/logos/clean/sbt-rio.png"
+                data-shape="square"
                 alt="TV SBT Rio"
-                width="160"
-                height="80"
+                width="130"
+                height="160"
                 loading="lazy"
               />
             </div>
             <div>
               <img
-                src="./assets/images/logos/coppetec.png"
+                src="./assets/images/logos/clean/coppetec.png"
+                data-shape="mid"
                 alt="UFRJ COPPETEC"
-                width="160"
-                height="80"
+                width="278"
+                height="160"
                 loading="lazy"
               />
             </div>
             <div>
               <img
-                src="./assets/images/logos/ipiranga.png"
+                src="./assets/images/logos/clean/ipiranga.png"
+                data-shape="wide"
                 alt="Ipiranga"
-                width="160"
-                height="80"
+                width="480"
+                height="133"
                 loading="lazy"
               />
             </div>
             <div>
               <img
-                src="./assets/images/logos/technip.png"
+                src="./assets/images/logos/clean/technip.png"
+                data-shape="wide"
                 alt="Technip Brasil"
-                width="160"
-                height="80"
+                width="194"
+                height="68"
                 loading="lazy"
               />
             </div>
             <div>
               <img
-                src="./assets/images/logos/claro.png"
+                src="./assets/images/logos/clean/claro.png"
+                data-shape="square"
                 alt="Claro"
                 width="160"
-                height="80"
+                height="160"
                 loading="lazy"
               />
             </div>
             <div>
               <img
-                src="./assets/images/logos/icl.png"
+                src="./assets/images/logos/clean/icl.png"
+                data-shape="square"
                 alt="Instituto Combustível Legal"
-                width="160"
-                height="80"
+                width="130"
+                height="160"
                 loading="lazy"
               />
             </div>
             <div>
               <img
-                src="./assets/images/logos/porto-angra.png"
+                src="./assets/images/logos/clean/porto-angra.png"
+                data-shape="mid"
                 alt="Porto de Angra"
-                width="160"
-                height="80"
+                width="235"
+                height="160"
                 loading="lazy"
               />
             </div>
             <div>
               <img
-                src="./assets/images/logos/cbkc.png"
+                src="./assets/images/logos/clean/cbkc.png"
+                data-shape="square"
                 alt="CBKC"
                 width="160"
-                height="80"
+                height="160"
                 loading="lazy"
               />
             </div>
             <div>
               <img
-                src="./assets/images/logos/oi.png"
+                src="./assets/images/logos/clean/oi.png"
+                data-shape="square"
                 alt="Oi Telecom"
-                width="160"
-                height="80"
+                width="187"
+                height="160"
                 loading="lazy"
               />
             </div>
@@ -1029,7 +1182,7 @@
           </div>
           <div>
             <p>
-              Conte o que você tem em mente.<br />A conversa começa por aqui.
+              Conte o que você tem em mente.<br />A conversa começa aqui.
             </p>
             <a
               class="button button-primary"
@@ -1072,14 +1225,14 @@
               ></a
             >
             <p class="footer-tagline">
-              Engenharia ao seu alcance.<br />Em todo o Rio de Janeiro.
+              Engenharia ao seu alcance.<br />Atendimento em todo o estado do Rio de Janeiro.
             </p>
           </div>
           <nav class="footer-nav" aria-label="Navegação do rodapé">
             <a href="./obras.html">Obras</a
             ><a href="./servicos.html">Serviços</a
             ><a href="./sobre.html">Empresa</a
-            ><a href="./index.html#depoimento">Depoimento</a
+            ><a href="./index.html#depoimento">Depoimentos</a
             ><a href="./contato.html">Contato</a>
           </nav>
           <div class="footer-contact">
@@ -1102,6 +1255,26 @@
                   d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"
                 /></svg
               ><span>(21) 96590-6030</span></a
+            ><a
+              href="https://wa.me/5521965906030?text=Ol%C3%A1%2C%20Ferreira!%20Gostaria%20de%20conversar%20sobre%20um%20projeto."
+              target="_blank"
+              rel="noopener noreferrer"
+              ><svg
+                aria-hidden="true"
+                focusable="false"
+                class="icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg
+              ><span>WhatsApp</span></a
             ><a href="mailto:ferreira@construcoesferreira.com.br"
               ><svg
                 aria-hidden="true"
@@ -1124,7 +1297,7 @@
               href="https://www.instagram.com/f.p.c_construtora/"
               target="_blank"
               rel="noopener noreferrer"
-              >Instagram<svg
+              ><svg
                 aria-hidden="true"
                 focusable="false"
                 class="icon"
@@ -1138,9 +1311,35 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
               >
-                <path d="M7 7h10v10" />
-                <path d="M7 17 17 7" /></svg
-            ></a>
+                <path
+                  d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"
+                />
+                <circle cx="12" cy="13" r="3" /></svg
+              ><span>@f.p.c_construtora</span></a
+            ><a
+              href="https://www.google.com/maps/search/?api=1&amp;query=Rua+Engenheiro+Enaldo+Cravo+Peixoto+155+Tijuca+Rio+de+Janeiro"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><svg
+                aria-hidden="true"
+                focusable="false"
+                class="icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+                />
+                <circle cx="12" cy="10" r="3" /></svg
+              ><span>Rua Eng. Enaldo Cravo Peixoto, 155 · Tijuca, Rio de Janeiro</span></a
+            >
           </div>
         </div>
         <div class="footer-bottom">
@@ -1157,6 +1356,7 @@
         </div>
       </div>
     </footer>
+
 
     <script src="./js/main.js" defer></script>
   </body>

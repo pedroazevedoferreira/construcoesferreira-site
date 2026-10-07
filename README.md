@@ -26,6 +26,8 @@ Nao use `file://` para aprovar o visual: o navegador pode bloquear fontes locais
 - `sobre.html`, `servicos.html`, `obras.html`, `contato.html`: paginas internas
 - `projetos/`: nove fichas de projetos e areas de atuacao, com galeria ampliavel
 - `index.html#depoimento`: avaliacao de Rafael Curvelo, com fonte no Google
+- Home: hero, experiencia, servicos, obras realizadas, como funciona, clientes, depoimentos, responsavel tecnico e chamada final
+- `obras.html`: obras realizadas (com filtros), areas de atuacao (imagens ilustrativas) e galeria de fotos
 - `privacidade.html`: funcionamento dos contatos e armazenamento local
 - `css/styles.css`: estilos globais e responsivos
 - `js/main.js`: comportamentos pequenos, sem bibliotecas externas
@@ -41,13 +43,13 @@ O favicon usa somente o cubo oficial, com fundo transparente e enquadramento jus
 
 ## Contato e depoimento
 
-O formulario de contato valida os campos e prepara uma mensagem para o WhatsApp. O visitante confirma o envio no proprio WhatsApp; nao existe envio de e-mail ou cadastro no servidor. Se a nova janela for bloqueada, um link permite continuar. Rascunhos nao sao salvos.
+O formulario de contato pede nome e cidade/bairro; tipo de projeto, prazo e descricao sao opcionais. Ele valida os campos e prepara uma mensagem para o WhatsApp ("Ola, Ferreira! Meu nome e...") apenas com o que o visitante digitou. O visitante confirma o envio no proprio WhatsApp; nao existe envio de e-mail ou cadastro no servidor. Se a nova janela for bloqueada, um link permite continuar. Rascunhos nao sao salvos.
 
 Ha um unico depoimento na home: Rafael Curvelo, nota individual de 5 de 5, texto e link do Google fornecidos pelo responsavel pelo site. O texto foi preservado integralmente; nao foi atribuido um resultado de verificacao automatica. O link leva ao perfil de avaliacoes do autor, nao a um identificador especifico da avaliacao. A data relativa "5 meses atras" foi omitida para nao envelhecer incorretamente.
 
-Edite o depoimento diretamente em `index.html`, na secao `#depoimento`. A nota pertence apenas a esse relato: nao e uma media da empresa nem um contador de clientes. O carrossel tem um relato real e dois espacos marcados com `data-placeholder`, visivelmente identificados como conteudo demonstrativo. Eles nao possuem notas, autores, fotos ou links que simulem avaliacoes reais. Substitua esses dois cards somente quando houver relatos reais com autoria e fonte; atualize tambem seus rotulos acessiveis e indicadores.
+Edite o depoimento diretamente em `index.html`, na secao `#depoimento`. A nota pertence apenas a esse relato: nao e uma media da empresa nem um contador de clientes.
 
-As setas, os tres indicadores, o teclado (setas, Home e End) e o gesto horizontal no celular mudam o slide. Nao ha rotacao automatica. Slides laterais sao inertes e ocultos da arvore de acessibilidade; uma regiao de status anuncia mudancas solicitadas. A altura acompanha o maior card para nao deslocar a pagina. A preferencia por movimento reduzido desativa as transicoes. Sem JavaScript, apenas o relato real e seu link permanecem visiveis, sem controles inativos.
+Com um unico relato real, a home mostra uma citacao em destaque, sem carrossel e sem cards vazios. O JavaScript e o CSS do carrossel (setas, indicadores, teclado e gesto no celular, com movimento reduzido respeitado) continuam no projeto; a marcacao anterior esta no historico do git. Restaure-a somente quando houver pelo menos dois relatos reais, com autoria e fonte.
 
 ## Seguranca e manutencao
 
@@ -78,4 +80,4 @@ node tests/smoke.cjs "$env:TEMP/ferreira-tests/node_modules"
 
 O teste usa o Microsoft Edge instalado no Windows. Em outro ambiente, defina `BROWSER_PATH` para um Chromium instalado ou instale o navegador do Playwright. O servidor de teste e temporario, escuta somente em `127.0.0.1` e e encerrado ao terminar. Nenhuma mensagem real e enviada.
 
-O teste verifica 16 paginas, oito larguras (incluindo a previa estreita de 319px), dois temas, links locais, imagens, acessibilidade automatizada, filtros, menu, galeria e formulario. Inclui navegacao sem JavaScript, o depoimento unico com fonte e pausa das animacoes. O conteudo de terceiros do mapa e simulado no teste automatizado; confira o carregamento real do Google Maps no navegador antes de publicar alteracoes no mapa. Isso nao substitui testes manuais com leitores de tela, dispositivos fisicos ou uma auditoria de seguranca independente.
+O teste verifica 16 paginas, dez larguras (319 a 1920px, incluindo 375 e 430px), dois temas, links locais, imagens, acessibilidade automatizada, filtros, menu, galeria e formulario. Inclui navegacao sem JavaScript, o depoimento unico com fonte e pausa das animacoes. O conteudo de terceiros do mapa e simulado no teste automatizado; confira o carregamento real do Google Maps no navegador antes de publicar alteracoes no mapa. Isso nao substitui testes manuais com leitores de tela, dispositivos fisicos ou uma auditoria de seguranca independente.
