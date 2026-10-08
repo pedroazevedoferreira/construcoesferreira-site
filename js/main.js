@@ -637,6 +637,55 @@
       observer.observe(target);
     });
     root.classList.add("reveal-live");
+    // Testimonial: stars light up, words arrive, key phrases get marked.
+    const review = document.querySelector(".testimonial-section");
+    const quote = review?.querySelector(".testimonial-single blockquote");
+    if (review && quote) {
+      let word = 0;
+      const wrap = (node) => {
+        [...node.childNodes].forEach((child) => {
+          if (child.nodeType === Node.ELEMENT_NODE) {
+            wrap(child);
+            if (child.classList.contains("quote-mark"))
+              child.style.setProperty(
+                "--mark-delay",
+                `${(word * 28 + 800) / 1000}s`,
+              );
+            return;
+          }
+          if (child.nodeType !== Node.TEXT_NODE || !child.textContent.trim())
+            return;
+          const parts = child.textContent.split(/(\s+)/);
+          const fragment = document.createDocumentFragment();
+          parts.forEach((part) => {
+            if (!part) return;
+            if (/^\s+$/.test(part)) {
+              fragment.append(part);
+              return;
+            }
+            const span = document.createElement("span");
+            span.className = "quote-word";
+            span.textContent = part;
+            span.style.setProperty("--w", word++);
+            fragment.append(span);
+          });
+          child.replaceWith(fragment);
+        });
+      };
+      wrap(quote);
+      review
+        .querySelectorAll(".review-stars .icon")
+        .forEach((star, index) => star.style.setProperty("--i", index));
+      new IntersectionObserver(
+        (entries, watcher) => {
+          if (!entries[0].isIntersecting) return;
+          review.classList.add("is-live");
+          watcher.disconnect();
+        },
+        { threshold: 0.35 },
+      ).observe(review);
+    }
+
     // Construction drawings beside headings trace themselves once.
     document.querySelectorAll(".site-art").forEach((art) =>
       new IntersectionObserver(
