@@ -27,8 +27,8 @@ Nao use `file://` para aprovar o visual: o navegador pode bloquear fontes locais
 - `empresas.html`: pagina para empresas (atendimento corporativo), com eventos de conversao para GTM/Analytics quando houver `dataLayer`
 - `projetos/`: nove fichas de projetos e areas de atuacao, com galeria ampliavel
 - `index.html#depoimento`: avaliacao de Rafael Curvelo, com fonte no Google
-- Home: hero, experiencia, servicos, obras realizadas, como funciona, clientes, depoimentos, responsavel tecnico e chamada final
-- `obras.html`: obras realizadas (com filtros), areas de atuacao (imagens ilustrativas) e galeria de fotos
+- Home: hero, numeros, posicionamento com os caminhos para empresas e residencial, servicos em linhas, tres cases de obras realizadas, metodo Ferreira, clientes, responsavel tecnico, depoimento e chamada final
+- `obras.html`: obras realizadas (com filtros) e galeria por obra; as areas de atuacao (imagens ilustrativas) ficam em `servicos.html#areas-de-atuacao`
 - `privacidade.html`: funcionamento dos contatos e armazenamento local
 - `css/styles.css`: estilos globais e responsivos
 - `js/main.js`: comportamentos pequenos, sem bibliotecas externas
@@ -42,9 +42,13 @@ Nao use `file://` para aprovar o visual: o navegador pode bloquear fontes locais
 
 O favicon usa somente o cubo oficial, com fundo transparente e enquadramento justo. `assets/favicon.svg` e a fonte vetorial; `assets/favicon.png` e sua renderizacao de 64px. O cabecalho usa a imagem independente `assets/images/brand-cube.png`, preservando seu enquadramento original. As referencias nas 16 paginas usam `?v=cubo-2` para renovar o cache do icone.
 
+## Identidade e metodo
+
+Assinatura: "Engenharia com presenca", no rodape, com o carimbo tecnico (quadro de identificacao de prancha). Rotulos de secao usam uma pequena marca de cota. O metodo oficial (Entendemos, Planejamos, Executamos, Entregamos) e o mesmo na home, em Servicos e em Para empresas. Laranja fica reservado a acoes e detalhes; desenhos em cinza com um unico elemento laranja.
+
 ## Contato e depoimento
 
-O formulario de contato pede nome e cidade/bairro; tipo de projeto, prazo e descricao sao opcionais. Ele valida os campos e prepara uma mensagem para o WhatsApp ("Ola, Ferreira! Meu nome e...") apenas com o que o visitante digitou. O visitante confirma o envio no proprio WhatsApp; nao existe envio de e-mail ou cadastro no servidor. Se a nova janela for bloqueada, um link permite continuar. Rascunhos nao sao salvos.
+O formulario de contato pede nome e cidade/bairro; o tipo de obra (botoes de escolha) e a descricao sao opcionais. Ele valida os campos e prepara uma mensagem para o WhatsApp ("Ola, Ferreira! Meu nome e...") apenas com o que o visitante digitou. O visitante confirma o envio no proprio WhatsApp; nao existe envio de e-mail ou cadastro no servidor. Se a nova janela for bloqueada, um link permite continuar. Rascunhos nao sao salvos.
 
 Ha um unico depoimento na home: Rafael Curvelo, nota individual de 5 de 5, texto e link do Google fornecidos pelo responsavel pelo site. O texto foi preservado integralmente; nao foi atribuido um resultado de verificacao automatica. O link leva ao perfil de avaliacoes do autor, nao a um identificador especifico da avaliacao. A data relativa "5 meses atras" foi omitida para nao envelhecer incorretamente.
 

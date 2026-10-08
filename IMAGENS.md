@@ -35,9 +35,9 @@ Nao apague imagens antigas enquanto houver referencias a elas. Nenhuma compilaca
 ## Obras realizadas x áreas de atuação
 
 - **Obras realizadas** (Obras, home e fichas com "Tipo: Obra realizada"): Otávio Kelly, Campo da Areia, Clínica LAB'S, Salas da CBKC, Technip, UFRJ COPPETEC e Caminho seguro · Ipiranga.
-- **Áreas de atuação** (seção própria em Obras, fichas com "Tipo: Área de atuação"): Construção residencial e Salas técnicas e CPD. Usam imagens ilustrativas e não representam obras executadas.
+- **Áreas de atuação** (seção "Áreas de atuação" em Serviços, fichas com "Tipo: Área de atuação"): Construção residencial e Salas técnicas e CPD. Usam imagens ilustrativas e não representam obras executadas.
 
-Ao incluir ou retirar uma obra realizada, atualize também o número "7" da faixa de experiência na home (`experience-grid`).
+Ao incluir ou retirar uma obra realizada, atualize também o número "7" da faixa de números na home (`experience-grid`). Os três cases da home (`case-list`) usam obras com foto real; troque-os quando houver casos mais fortes, sempre com fatos documentados.
 
 Não mova uma área de atuação para "Obras realizadas" sem uma obra real, com cliente, local e escopo confirmados.
 

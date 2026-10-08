@@ -469,20 +469,12 @@ async function main() {
       "architectural backgrounds fill desktop whitespace without changing geometry or overlapping content; no added mobile bands",
     );
     await page.setViewportSize({ width: 1440, height: 1000 });
+    // The home shows three documented cases; the full catalog lives on Obras.
     await page.goto(base);
-    assert.equal(await page.locator(".project-card:visible").count(), 3);
-    await page.locator("[data-show-more]").click();
-    // The home lists completed works only; areas of practice live on Obras.
+    assert.equal(await page.locator(".case").count(), 3);
+    assert.equal(await page.locator(".project-card").count(), 0);
+    await page.goto(base + "obras.html");
     assert.equal(await page.locator(".project-card:visible").count(), 7);
-    await page.locator("[data-show-more]").click();
-    assert.equal(await page.locator(".project-card:visible").count(), 3);
-    const collapsedButton = await page
-      .locator("[data-show-more]")
-      .boundingBox();
-    assert.ok(
-      collapsedButton.y > 88 &&
-        collapsedButton.y + collapsedButton.height < 1000,
-    );
     await page.locator('[data-filter="estruturas"]').click();
     assert.equal(await page.locator(".project-card:visible").count(), 3);
     assert.equal(
@@ -670,9 +662,11 @@ async function main() {
       await staticPage.locator("[data-placeholder]:visible").count(),
       0,
     );
-    assert.equal(await staticPage.locator(".project-card:visible").count(), 7);
+    assert.equal(await staticPage.locator(".case").count(), 3);
     await staticPage.locator(".mobile-nav summary").click();
     assert.equal(await staticPage.locator(".mobile-nav nav").isVisible(), true);
+    await staticPage.goto(base + "obras.html");
+    assert.equal(await staticPage.locator(".project-card:visible").count(), 7);
     await staticPage.goto(base + "contato.html");
     assert.equal(await staticPage.locator("form").isVisible(), false);
     await nojs.close();
