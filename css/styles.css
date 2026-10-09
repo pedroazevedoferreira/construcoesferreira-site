@@ -5569,3 +5569,515 @@ img[data-focus="right"] {
     display: none;
   }
 }
+
+/* ==========================================================
+   Design system · final layer
+   One grid, one type scale, one button, one card, one fact
+   sheet. Later rules here win over earlier experiments.
+   ========================================================== */
+
+:root {
+  --grid: min(1248px, calc(100% - 96px));
+  --h-section: 44px;
+  --h-band: 32px;
+  --h-sub: 28px;
+  --radius: 3px;
+}
+@media (max-width: 1180px) {
+  :root {
+    --grid: calc(100% - 64px);
+  }
+}
+@media (max-width: 900px) {
+  :root {
+    --h-section: 36px;
+    --h-band: 28px;
+    --h-sub: 25px;
+  }
+}
+@media (max-width: 640px) {
+  :root {
+    --grid: calc(100% - 40px);
+    --h-section: 30px;
+    --h-band: 24px;
+    --h-sub: 23px;
+  }
+}
+@media (max-width: 360px) {
+  :root {
+    --grid: calc(100% - 32px);
+  }
+}
+
+/* Grid: header, content and footer share the same edges. */
+.section-shell,
+.header-shell {
+  width: var(--grid);
+}
+
+/* Type scale: section titles, band titles, subsections. */
+.section-heading h2,
+.positioning-copy h2,
+.people-copy h2,
+.testimonial-heading h2,
+.related-projects h2,
+.project-story h2,
+.contact-cta h2,
+.values-layout h2,
+.faq-layout h2,
+.company-profile h2 {
+  font-size: var(--h-section);
+  line-height: 1.1;
+}
+.company-profile h2 {
+  font-size: calc(var(--h-section) * 0.82);
+}
+.trust-section h2,
+.trust-section .section-heading h2,
+.numbers-head h2,
+.contact-layout h2,
+.contact-location h2,
+.contact-location .section-heading h2 {
+  font-size: var(--h-band);
+}
+.service-detail h2 {
+  font-size: var(--h-sub);
+}
+.page-description,
+.hero-description {
+  font-size: 17px;
+}
+@media (max-width: 640px) {
+  .page-description,
+  .hero-description {
+    font-size: 16px;
+  }
+}
+
+/* Header: aligned to the grid, quiet theme switch, soft link hover. */
+.desktop-nav a {
+  color: var(--ink);
+  transition: color 0.2s;
+}
+.desktop-nav a:not([aria-current]):hover {
+  color: var(--accent);
+}
+.theme-toggle {
+  border-color: transparent;
+}
+.theme-toggle:hover {
+  border-color: var(--line);
+}
+
+/* One button. Orange, dark text, arrow; hover only shifts tone and
+   nudges the arrow. */
+.button,
+.button-primary:hover,
+.contact-cta .button:hover,
+.button:active {
+  transform: none;
+  box-shadow: none;
+}
+.button {
+  gap: 18px;
+  min-height: 52px;
+  padding: 14px 24px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 650;
+}
+.button-primary,
+.contact-cta .button {
+  background: var(--orange);
+  color: var(--on-orange);
+}
+.button-primary:hover,
+.contact-cta .button:hover {
+  background: var(--orange-hover);
+}
+.button-primary:active,
+.contact-cta .button:active {
+  background: var(--orange);
+}
+.button .icon {
+  transition: transform 0.2s ease;
+}
+.button:hover .icon {
+  transform: translate(2px, -2px);
+}
+.button:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+.header-actions > .button {
+  min-height: 44px;
+  padding: 10px 18px;
+  font-size: 13px;
+  gap: 14px;
+}
+.text-link {
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.text-link:hover {
+  color: var(--accent);
+}
+
+/* Work cards: image, category, name, place, arrow. */
+.project-image,
+.case-image,
+.album-photos img,
+.project-cover img {
+  border-radius: var(--radius);
+}
+.project-link:hover .project-image img {
+  transform: scale(1.03);
+}
+.case:hover .case-image img,
+.album.is-card:hover .album-photos img {
+  transform: scale(1.03);
+}
+.project-caption {
+  padding-top: 16px;
+}
+.project-type {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+.project-caption h3 {
+  font-size: 22px;
+  line-height: 1.2;
+}
+.project-place {
+  margin-top: 6px;
+  font-size: 14px;
+}
+.project-arrow {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius);
+}
+.project-arrow .icon {
+  transition: transform 0.25s ease;
+}
+.project-link:hover .project-arrow .icon {
+  transform: translate(2px, -2px);
+}
+
+/* Project page fact sheet: thin rules, aligned columns. */
+.project-facts > div {
+  grid-template-columns: 128px 1fr;
+  gap: 20px;
+  padding-block: 15px;
+  font-size: 15px;
+  align-items: baseline;
+}
+.project-facts > div > span {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.project-facts strong {
+  font-weight: 600;
+}
+.project-facts ul {
+  margin: 0;
+  padding-left: 18px;
+}
+.project-facts li + li {
+  margin-top: 4px;
+}
+.project-facts > div:last-of-type {
+  border-bottom: 1px solid var(--line);
+}
+@media (max-width: 640px) {
+  .project-facts > div {
+    grid-template-columns: 96px 1fr;
+    gap: 14px;
+    font-size: 14px;
+  }
+}
+
+/* Serviços: each service reads as an area of the company. */
+.service-detail-icon > span {
+  font:
+    300 44px/1 Archivo,
+    Arial,
+    sans-serif;
+  color: var(--numeral);
+}
+.service-detail h2 {
+  transition: color 0.2s;
+}
+.service-detail:hover h2 {
+  color: var(--accent);
+}
+.service-detail:hover .service-detail-icon > span {
+  color: var(--orange);
+}
+.service-detail-icon > span {
+  transition: color 0.3s;
+}
+@media (max-width: 640px) {
+  .service-detail-icon > span {
+    font-size: 30px;
+  }
+}
+
+/* Para empresas: planning, execution, follow-up. */
+.pillar-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 760px;
+  margin: 40px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line-strong);
+}
+.pillar-strip li {
+  display: grid;
+  gap: 6px;
+  padding: 16px 20px 0 0;
+  font:
+    650 20px/1.2 Archivo,
+    Arial,
+    sans-serif;
+}
+.pillar-strip li + li {
+  padding-left: 20px;
+  border-left: 1px solid var(--line-strong);
+}
+.pillar-strip span {
+  font:
+    600 13px/1 Archivo,
+    Arial,
+    sans-serif;
+  color: var(--accent);
+}
+.work-row {
+  transition: background 0.2s;
+}
+.work-row:hover {
+  background: var(--bg);
+}
+@media (max-width: 640px) {
+  .pillar-strip {
+    grid-template-columns: 1fr;
+  }
+  .pillar-strip li {
+    grid-template-columns: 32px 1fr;
+    align-items: baseline;
+    padding: 12px 0;
+    font-size: 17px;
+    border-bottom: 1px solid var(--line);
+  }
+  .pillar-strip li + li {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+/* Empresa: the technical lead and the four pillars carry weight. */
+.person-name strong {
+  font-size: 28px;
+}
+.person-name span {
+  font-size: 14px;
+}
+.why-grid {
+  counter-reset: pillar;
+}
+.why-grid li {
+  counter-increment: pillar;
+}
+.why-grid li h3::before {
+  content: counter(pillar, decimal-leading-zero);
+  display: block;
+  margin-bottom: 14px;
+  font:
+    600 13px/1 Archivo,
+    Arial,
+    sans-serif;
+  color: var(--accent);
+}
+.why-grid h3 {
+  font-size: 23px;
+}
+.why-grid p {
+  font-size: 15px;
+}
+
+/* Contact: channels read at a glance. */
+.contact-methods > a {
+  padding-block: 18px;
+  font-size: 15px;
+}
+.contact-methods small {
+  font-size: 12px;
+}
+.contact-methods > a:first-child {
+  border-top: 1px solid var(--line);
+}
+.contact-methods > a > .icon:first-child {
+  width: 20px;
+  height: 20px;
+}
+
+/* FAQ: thin rules, aligned plus, smooth opening. */
+.faq-list summary {
+  padding-block: 22px;
+  font-size: 16px;
+  transition: color 0.2s;
+}
+.faq-list summary:hover {
+  color: var(--accent);
+}
+.faq-list summary .icon {
+  flex: 0 0 18px;
+  transition: transform 0.3s ease;
+}
+.faq-list details p {
+  max-width: 640px;
+  font-size: 15px;
+  line-height: 1.7;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .faq-list {
+    interpolate-size: allow-keywords;
+  }
+  .faq-list details::details-content {
+    height: 0;
+    overflow: clip;
+    transition:
+      height 0.35s ease,
+      content-visibility 0.35s allow-discrete;
+  }
+  .faq-list details[open]::details-content {
+    height: auto;
+  }
+}
+@media (max-width: 640px) {
+  .faq-list summary {
+    font-size: 15px;
+    padding-block: 20px;
+  }
+  .faq-list details p {
+    font-size: 14px;
+    padding-right: 0;
+  }
+}
+
+/* Footer: labelled columns, readable sizes, steady rhythm. */
+.footer-main {
+  gap: 48px 64px;
+  padding-bottom: 40px;
+}
+.footer-label {
+  margin-bottom: 14px;
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #f0a77c;
+}
+.footer-nav a,
+.footer-contact a {
+  transition: color 0.2s;
+}
+.footer-contact a span {
+  font-size: 14px;
+}
+.footer-tagline {
+  font-size: 14px;
+  line-height: 1.6;
+}
+@media (max-width: 900px) {
+  .footer-main {
+    grid-template-columns: 1fr 1fr;
+  }
+  .footer-main > div:first-child {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 640px) {
+  .footer-main {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+}
+
+/* Large numerals: quiet but still 3:1 against both themes. */
+:root {
+  --numeral: #7f8487;
+}
+:root[data-theme="dark"] {
+  --numeral: #868b8f;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --numeral: #868b8f;
+  }
+}
+
+/* Final consistency pass */
+.project-heading h1,
+.page-heading h1 {
+  font-size: clamp(36px, 4.6vw, 64px);
+  line-height: 1.06;
+}
+.project-heading > p:last-child {
+  font-size: 16px;
+}
+.project-cover figcaption {
+  left: 24px;
+  bottom: 20px;
+  padding: 3px 8px;
+  background: rgb(23 25 27 / 0.62);
+  color: #fff;
+  font-size: 11px;
+  letter-spacing: 0.01em;
+}
+.contact-cta .eyebrow,
+.trust-section .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.contact-cta .eyebrow::before,
+.trust-section .section-heading .eyebrow::before {
+  content: "";
+  flex: 0 0 26px;
+  height: 9px;
+  border-inline: 1px solid currentColor;
+  background: linear-gradient(currentColor, currentColor) center / 100% 1px
+    no-repeat;
+  opacity: 0.7;
+}
+.contact-cta {
+  padding-block: 72px;
+}
+.contact-cta p:not(.eyebrow) {
+  font-size: 15px;
+}
+@media (max-width: 640px) {
+  .contact-cta {
+    padding-block: 48px;
+  }
+  .project-cover figcaption {
+    left: 12px;
+    bottom: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .project-cover figcaption {
+    position: static;
+    max-width: none;
+    padding: 8px 20px;
+    background: var(--tone-2);
+    color: var(--muted);
+    font-size: 12px;
+  }
+}
