@@ -378,7 +378,7 @@
         </nav>
         <p class="eyebrow">CONSTRUÇÃO E AMPLIAÇÃO</p>
         <h1>Construção residencial</h1>
-        <p>Área de atuação</p>
+        <dl class="project-meta"><div><dt>Serviço</dt><dd>Construção e ampliação</dd></div><div><dt>Atendimento</dt><dd>Todo o estado do Rio de Janeiro</dd></div></dl>
       </section>
       <figure class="project-cover">
         <a
@@ -418,7 +418,7 @@
             >Ampliar</span
           ></a
         >
-        <figcaption>Imagem ilustrativa</figcaption>
+        <figcaption class="media-badge">Imagem ilustrativa</figcaption>
       </figure>
       <section class="section-shell project-story">
         <div>
@@ -435,11 +435,6 @@
         </div>
         <div class="project-facts">
           <div><span>Tipo</span><strong>Área de atuação</strong></div>
-          <div><span>Serviço</span><strong>Construção e ampliação</strong></div>
-          <div>
-            <span>Atendimento</span
-            ><strong>Todo o estado do Rio de Janeiro</strong>
-          </div>
           <div>
             <span>Escopo</span>
             <ul>
@@ -488,19 +483,25 @@
           </div>
         </section>
       -->
+      <nav class="section-shell project-pager" aria-label="Navegação entre áreas de atuação">
+        <a class="project-pager-all" href="../servicos.html#areas-de-atuacao">Todas as áreas</a
+        ><a class="project-pager-link is-next" href="./salas-tecnicas.html"
+          ><span>Outra área de atuação</span><strong>Salas técnicas e CPD</strong></a
+        >
+      </nav>
       <section class="related-projects section-pad">
         <div class="section-shell">
           <div class="section-heading">
             <div>
               <p class="eyebrow">CONTINUE EXPLORANDO</p>
-              <h2>Outras obras e<br />áreas de atuação</h2>
+              <h2>Outras obras e <br />áreas de atuação</h2>
             </div>
             <a class="text-link" href="../obras.html"
               >Todo o portfólio</a>
           </div>
           <div class="project-grid">
             <article
-              class="project-card"
+              class="project-card" data-record="ilustrativa"
               id="projeto-corporativo"
               data-category="corporativo"
             >
@@ -559,7 +560,7 @@
               ></a>
             </article>
             <article
-              class="project-card"
+              class="project-card" data-record="real"
               id="projeto-otavio-kelly"
               data-category="estruturas"
             >
@@ -572,7 +573,8 @@
                     height="900"
                     loading="lazy"
                     decoding="async"
-                  /><span class="project-arrow"
+                  /><span class="image-label is-real">Registro da obra</span
+                  ><span class="project-arrow"
                     ><svg
                       aria-hidden="true"
                       focusable="false"
@@ -617,7 +619,7 @@
               ></a>
             </article>
             <article
-              class="project-card"
+              class="project-card" data-record="real"
               id="projeto-campo-da-areia"
               data-category="estruturas"
             >
@@ -630,7 +632,8 @@
                     height="900"
                     loading="lazy"
                     decoding="async"
-                  /><span class="project-arrow"
+                  /><span class="image-label is-real">Registro da obra</span
+                  ><span class="project-arrow"
                     ><svg
                       aria-hidden="true"
                       focusable="false"
@@ -681,11 +684,11 @@
         <div class="section-shell cta-layout">
           <div>
             <p class="eyebrow">SEU PRÓXIMO PROJETO</p>
-            <h2>Tem uma obra<br />parecida em mente?</h2>
+            <h2>Tem uma obra <br />parecida em mente?</h2>
           </div>
           <div>
             <p>
-              Conte o que você tem em mente.<br />A conversa começa aqui.
+              Conte o que você tem em mente. <br />A conversa começa aqui.
             </p>
             <a
               class="button button-primary"

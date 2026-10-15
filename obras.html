@@ -335,7 +335,7 @@
       <section class="page-heading" data-architecture="planta">
         <div class="section-shell">
           <p class="eyebrow">OBRAS</p>
-          <h1>Obras que mostram<br />como trabalhamos</h1>
+          <h1>Obras que mostram <br />como trabalhamos</h1>
           <p class="page-description">
             Trabalhos realizados pela Ferreira no Rio de Janeiro, com o serviço, o
             local e o escopo de cada um.
@@ -351,12 +351,18 @@
           <div class="section-heading">
             <div>
               <p class="eyebrow">OBRAS REALIZADAS</p>
-              <h2>Trabalhos executados<br />pela Ferreira</h2>
+              <h2>Trabalhos executados <br />pela Ferreira</h2>
             </div>
-            <p class="section-aside">
-              Quando ainda não há foto da obra, a imagem é ilustrativa e está
-              identificada no card.
-            </p>
+            <ul class="media-legend" aria-label="Legenda das imagens">
+              <li>
+                <span class="media-badge is-real">Registro da obra</span>
+                <span class="media-legend-text">Foto feita na própria obra.</span>
+              </li>
+              <li>
+                <span class="media-badge">Imagem ilustrativa</span>
+                <span class="media-legend-text">Referência visual enquanto a foto da obra não é publicada.</span>
+              </li>
+            </ul>
           </div>
           <div class="project-toolbar">
             <div
@@ -412,6 +418,12 @@
                 <option value="acessibilidade">Acessibilidade</option>
               </select></label
             >
+            <label class="record-toggle" hidden
+              ><input type="checkbox" data-record-filter aria-controls="project-grid" /><span
+                class="record-toggle-text"
+                >Só fotos reais <span class="record-count" data-record-count></span></span
+              ></label
+            >
             <p
               class="project-count"
               role="status"
@@ -421,7 +433,7 @@
           </div>
           <div class="project-grid" id="project-grid">
             <article
-              class="project-card"
+              class="project-card" data-record="real"
               id="projeto-otavio-kelly"
               data-category="estruturas"
             >
@@ -434,7 +446,8 @@
                     height="900"
                     loading="lazy"
                     decoding="async"
-                  /><span class="project-arrow"
+                  /><span class="image-label is-real">Registro da obra</span
+                  ><span class="project-arrow"
                     ><svg
                       aria-hidden="true"
                       focusable="false"
@@ -479,7 +492,7 @@
               ></a>
             </article>
             <article
-              class="project-card"
+              class="project-card" data-record="real"
               id="projeto-campo-da-areia"
               data-category="estruturas"
             >
@@ -492,7 +505,8 @@
                     height="900"
                     loading="lazy"
                     decoding="async"
-                  /><span class="project-arrow"
+                  /><span class="image-label is-real">Registro da obra</span
+                  ><span class="project-arrow"
                     ><svg
                       aria-hidden="true"
                       focusable="false"
@@ -537,7 +551,7 @@
               ></a>
             </article>
             <article
-              class="project-card"
+              class="project-card" data-record="real"
               id="projeto-clinica-labs"
               data-category="estruturas"
             >
@@ -550,7 +564,8 @@
                     height="900"
                     loading="lazy"
                     decoding="async"
-                  /><span class="project-arrow"
+                  /><span class="image-label is-real">Registro da obra</span
+                  ><span class="project-arrow"
                     ><svg
                       aria-hidden="true"
                       focusable="false"
@@ -595,7 +610,7 @@
               ></a>
             </article>
             <article
-              class="project-card"
+              class="project-card" data-record="ilustrativa"
               id="projeto-corporativo"
               data-category="corporativo"
             >
@@ -654,7 +669,7 @@
               ></a>
             </article>
             <article
-              class="project-card"
+              class="project-card" data-record="ilustrativa"
               id="projeto-technip"
               data-category="corporativo"
             >
@@ -713,7 +728,7 @@
               ></a>
             </article>
             <article
-              class="project-card"
+              class="project-card" data-record="ilustrativa"
               id="projeto-ufrj"
               data-category="infraestrutura"
             >
@@ -772,7 +787,7 @@
               ></a>
             </article>
             <article
-              class="project-card"
+              class="project-card" data-record="ilustrativa"
               id="projeto-acessibilidade"
               data-category="acessibilidade"
             >
@@ -830,7 +845,23 @@
                   </svg></div
               ></a>
             </article>
+            <aside class="project-cta-tile" aria-label="Fale sobre a sua obra">
+              <p class="eyebrow">SUA OBRA</p>
+              <p class="project-cta-title">Não encontrou uma obra parecida com a sua?</p>
+              <p>Conte o que você precisa. A conversa começa pelo WhatsApp.</p>
+              <a
+                class="text-link"
+                href="https://wa.me/5521965906030?text=Ol%C3%A1%2C%20Ferreira%21%20Gostaria%20de%20falar%20sobre%20o%20meu%20projeto."
+                target="_blank"
+                rel="noopener noreferrer"
+                >Falar sobre meu projeto</a
+              >
+            </aside>
           </div>
+          <p class="project-empty" data-filter-empty hidden>
+            Ainda não há fotos reais publicadas desta categoria.
+            <button type="button" data-record-reset>Ver todas as imagens</button>
+          </p>
         </div>
       </section>
       <section class="photo-gallery section-pad" id="galeria" data-albums>
@@ -929,7 +960,7 @@
           <div class="section-heading">
             <div>
               <p class="eyebrow">EXPERIÊNCIA NA PRÁTICA</p>
-              <h2>Empresas e instituições<br />na nossa trajetória</h2>
+              <h2>Empresas e instituições <br />na nossa trajetória</h2>
             </div>
             <p class="section-aside">
               Trabalhos realizados diretamente <br />ou em parceria com empresas
@@ -1034,11 +1065,11 @@
         <div class="section-shell cta-layout">
           <div>
             <p class="eyebrow">SEU PRÓXIMO PROJETO</p>
-            <h2>Tem um desafio<br />de engenharia?</h2>
+            <h2>Tem um desafio <br />de engenharia?</h2>
           </div>
           <div>
             <p>
-              Conte o que você tem em mente.<br />A conversa começa aqui.
+              Conte o que você tem em mente. <br />A conversa começa aqui.
             </p>
             <a
               class="button button-primary"

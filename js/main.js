@@ -95,13 +95,17 @@
     const select = scope.querySelector("[data-filter-select]");
     const more = scope.querySelector("[data-show-more]");
     const status = scope.querySelector("[data-filter-status]");
+    const realOnly = scope.querySelector("[data-record-filter]");
+    const empty = scope.querySelector("[data-filter-empty]");
     const limit = Number(scope.dataset.limit) || cards.length;
     let category = "all";
     let expanded = false;
 
     function render() {
       const matching = cards.filter(
-        (card) => category === "all" || card.dataset.category === category,
+        (card) =>
+          (category === "all" || card.dataset.category === category) &&
+          (!realOnly?.checked || card.dataset.record === "real"),
       );
       const visible = expanded ? matching : matching.slice(0, limit);
       cards.forEach((card) => {
@@ -116,6 +120,16 @@
         ),
       );
       select.value = category;
+      if (empty) empty.hidden = matching.length > 0;
+      const recordCount = scope.querySelector("[data-record-count]");
+      if (recordCount) {
+        const real = cards.filter(
+          (card) =>
+            card.dataset.record === "real" &&
+            (category === "all" || card.dataset.category === category),
+        ).length;
+        recordCount.textContent = `(${real} ${real === 1 ? "obra" : "obras"})`;
+      }
       status.textContent =
         visible.length === matching.length
           ? `${visible.length} ${visible.length === 1 ? "obra" : "obras"}`
@@ -138,6 +152,12 @@
       button.addEventListener("click", () => change(button.dataset.filter)),
     );
     select.addEventListener("change", () => change(select.value));
+    realOnly?.addEventListener("change", () => change(category));
+    scope.querySelector("[data-record-reset]")?.addEventListener("click", () => {
+      realOnly.checked = false;
+      change(category);
+      realOnly.focus();
+    });
     more?.addEventListener("click", () => {
       expanded = !expanded;
       render();
@@ -151,6 +171,7 @@
       const card = cards.find((item) => `#${item.id}` === window.location.hash);
       if (!card) return;
       category = "all";
+      if (realOnly) realOnly.checked = false;
       expanded = true;
       render();
       requestAnimationFrame(() =>
@@ -159,6 +180,7 @@
     }
     scope.querySelector(".project-filters").hidden = false;
     scope.querySelector(".project-select").hidden = false;
+    if (realOnly) realOnly.closest("label").hidden = false;
     render();
     revealHash();
     window.addEventListener("hashchange", revealHash);
@@ -178,9 +200,18 @@
       fallback.hidden = true;
       fallback.removeAttribute("href");
       status.textContent = "";
+      status.classList.remove("is-success", "is-error");
+    };
+    const count = form.querySelector("[data-char-count]");
+    const message = form.querySelector("#mensagem");
+    const updateCount = () => {
+      if (!count || !message) return;
+      count.textContent = `${message.value.length.toLocaleString("pt-BR")} de 2.000`;
+      count.classList.toggle("is-near", message.value.length > 1800);
     };
     form.addEventListener("input", (event) => {
       clearDraftLink();
+      updateCount();
       const name = event.target.name;
       if (name && form.querySelector(`#${name}-error`)) messageError(name, "");
     });
@@ -231,10 +262,12 @@
       });
       fallback.href = url;
       fallback.hidden = false;
+      status.classList.add("is-success");
       status.textContent =
         "Mensagem preparada. Revise e confirme o envio no WhatsApp. Se a janela não abriu, use o link abaixo.";
       window.open(url, "_blank", "noopener,noreferrer");
     });
+    updateCount();
     form.hidden = false;
   });
 
@@ -756,18 +789,47 @@
       ),
     );
   }
-  const footer = document.querySelector(".site-footer");
-  let footerInView = false;
-  if (footer && float && "IntersectionObserver" in window)
-    new IntersectionObserver((entries) => {
-      footerInView = entries[0].isIntersecting;
-      syncScroll();
-    }).observe(footer);
+  // The shortcut steps aside where the page already offers WhatsApp or
+  // where it would cover controls: hero, calls to action, the contact
+  // area, the works filters, small link rows and the footer. Large card
+  // links underneath stay usable around it.
+  const busyZones = [
+    ".hero",
+    ".contact-cta",
+    ".contact-layout",
+    ".project-toolbar",
+    ".project-pager",
+    ".faq-list",
+    ".site-footer",
+  ].flatMap((selector) => [...document.querySelectorAll(selector)]);
+  const busy = new Set();
+  if (float && "IntersectionObserver" in window)
+    busyZones.forEach((zone) =>
+      new IntersectionObserver((entries) => {
+        entries.forEach((entry) =>
+          entry.isIntersecting ? busy.add(zone) : busy.delete(zone),
+        );
+        syncScroll();
+      }).observe(zone),
+    );
+  // On phones it also hides while reading downwards and returns on the
+  // way back up, so it never sits over the text being read.
+  const phone = window.matchMedia("(max-width: 640px)");
+  let lastY = window.scrollY;
+  let goingDown = false;
   function syncScroll() {
-    header?.classList.toggle("is-scrolled", window.scrollY > 8);
+    const y = window.scrollY;
+    if (Math.abs(y - lastY) > 6) {
+      goingDown = y > lastY;
+      lastY = y;
+    }
+    header?.classList.toggle("is-scrolled", y > 8);
     // Compact only once the header's own spot has scrolled away (no jump).
-    header?.classList.toggle("is-compact", window.scrollY > 160);
-    float?.classList.toggle("is-visible", !footerInView);
+    header?.classList.toggle("is-compact", y > 160);
+    float?.classList.toggle(
+      "is-visible",
+      busy.size === 0 && !(phone.matches && goingDown),
+    );
   }
   window.addEventListener("scroll", syncScroll, { passive: true });
   syncScroll();

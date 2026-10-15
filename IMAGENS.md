@@ -47,8 +47,8 @@ A troca não muda layout, proporção nem componentes. Em cada lugar onde a obra
 
 1. Troque `src` (e o `href` de ampliação, na ficha) pelo arquivo novo. Mantenha `width` e `height` proporcionais à foto.
 2. Atualize o `alt` e o `data-caption` descrevendo o que a foto mostra.
-3. Remova a etiqueta `<span class="image-label">Imagem ilustrativa</span>` do card.
-4. Na ficha, troque a legenda da capa para "Registro da obra." e a linha "Imagem" da ficha técnica para "Registro da obra". Ajuste o texto de `project-disclosure`.
+3. No card, troque a etiqueta `<span class="image-label">Imagem ilustrativa</span>` por `<span class="image-label is-real">Registro da obra</span>` e mude `data-record="ilustrativa"` para `data-record="real"` no `<article class="project-card">`. Assim a obra passa a aparecer no filtro "Só fotos reais".
+4. Na ficha, troque a legenda da capa para `<figcaption class="media-badge is-real">Registro da obra</figcaption>` e a linha "Imagem" da ficha técnica para "Registro da obra". Ajuste o texto de `project-disclosure`.
 5. Se o assunto ficar mal enquadrado no corte 4:3, use `data-focus="top"`, `"bottom"`, `"left"` ou `"right"` na `<img>`. Não use `style=""`: a política de segurança bloqueia estilos inline.
 
 As fichas têm, em comentário HTML, os blocos opcionais "O desafio" e "Resultado". Use-os somente com informações reais e autorizadas.

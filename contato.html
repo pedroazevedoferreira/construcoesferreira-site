@@ -372,10 +372,24 @@
       <section class="page-heading" data-architecture="residencia">
         <div class="section-shell">
           <p class="eyebrow">CONTATO</p>
-          <h1>Toda obra começa<br />com uma conversa.</h1>
+          <h1>Toda obra começa <br />com uma conversa.</h1>
           <p class="page-description">
             Conte a sua ideia. Vamos entender juntos o próximo passo.
           </p>
+          <ol class="contact-steps">
+            <li>
+              <strong>Conte o que precisa</strong>
+              <span>Pelo formulário, WhatsApp, telefone ou e-mail.</span>
+            </li>
+            <li>
+              <strong>Revise antes de enviar</strong>
+              <span>O formulário monta a mensagem no WhatsApp para você conferir.</span>
+            </li>
+            <li>
+              <strong>Converse com a Ferreira</strong>
+              <span>A conversa sobre a obra segue pelo canal que você escolheu.</span>
+            </li>
+          </ol>
         </div>
       </section>
       <section class="section-shell contact-layout" data-technical-margin>
@@ -576,7 +590,7 @@
             <div>
               <strong>Rio de Janeiro</strong>
               <p>
-                Rua Engenheiro Enaldo Cravo Peixoto, 155<br />Tijuca · CEP
+                Rua Engenheiro Enaldo Cravo Peixoto, 155 <br />Tijuca · CEP
                 20540-106
               </p>
               <a
@@ -608,8 +622,11 @@
           <p class="eyebrow">SOBRE O SEU PROJETO</p>
           <h2>Conte um pouco sobre sua obra</h2>
           <form class="message-form" data-wa-form hidden novalidate>
+            <p class="form-required-note form-full">
+              <span aria-hidden="true">*</span> Campos obrigatórios
+            </p>
             <div class="form-field">
-              <label for="nome">Seu nome</label
+              <label for="nome">Seu nome <span class="required" aria-hidden="true">*</span></label
               ><input
                 id="nome"
                 name="nome"
@@ -621,7 +638,7 @@
               /><span class="field-error" id="nome-error"></span>
             </div>
             <div class="form-field">
-              <label for="local">Cidade ou bairro</label
+              <label for="local">Cidade ou bairro da obra <span class="required" aria-hidden="true">*</span></label
               ><input
                 id="local"
                 name="local"
@@ -629,11 +646,12 @@
                 required
                 minlength="2"
                 maxlength="100"
-                aria-describedby="local-error"
-              /><span class="field-error" id="local-error"></span>
+                aria-describedby="local-hint local-error"
+              /><span class="field-hint" id="local-hint">Por exemplo: Tijuca, Niterói ou Duque de Caxias.</span><span class="field-error" id="local-error"></span>
             </div>
-            <fieldset class="form-field form-full choice-field">
+            <fieldset class="form-field form-full choice-field" aria-describedby="tipo-hint">
               <legend>O que você precisa?</legend>
+              <p class="field-hint" id="tipo-hint">Se não tiver certeza, marque Outro.</p>
               <div class="choices">
                 <label
                   ><input type="radio" name="tipo" value="Construção" /><span
@@ -676,8 +694,12 @@
                 name="mensagem"
                 rows="4"
                 maxlength="2000"
-                aria-describedby="mensagem-error"
+                aria-describedby="mensagem-hint mensagem-count mensagem-error"
               ></textarea
+              ><span class="field-meta"
+                ><span class="field-hint" id="mensagem-hint"
+                  >O que precisa ser feito e quando pretende começar.</span
+                ><span class="field-count" id="mensagem-count" data-char-count>0 de 2.000</span></span
               ><span class="field-error" id="mensagem-error"></span>
             </div>
             <div class="form-full">
@@ -700,12 +722,14 @@
                   <path d="M7 17 17 7" />
                 </svg>
               </button>
-              <p class="form-note">
-                Nada é enviado pelo site: a mensagem abre no WhatsApp com essas
-                informações, e você revisa antes de enviar. Não pedimos
-                documentos nem dados financeiros.
-                <a href="./privacidade.html">Privacidade</a>
-              </p>
+              <div class="form-privacy">
+                <p class="form-privacy-title">Como usamos suas informações</p>
+                <ul>
+                  <li>Nada é enviado pelo site: a mensagem abre no WhatsApp para você revisar e enviar.</li>
+                  <li>Usamos os dados só para responder e preparar a proposta. Não pedimos documentos nem dados financeiros.</li>
+                </ul>
+                <a href="./privacidade.html">Política de privacidade</a>
+              </div>
               <p class="form-status" role="status" aria-live="polite"></p>
               <a
                 class="text-link message-fallback"
