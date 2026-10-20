@@ -113,6 +113,12 @@
         card.classList.toggle("project-featured", card === visible[0]);
       });
       grid.dataset.count = visible.length;
+      // Real records and illustrated works sit in separate groups.
+      scope.querySelectorAll(".project-grid, .project-list").forEach((group) => {
+        group.dataset.visible = [...group.children].filter(
+          (card) => card.matches(".project-card") && !card.hidden,
+        ).length;
+      });
       buttons.forEach((button) =>
         button.setAttribute(
           "aria-pressed",
