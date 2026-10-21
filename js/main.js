@@ -845,7 +845,7 @@
   const touch = window.matchMedia("(hover: none)");
   if (touch.matches && "IntersectionObserver" in window) {
     const focusable = document.querySelectorAll(
-      ".route, .service-row, .service-detail, .case, .project-link, .chooser-card, .album.is-card, .work-row, .hero-proof, .contact-methods > a, .why-grid li, .opener-mosaic a",
+      ".route, .service-row, .service-card, .service-detail, .case, .project-link, .chooser-card, .album.is-card, .work-row, .hero-proof, .contact-methods > a, .why-grid li, .opener-mosaic a",
     );
     // Only one item at a time: the one closest to the middle.
     const near = new Set();
