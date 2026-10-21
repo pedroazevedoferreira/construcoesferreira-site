@@ -840,6 +840,39 @@
   window.addEventListener("scroll", syncScroll, { passive: true });
   syncScroll();
 
+  // Serviços: the sticky area nav sits right under the header and marks
+  // the service being read.
+  const serviceNav = document.querySelector("[data-service-nav]");
+  if (serviceNav && header) {
+    const setHeaderHeight = () =>
+      document.documentElement.style.setProperty(
+        "--header-h",
+        `${Math.round(header.getBoundingClientRect().height)}px`,
+      );
+    setHeaderHeight();
+    window.addEventListener("scroll", setHeaderHeight, { passive: true });
+    window.addEventListener("resize", setHeaderHeight);
+    const navLinks = [...serviceNav.querySelectorAll('a[href^="#"]')];
+    const mark = (id) =>
+      navLinks.forEach((link) => {
+        if (link.hash === `#${id}`) {
+          link.setAttribute("aria-current", "true");
+          link.scrollIntoView({ block: "nearest", inline: "nearest" });
+        } else link.removeAttribute("aria-current");
+      });
+    if ("IntersectionObserver" in window) {
+      const spy = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((entry) => entry.isIntersecting && mark(entry.target.id)),
+        { rootMargin: "-35% 0px -60% 0px" },
+      );
+      navLinks.forEach((link) => {
+        const target = document.querySelector(link.hash);
+        if (target) spy.observe(target);
+      });
+    }
+  }
+
   // Back to top, next to the privacy link.
   const privacy = document.querySelector(".footer-bottom > a:last-child");
   if (privacy) {
