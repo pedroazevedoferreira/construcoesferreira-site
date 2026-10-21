@@ -8668,3 +8668,246 @@ main .company-facts span {
     font-size: 13px;
   }
 }
+
+/* ==========================================================
+   Round 10 · less visual noise
+   ========================================================== */
+
+/* Eyebrows: plain text, no ruler tick in front. */
+.section-heading .eyebrow::before,
+.numbers-head .eyebrow::before,
+.positioning-copy .eyebrow::before,
+.testimonial-heading .eyebrow::before,
+.people-copy .eyebrow::before,
+.page-heading .eyebrow::before,
+.contact-cta .eyebrow::before,
+.trust-section .section-heading .eyebrow::before {
+  content: none;
+}
+
+/* Hero: one provenance chip over the image. */
+.hero .hero-caption {
+  display: block;
+  text-shadow: none;
+}
+
+/* Home routes: the card is the link; an arrow closes the title. */
+.route strong::after {
+  content: " →";
+  color: var(--muted);
+  transition: color 0.2s;
+}
+.route:hover strong::after {
+  color: var(--orange);
+}
+
+/* Home services: icon, name, one line, arrow. */
+.services-index .service-row {
+  grid-template-columns: 64px minmax(0, 0.9fr) minmax(0, 1.6fr) auto;
+  align-items: center;
+  padding-block: 24px;
+}
+.services-index .service-row p {
+  margin: 0;
+}
+.services-index .service-row-more {
+  font-size: 18px;
+  color: var(--muted);
+}
+.services-index .service-row-more::after {
+  margin-left: 0;
+}
+.services-index .service-row:hover .service-row-more {
+  color: var(--orange);
+}
+
+/* Serviços: the area bar only appears once the comparison is behind. */
+.service-sticky {
+  transition:
+    opacity 0.2s,
+    visibility 0.2s;
+}
+.service-sticky:not(.is-active) {
+  opacity: 0;
+  visibility: hidden;
+}
+.service-sticky {
+  margin-top: -53px;
+}
+.service-detail .service-fit {
+  border-top: 0;
+  padding-top: 0;
+}
+.chooser-card {
+  grid-template-rows: auto auto 1fr auto;
+}
+
+/* Contato: no orange rule over the form, no steps grid. */
+.contact-form-panel {
+  border-top: 0;
+}
+
+/* Footer: brand, tagline and region only. */
+.footer-tagline strong {
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .services-index .service-row {
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+  }
+  .services-index .service-row p {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .services-index .service-row-more {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+  }
+}
+@media (max-width: 640px) {
+  .services-index .service-row {
+    grid-template-columns: 40px minmax(0, 1fr) auto;
+  }
+  .services-index .service-row > :not(.service-row-number) {
+    grid-column: 2;
+  }
+  .services-index .service-row > .service-row-more {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    display: block;
+  }
+  .service-sticky {
+    margin-top: -47px;
+  }
+}
+
+/* Obras · one catalogue: the first work wide, the rest in rows of three.
+   Swapping a photo or adding a work needs no layout change. */
+.project-grid[data-visible] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.project-grid[data-visible] > .project-featured {
+  grid-column: 1 / -1;
+  grid-row: auto;
+}
+.project-grid > .project-featured .project-link {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 40px;
+  align-items: center;
+}
+.project-grid[data-visible] > .project-featured .project-image,
+.project-grid[data-visible] > .project-card:not(.project-featured) .project-image {
+  aspect-ratio: 4 / 3;
+}
+.project-grid[data-visible] > .project-featured .project-image {
+  aspect-ratio: 16 / 10;
+}
+.project-grid > .project-featured h3 {
+  font-size: 30px;
+}
+.opener-photo-name::before {
+  content: none;
+}
+
+/* Rows without an icon column. */
+.service-row {
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr) minmax(0, 1.4fr) auto;
+}
+.services-index .service-row {
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.6fr) auto;
+}
+.value-list article {
+  display: block;
+}
+
+/* What each service covers: small square bullets instead of checks. */
+.service-tags-list .icon {
+  display: none;
+}
+.service-tags-list li::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 5px;
+  height: 5px;
+  background: var(--line-strong);
+}
+
+@media (max-width: 900px) {
+  .project-grid[data-visible] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .project-grid > .project-featured .project-link {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .service-row,
+  .services-index .service-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .service-row > *,
+  .services-index .service-row > *,
+  .services-index .service-row p {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .services-index .service-row > .service-row-more,
+  .service-row > .service-row-more {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+@media (max-width: 640px) {
+  .project-grid[data-visible] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .project-grid > .project-featured h3 {
+    font-size: 24px;
+  }
+  .chooser-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.chooser-card {
+  grid-template-rows: auto 1fr auto;
+}
+.chooser-more {
+  align-self: end;
+}
+.project-toolbar .project-count {
+  margin-left: auto;
+}
+/* Rows that list what is included (Para empresas) keep four columns. */
+.services-index .service-row:has(.service-tags) {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) minmax(0, 1.4fr) auto;
+  align-items: baseline;
+}
+.services-index .service-row:has(.service-tags) .service-row-more {
+  font-size: 14px;
+  color: var(--ink);
+}
+@media (max-width: 900px) {
+  .services-index .service-row:has(.service-tags) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .services-index .service-row:has(.service-tags) > * {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+@media (max-width: 900px) {
+  .services-index .service-row:not(:has(.service-tags)) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 16px;
+  }
+  .services-index .service-row:not(:has(.service-tags)) > :not(.service-row-more) {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .services-index .service-row:not(:has(.service-tags)) > .service-row-more {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+  }
+}

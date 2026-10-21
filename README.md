@@ -28,7 +28,7 @@ Nao use `file://` para aprovar o visual: o navegador pode bloquear fontes locais
 - `projetos/`: nove fichas de projetos e areas de atuacao, com galeria ampliavel
 - `index.html#depoimento`: avaliacao de Rafael Curvelo, com fonte no Google
 - Home: hero, numeros, posicionamento com os caminhos para empresas e residencial, servicos em linhas, tres cases de obras realizadas, metodo Ferreira, clientes, responsavel tecnico, depoimento e chamada final
-- `obras.html`: obras realizadas (com filtros) e galeria por obra; as areas de atuacao (imagens ilustrativas) ficam em `servicos.html#areas-de-atuacao`
+- `obras.html`: obras realizadas (com filtros) e galeria por obra; as areas de atuacao ficam em `servicos.html#areas-de-atuacao`
 - `privacidade.html`: funcionamento dos contatos e armazenamento local
 - `css/styles.css`: estilos globais e responsivos
 - `js/main.js`: comportamentos pequenos, sem bibliotecas externas

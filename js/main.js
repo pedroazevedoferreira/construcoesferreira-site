@@ -860,6 +860,23 @@
           link.scrollIntoView({ block: "nearest", inline: "nearest" });
         } else link.removeAttribute("aria-current");
       });
+    // The bar shows only after the comparison cards have scrolled away
+    // and while the service details are on screen.
+    const chooser = document.querySelector(".service-chooser");
+    const details = document.querySelector(".service-details");
+    if (chooser && details && "IntersectionObserver" in window) {
+      const state = { chooser: true, details: false };
+      const toggle = () =>
+        serviceNav.classList.toggle("is-active", !state.chooser && state.details);
+      new IntersectionObserver(([entry]) => {
+        state.chooser = entry.isIntersecting;
+        toggle();
+      }).observe(chooser);
+      new IntersectionObserver(([entry]) => {
+        state.details = entry.isIntersecting;
+        toggle();
+      }).observe(details);
+    } else serviceNav.classList.add("is-active");
     if ("IntersectionObserver" in window) {
       const spy = new IntersectionObserver(
         (entries) =>

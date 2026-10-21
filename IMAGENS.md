@@ -1,13 +1,13 @@
 # Fotos e portfolio
 
-O layout esta pronto. As imagens de referencia estao identificadas no site e nao comprovam a execucao dos projetos citados. Nao remover os avisos antes de substituir as fotos por registros da respectiva obra.
+O layout esta pronto. As obras aparecem no site sem etiqueta de origem da imagem: algumas fotos ainda sao provisorias (veja a coluna "Situacao" no mapa abaixo) e devem ser trocadas pela foto da propria obra. A troca e so de arquivo e texto; nenhum componente muda.
 
 ## Troca de uma foto
 
 1. Separe uma foto com autorizacao de uso e confirme a qual obra pertence. Evite documentos legiveis, dados de terceiros e pessoas sem autorizacao.
 2. Exporte em WebP, de preferencia entre 1200 e 1800 px no lado maior. Nao aumente artificialmente uma foto pequena para simular detalhes tecnicos.
 3. Coloque em `assets/images/finais/` com nome simples, sem espacos, por exemplo `cbkc-sala-reuniao.webp`.
-4. Na ficha abaixo, atualize o `src` da foto e o `href` do link de ampliacao. Atualize tambem o `alt`, `data-caption`, o aviso da imagem e `og:image` quando for a capa.
+4. Na ficha abaixo, atualize o `src` da foto e o `href` do link de ampliacao. Atualize tambem o `alt`, `data-caption` e `og:image` quando for a capa.
 5. Procure o nome antigo do arquivo no projeto e atualize os cards da home, Obras e projetos relacionados. Preserve `width` e `height` proporcionais a foto.
 6. Abra a home, o filtro correspondente e a ficha em celular e desktop, nos dois temas. Confira o enquadramento e a ampliacao.
 
@@ -47,9 +47,12 @@ A troca não muda layout, proporção nem componentes. Em cada lugar onde a obra
 
 1. Troque `src` (e o `href` de ampliação, na ficha) pelo arquivo novo. Mantenha `width` e `height` proporcionais à foto.
 2. Atualize o `alt` e o `data-caption` descrevendo o que a foto mostra.
-3. No card, troque a etiqueta `<span class="image-label">Imagem ilustrativa</span>` por `<span class="image-label is-real">Registro da obra</span>` e mude `data-record="ilustrativa"` para `data-record="real"` no `<article class="project-card">`. Assim a obra passa a aparecer no filtro "Só fotos reais".
-4. Na ficha, troque a legenda da capa para `<figcaption class="media-badge is-real">Registro da obra</figcaption>` e a linha "Imagem" da ficha técnica para "Registro da obra". Ajuste o texto de `project-disclosure`.
-5. Se o assunto ficar mal enquadrado no corte 4:3, use `data-focus="top"`, `"bottom"`, `"left"` ou `"right"` na `<img>`. Não use `style=""`: a política de segurança bloqueia estilos inline.
+3. Se o assunto ficar mal enquadrado no corte, use `data-focus="top"`, `"bottom"`, `"left"` ou `"right"` na `<img>`. Não use `style=""`: a política de segurança bloqueia estilos inline.
+4. Atualize a coluna "Situação" do mapa acima.
+
+## Ordem das obras em Obras
+
+A primeira obra visível em `obras.html` aparece em destaque, ocupando a largura toda; as demais seguem em linhas de três. Para mudar o destaque, mova o `<article class="project-card">` desejado para o início do `project-grid`. Para incluir uma obra, copie um `<article class="project-card">` inteiro e troque link, imagem, categoria (`data-category`), título e local. A abertura da página (`opener-mosaic`) mostra três obras: troque os links e as fotos ali também quando quiser outras em evidência.
 
 As fichas têm, em comentário HTML, os blocos opcionais "O desafio" e "Resultado". Use-os somente com informações reais e autorizadas.
 

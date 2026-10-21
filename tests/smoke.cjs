@@ -481,15 +481,9 @@ async function main() {
       await page.locator(".project-featured:visible").getAttribute("id"),
       "projeto-otavio-kelly",
     );
-    // Only real photos: counts follow the category, empty state offers a way back.
-    await page.locator('[data-filter="all"]').click();
-    assert.equal(await page.locator("[data-record-count]").textContent(), "(3 obras)");
-    await page.locator("[data-record-filter]").check();
-    assert.equal(await page.locator(".project-card:visible").count(), 3);
+    // One catalogue: no provenance tags or photo-type filter on the cards.
+    assert.equal(await page.locator(".image-label, [data-record-filter]").count(), 0);
     await page.locator('[data-filter="corporativo"]').click();
-    assert.equal(await page.locator(".project-card:visible").count(), 0);
-    assert.ok(await page.locator("[data-filter-empty]").isVisible());
-    await page.locator("[data-record-reset]").click();
     assert.equal(await page.locator(".project-card:visible").count(), 2);
     await page.locator('[data-filter="all"]').click();
     await page.setViewportSize({ width: 390, height: 844 });
