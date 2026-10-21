@@ -7359,7 +7359,7 @@ img[data-focus="right"] {
   .contact-methods small,
   .footer-links a,
   .footer-top,
-  .testimonial-section span,
+  .testimonial-section figcaption span,
   .testimonial-section .text-link {
     font-size: 13px;
   }
@@ -8909,5 +8909,261 @@ main .company-facts span {
     grid-column: 2;
     grid-row: 1 / span 2;
     align-self: center;
+  }
+}
+
+/* ==========================================================
+   Round 11 · a phone layout designed, not just stacked
+   ========================================================== */
+@media (max-width: 640px) {
+  /* Testimonial: highlighted words keep the quote's size. */
+  .testimonial-heading h2 span,
+  .testimonial-section blockquote span {
+    font-size: inherit;
+  }
+
+  /* Rhythm: a little less air between sections on a small screen. */
+  .section-pad {
+    padding-block: 56px;
+  }
+
+  /* Home works: the first one large, the other two as compact rows. */
+  .case-list {
+    gap: 20px;
+  }
+  .case:not(:first-child) {
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 14px;
+    align-items: center;
+  }
+  .case:not(:first-child) .case-image img {
+    aspect-ratio: 1;
+  }
+  .case:not(:first-child) .case-summary {
+    display: none;
+  }
+  .case:not(:first-child) h3 {
+    font-size: 18px;
+  }
+  .case:not(:first-child) .case-meta {
+    margin-top: 4px;
+    font-size: 13px;
+  }
+  .case:first-child {
+    padding-bottom: 8px;
+  }
+
+  /* Method summary on the home page: a tight vertical sequence. */
+  .how-section .process-list {
+    gap: 0;
+  }
+  .how-section .process-list li {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    align-items: center;
+    column-gap: 16px;
+    padding-bottom: 18px;
+  }
+  .how-section .process-list li:last-child {
+    padding-bottom: 0;
+  }
+  .how-section .process-node {
+    width: 44px;
+    height: 44px;
+    font-size: 13px;
+  }
+  .how-section .process-list h3 {
+    margin: 0;
+    font-size: 19px;
+  }
+  .how-section .process-list li:not(:last-child)::before,
+  .how-section .process-list li:not(:last-child)::after {
+    top: 44px;
+    bottom: 0;
+    left: 21px;
+  }
+
+  /* Other method bands: steps closer together. */
+  .process-section .process-list li {
+    padding-bottom: 8px;
+  }
+  .process-section .process-list p {
+    margin-top: 4px;
+  }
+
+  /* Serviços: the four areas as a swipeable row. */
+  .chooser-list {
+    display: flex;
+    gap: 12px;
+    margin-inline: calc((100% - 100vw) / 2);
+    padding: 2px calc((100vw - 100%) / 2) 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: calc((100vw - 100%) / 2);
+    scrollbar-width: none;
+  }
+  .chooser-list::-webkit-scrollbar {
+    display: none;
+  }
+  .chooser-list li {
+    flex: 0 0 76%;
+    scroll-snap-align: start;
+  }
+  .chooser-card {
+    min-height: 168px;
+  }
+  .service-chooser {
+    padding-bottom: 40px;
+  }
+  /* Proof links stack cleanly instead of wrapping around dots. */
+  .service-proof {
+    display: grid;
+    gap: 0;
+  }
+  .service-proof > span[aria-hidden] {
+    display: none;
+  }
+  .service-actions {
+    display: grid;
+    gap: 14px;
+  }
+
+  /* Obras catalogue: one large work, then compact rows. */
+  .project-grid[data-visible] {
+    gap: 4px;
+  }
+  .project-grid > .project-card:not(.project-featured) .project-link {
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 14px;
+    align-items: center;
+    padding-block: 10px;
+  }
+  .project-grid > .project-card:not(.project-featured) .project-image {
+    aspect-ratio: 1;
+  }
+  .project-grid > .project-card:not(.project-featured) .project-arrow {
+    display: none;
+  }
+  .project-grid > .project-card:not(.project-featured) .project-caption {
+    padding-top: 0;
+  }
+  .project-grid > .project-card:not(.project-featured) .project-caption h3 {
+    font-size: 17px;
+  }
+  .project-grid > .project-featured {
+    margin-bottom: 16px;
+  }
+  /* Related works on project pages follow the same compact rows. */
+  .related-projects .project-grid {
+    gap: 4px;
+  }
+  .related-projects .project-link {
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 14px;
+    align-items: center;
+    padding-block: 10px;
+  }
+  .related-projects .project-image {
+    aspect-ratio: 1;
+  }
+  .related-projects .project-arrow {
+    display: none;
+  }
+  .related-projects .project-caption {
+    padding-top: 0;
+  }
+  .related-projects .project-caption h3 {
+    font-size: 17px;
+  }
+  /* Gallery: two albums per row. */
+  .album-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 12px;
+  }
+  .album-title {
+    font-size: 16px;
+  }
+  .album-meta {
+    font-size: 12.5px;
+  }
+
+  /* Footer: brand, contact and links without the long stack. */
+  .site-footer .title-block {
+    display: none;
+  }
+  .footer-main {
+    gap: 28px;
+  }
+  .footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 20px;
+  }
+  .footer-contact a {
+    padding-block: 7px;
+  }
+}
+@media (max-width: 640px) {
+  .how-section .process-list li {
+    grid-template-columns: 44px minmax(0, 1fr);
+    grid-template-rows: auto;
+  }
+  .how-section .process-node {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .how-section .process-list h3 {
+    grid-column: 2;
+    grid-row: 1;
+    width: auto;
+    padding: 0;
+  }
+}
+@media (max-width: 640px) {
+  .how-section .process-list li {
+    padding-left: 0;
+    padding-top: 0;
+  }
+}
+@media (max-width: 640px) {
+  main .how-section .process-list li h3 {
+    margin: 0;
+    align-self: center;
+  }
+  .chooser-list {
+    margin-inline: -20px;
+    padding-inline: 20px;
+    scroll-padding-inline: 20px;
+  }
+  .project-grid > .project-card:not(.project-featured) .project-caption > .icon,
+  .related-projects .project-caption > .icon {
+    display: none;
+  }
+  .project-grid > .project-card:not(.project-featured) .project-type,
+  .related-projects .project-type {
+    font-size: 11.5px;
+  }
+}
+@media (max-width: 360px) {
+  .chooser-list {
+    margin-inline: -16px;
+    padding-inline: 16px;
+    scroll-padding-inline: 16px;
+  }
+}
+@media (max-width: 640px) {
+  main .how-section .process-list li {
+    min-height: 0;
+    height: auto;
+  }
+  main .how-section .process-list .process-node {
+    align-self: center;
+  }
+}
+@media (max-width: 640px) {
+  main .how-section .process-list li {
+    grid-template-rows: 44px;
   }
 }
