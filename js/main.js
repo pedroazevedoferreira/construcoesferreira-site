@@ -840,6 +840,48 @@
   window.addEventListener("scroll", syncScroll, { passive: true });
   syncScroll();
 
+  // Touch screens have no hover: the item crossing the middle of the
+  // screen gets the same highlight a mouse would give it.
+  const touch = window.matchMedia("(hover: none)");
+  if (touch.matches && "IntersectionObserver" in window) {
+    const focusable = document.querySelectorAll(
+      ".route, .service-row, .service-detail, .case, .project-link, .chooser-card, .album.is-card, .work-row, .hero-proof, .contact-methods > a, .why-grid li, .opener-mosaic a",
+    );
+    // Only one item at a time: the one closest to the middle.
+    const near = new Set();
+    let current = null;
+    const pick = () => {
+      const middle = window.innerHeight / 2;
+      let best = null;
+      let bestDistance = Infinity;
+      near.forEach((item) => {
+        const box = item.getBoundingClientRect();
+        const distance = Math.abs(box.top + box.height / 2 - middle);
+        if (distance < bestDistance) {
+          best = item;
+          bestDistance = distance;
+        }
+      });
+      if (best === current) return;
+      current?.classList.remove("is-centered");
+      best?.classList.add("is-centered");
+      current = best;
+    };
+    const centre = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) =>
+          entry.isIntersecting ? near.add(entry.target) : near.delete(entry.target),
+        );
+        pick();
+      },
+      { rootMargin: "-35% 0px -35% 0px" },
+    );
+    focusable.forEach((item) => centre.observe(item));
+    window.addEventListener("scroll", () => near.size > 1 && pick(), {
+      passive: true,
+    });
+  }
+
   // Serviços: the sticky area nav sits right under the header and marks
   // the service being read.
   const serviceNav = document.querySelector("[data-service-nav]");

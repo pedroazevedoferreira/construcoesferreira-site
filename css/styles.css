@@ -9167,3 +9167,63 @@ main .company-facts span {
     grid-template-rows: 44px;
   }
 }
+
+/* ==========================================================
+   Round 12 · touch: the centred item lights up like a hover
+   ========================================================== */
+@media (hover: none) {
+  .route.is-centered .line-icon,
+  .service-detail.is-centered .line-icon,
+  .why-grid li.is-centered .line-icon,
+  .route.is-centered strong::after,
+  .services-index .service-row.is-centered .service-row-more {
+    color: var(--orange);
+  }
+  .route.is-centered strong,
+  .service-row.is-centered h3,
+  .service-detail.is-centered h2,
+  .case.is-centered h3 a,
+  .project-link.is-centered h3,
+  .chooser-card.is-centered strong,
+  .work-row.is-centered h3,
+  .album.is-card.is-centered .album-title {
+    color: var(--accent-action);
+  }
+  .chooser-card.is-centered {
+    border-top-color: var(--orange);
+  }
+  .hero-proof.is-centered {
+    border-color: var(--orange);
+  }
+  .contact-methods > a.is-centered small {
+    color: var(--accent-action);
+  }
+  .route,
+  .route strong,
+  .service-row h3,
+  .service-detail h2,
+  .case h3 a,
+  .project-link h3,
+  .chooser-card,
+  .chooser-card strong,
+  .hero-proof,
+  .why-grid .line-icon {
+    transition:
+      color 0.35s,
+      border-color 0.35s;
+  }
+}
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .case.is-centered .case-image img,
+  .project-link.is-centered .project-image img,
+  .album.is-card.is-centered .album-photos img,
+  .opener-mosaic a.is-centered img {
+    transform: scale(1.03);
+  }
+  .service-row.is-centered .service-row-more::after {
+    translate: 4px 0;
+  }
+  .contact-methods > a.is-centered > .icon:last-child {
+    transform: translate(2px, -2px);
+  }
+}
