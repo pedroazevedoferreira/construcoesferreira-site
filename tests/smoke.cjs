@@ -17,6 +17,10 @@ const files = [
     .readdirSync(path.join(root, "projetos"))
     .filter((f) => f.endsWith(".html"))
     .map((f) => `projetos/${f}`),
+  ...fs
+    .readdirSync(path.join(root, "servicos"))
+    .filter((f) => f.endsWith(".html"))
+    .map((f) => `servicos/${f}`),
 ];
 const headers = Object.fromEntries(
   fs
@@ -99,153 +103,6 @@ const mockMap = (route) =>
     body: '<!doctype html><html lang="pt-BR"><head><title>Mapa de teste</title></head><body><main>Localizacao da Ferreira</main></body></html>',
   });
 
-async function checkArtwork(page) {
-  const problems = await page.evaluate(() => {
-    const failures = [];
-    const intersects = (a, b) =>
-      a.left < b.right &&
-      a.right > b.left &&
-      a.top < b.bottom &&
-      a.bottom > b.top;
-    const hosts = [
-      ...document.querySelectorAll(
-        "[data-architecture], [data-technical-margin], .testimonial-blueprint",
-      ),
-    ];
-    for (const host of hosts) {
-      const element = host.matches(".testimonial-blueprint");
-      const styles = element ? [null] : ["::before", "::after"];
-      const content = element
-        ? host.closest("section").querySelector(".testimonial-heading")
-        : host;
-      for (const pseudo of styles) {
-        const style = getComputedStyle(host, pseudo);
-        const requiredDrawing =
-          innerWidth >= 1024 &&
-          (element ||
-            (pseudo === "::before" && host.hasAttribute("data-architecture")));
-        if (
-          requiredDrawing &&
-          (style.display === "none" ||
-            style.maskImage === "none" ||
-            parseFloat(style.width) < 200 ||
-            parseFloat(style.height) < 140 ||
-            Number(style.opacity) < 0.1)
-        )
-          failures.push("architectural drawing missing or imperceptible");
-        if (style.display === "none" || (pseudo && style.content === "none"))
-          continue;
-        const parent = host.getBoundingClientRect();
-        const left = element
-          ? parent.left
-          : parent.left + parseFloat(style.left);
-        const top = element ? parent.top : parent.top + parseFloat(style.top);
-        const box = {
-          left,
-          top,
-          right: left + parseFloat(style.width),
-          bottom: top + parseFloat(style.height),
-        };
-        if (style.pointerEvents !== "none")
-          failures.push("interactive artwork");
-        if (element && host.getAttribute("aria-hidden") !== "true")
-          failures.push("unlabelled decoration");
-        if (style.maskImage !== "none" && Number(style.opacity) > 0.2)
-          failures.push("artwork contrast too high");
-        if (innerWidth < 1024 && style.maskImage !== "none")
-          failures.push("artwork forced into a compact layout");
-        const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT);
-        let text;
-        while ((text = walker.nextNode())) {
-          if (!text.textContent.trim()) continue;
-          const range = document.createRange();
-          range.selectNodeContents(text);
-          if (
-            [...range.getClientRects()].some(
-              (rect) => rect.width && rect.height && intersects(box, rect),
-            )
-          ) {
-            failures.push(
-              `${host.dataset.architecture || host.className}: drawing overlaps ${text.textContent.trim().slice(0, 45)}`,
-            );
-          }
-        }
-      }
-    }
-    // Construction line drawings beside headings: decorative, never over text.
-    for (const art of document.querySelectorAll(".site-art")) {
-      const style = getComputedStyle(art);
-      if (art.getAttribute("aria-hidden") !== "true")
-        failures.push("unlabelled construction drawing");
-      if (style.display === "none") continue;
-      if (innerWidth < 1024) failures.push("construction drawing on a compact layout");
-      if (style.pointerEvents !== "none") failures.push("interactive construction drawing");
-      const box = art.getBoundingClientRect();
-      const walker = document.createTreeWalker(
-        art.closest("section"),
-        NodeFilter.SHOW_TEXT,
-      );
-      let text;
-      while ((text = walker.nextNode())) {
-        if (!text.textContent.trim() || art.contains(text)) continue;
-        const range = document.createRange();
-        range.selectNodeContents(text);
-        if (
-          [...range.getClientRects()].some(
-            (rect) => rect.width && rect.height && intersects(box, rect),
-          )
-        )
-          failures.push(
-            `construction drawing overlaps ${text.textContent.trim().slice(0, 45)}`,
-          );
-      }
-    }
-    // Removing every decorative layer must leave content geometry unchanged.
-    const geometry = () =>
-      [
-        ...document.querySelectorAll(
-          "main > section, .page-heading > .section-shell, .testimonial-heading, .testimonial-feature, .values-layout, .faq-layout",
-        ),
-      ].map((node) => {
-        const { x, y, width, height } = node.getBoundingClientRect();
-        return { x, y, width, height };
-      });
-    const before = geometry();
-    const attributes = [
-      ...document.querySelectorAll(
-        "[data-architecture], [data-technical-margin]",
-      ),
-    ].flatMap((node) =>
-      ["data-architecture", "data-technical-margin"]
-        .filter((name) => node.hasAttribute(name))
-        .map((name) => ({ node, name, value: node.getAttribute(name) })),
-    );
-    attributes.forEach(({ node, name }) => node.removeAttribute(name));
-    const blueprint = document.querySelector(".testimonial-blueprint");
-    const wasHidden = blueprint?.hidden;
-    if (blueprint) blueprint.hidden = true;
-    const arts = [...document.querySelectorAll(".site-art")];
-    arts.forEach((art) => art.setAttribute("hidden", ""));
-    const withoutArtwork = geometry();
-    arts.forEach((art) => art.removeAttribute("hidden"));
-    attributes.forEach(({ node, name, value }) =>
-      node.setAttribute(name, value),
-    );
-    if (blueprint) blueprint.hidden = wasHidden;
-    if (JSON.stringify(before) !== JSON.stringify(withoutArtwork))
-      failures.push("decoration creates layout space");
-    const heading = document.querySelector(".testimonial-heading");
-    if (heading && getComputedStyle(heading).paddingBottom !== "0px")
-      failures.push("testimonial heading reserves space for artwork");
-    return failures;
-  });
-  assert.deepEqual(
-    problems,
-    [],
-    "architectural artwork must stay outside content",
-  );
-}
-
 async function main() {
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   const base = `http://127.0.0.1:${server.address().port}/`;
@@ -276,7 +133,7 @@ async function main() {
     const records = [];
     for (const theme of ["light", "dark"]) {
       await page.emulateMedia({ colorScheme: theme });
-      for (const width of [319, 320, 375, 390, 430, 640, 768, 1024, 1440, 1920]) {
+      for (const width of [320, 360, 375, 390, 430, 640, 768, 1024, 1280, 1440, 1920]) {
         await page.setViewportSize({ width, height: width < 700 ? 844 : 1000 });
         for (const file of files) {
           await page.goto(base + file);
@@ -341,7 +198,6 @@ async function main() {
               (icon) => new URL(icon.href).searchParams.get("v") === "cubo-2",
             ),
           );
-          await checkArtwork(page);
           report.layouts++;
           if (width === 390 || width === 1440) {
             await page.evaluate(async () => {
@@ -422,65 +278,17 @@ async function main() {
     console.log(
       "Layout, assets, links and accessibility passed. Checking interactions...",
     );
-    const drawings = fs
-      .readdirSync(path.join(root, "assets/drawings"))
-      .filter((file) => file.endsWith(".svg"));
-    assert.equal(drawings.length, 6);
-    assert.equal(
-      new Set(
-        drawings.map((file) =>
-          fs.readFileSync(path.join(root, "assets/drawings", file), "utf8"),
-        ),
-      ).size,
-      6,
-    );
-    for (const drawing of drawings) {
-      const response = await context.request.get(
-        `${base}assets/drawings/${drawing}`,
-      );
-      assert.equal(response.status(), 200);
-      const svg = await response.text();
-      assert.equal(
-        await page.evaluate((source) => {
-          const doc = new DOMParser().parseFromString(source, "image/svg+xml");
-          return !!doc.querySelector(
-            "parsererror, script, foreignObject, image, linearGradient, radialGradient, [href]",
-          );
-        }, svg),
-        false,
-        `invalid or external content in ${drawing}`,
-      );
-    }
-    for (const width of [901, 1023, 1024, 1199, 1200, 1366]) {
-      await page.setViewportSize({ width, height: 1000 });
-      for (const file of [
-        "index.html",
-        "sobre.html",
-        "servicos.html",
-        "obras.html",
-        "contato.html",
-      ]) {
-        await page.goto(base + file);
-        await page.evaluate(() => document.fonts.ready);
-        await checkArtwork(page);
-      }
-    }
-    report.interactions.push(
-      "architectural backgrounds fill desktop whitespace without changing geometry or overlapping content; no added mobile bands",
-    );
     await page.setViewportSize({ width: 1440, height: 1000 });
-    // The home shows three documented cases; the full catalog lives on Obras.
+    // The home shows three documented works; the full catalog lives on Obras.
     await page.goto(base);
-    assert.equal(await page.locator(".case").count(), 3);
+    assert.equal(await page.locator("#portfolio .work-card").count(), 3);
     assert.equal(await page.locator(".project-card").count(), 0);
+    assert.equal(await page.locator(".service-card").count(), 6);
+    assert.equal(await page.locator(".steps .step").count(), 4);
     await page.goto(base + "obras.html");
     assert.equal(await page.locator(".project-card:visible").count(), 7);
     await page.locator('[data-filter="estruturas"]').click();
     assert.equal(await page.locator(".project-card:visible").count(), 3);
-    assert.equal(
-      await page.locator(".project-featured:visible").getAttribute("id"),
-      "projeto-otavio-kelly",
-    );
     // One catalogue: no provenance tags or photo-type filter on the cards.
     assert.equal(await page.locator(".image-label, [data-record-filter]").count(), 0);
     await page.locator('[data-filter="corporativo"]').click();
@@ -584,72 +392,63 @@ async function main() {
       await page.evaluate(() => {
         window.open = () => null;
       });
-      await page.locator("form button[type=submit]").click();
-      assert.equal(
-        await page.locator("#nome").getAttribute("aria-invalid"),
-        "true",
-      );
+      await page.locator("form button[value=whatsapp]").click();
+      for (const field of ["nome", "telefone", "servico", "local", "mensagem"])
+        assert.equal(
+          await page.locator(`#${field}`).getAttribute("aria-invalid"),
+          "true",
+          field,
+        );
+      assert.equal(await page.locator("#email").getAttribute("aria-invalid"), null);
       assert.equal(await page.locator(".message-fallback").isVisible(), false);
       await page.locator("#nome").fill("Teste & Validação");
+      await page.locator("#telefone").fill("(21) 99999-0000");
+      await page.locator("#servico").selectOption("engenharia-estrutural");
+      await page.locator("#local").fill("Tijuca");
       await page
         .locator("#mensagem")
         .fill("Teste local. Esta mensagem nao sera enviada.");
-      await page.locator("#local").fill("Tijuca");
-      await page.locator("form button[type=submit]").click();
+      await page.locator("#email").fill("invalido");
+      await page.locator("form button[value=whatsapp]").click();
+      assert.equal(await page.locator("#email").getAttribute("aria-invalid"), "true");
+      await page.locator("#email").fill("");
+      await page.locator("form button[value=whatsapp]").click();
       const prepared = new URL(
         await page.locator(".message-fallback").getAttribute("href"),
       );
       assert.equal(prepared.hostname, "wa.me");
       assert.equal(prepared.pathname, "/5521965906030");
+      const text = prepared.searchParams.get("text");
+      assert.ok(text.startsWith("Olá, Ferreira! Meu nome é Teste & Validação."));
+      assert.ok(text.includes("Serviço de interesse: Engenharia estrutural."));
+      assert.ok(text.includes("Telefone para contato: (21) 99999-0000."));
+      assert.ok(!text.includes("E-mail:"));
       assert.ok(
-        prepared.searchParams.get("text").includes("Teste & Validação"),
-      );
-      assert.ok(
-        prepared.searchParams
-          .get("text")
-          .startsWith("Olá, Ferreira! Meu nome é Teste & Validação."),
+        (await page.locator(".form-status").innerText()).includes("só será enviada"),
       );
       await page.locator("#mensagem").fill("Atualizacao da mensagem de teste.");
       assert.equal(
         await page.locator(".message-fallback").getAttribute("href"),
         null,
       );
+      // Service pages pre-select their service in the form.
+      await page.goto(base + "contato.html?servico=gerenciamento-de-obras#orcamento");
+      assert.equal(await page.locator("#servico").inputValue(), "gerenciamento-de-obras");
     }
     report.interactions.push(
       "contact validation, safe encoding, popup fallback",
     );
-    // "Como funciona" draws once when it comes into view; with reduced motion
-    // the finished state is shown straight away.
-    for (const file of ["index.html", "servicos.html"]) {
-      await page.emulateMedia({ reducedMotion: "no-preference" });
-      await page.goto(base + file);
-      assert.equal(
-        await page.locator(".process-list").evaluate((list) =>
-          getComputedStyle(list.querySelector("h3")).opacity,
-        ),
-        "0",
-      );
-      await page.locator(".process-list").scrollIntoViewIfNeeded();
-      await page.waitForFunction(() =>
-        document.querySelector(".process-list.is-drawn"),
-      );
-      await page.waitForFunction(
-        () =>
-          getComputedStyle(
-            document.querySelector(".process-list li:last-child h3"),
-          ).opacity === "1",
-      );
-      await page.emulateMedia({ reducedMotion: "reduce" });
-      await page.goto(base + file);
-      assert.equal(
-        await page
-          .locator(".process-list li:last-child h3")
-          .evaluate((node) => getComputedStyle(node).opacity),
-        "1",
-      );
-    }
-    assert.equal(await page.locator(".process-toggle").count(), 0);
-    report.interactions.push("process steps draw once; finished state with reduced motion");
+    // Content below the first screen rises in once; with reduced motion
+    // nothing is hidden.
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(base);
+    assert.ok((await page.locator(".reveal").count()) > 0);
+    assert.equal(await page.locator(".hero .reveal").count(), 0);
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto(base);
+    assert.equal(await page.locator(".reveal").count(), 0);
+    report.interactions.push("reveal only below the fold; none with reduced motion");
 
     const nojs = await browser.newContext({
       javaScriptEnabled: false,
@@ -667,7 +466,7 @@ async function main() {
       await staticPage.locator("[data-placeholder]:visible").count(),
       0,
     );
-    assert.equal(await staticPage.locator(".case").count(), 3);
+    assert.equal(await staticPage.locator("#portfolio .work-card").count(), 3);
     await staticPage.locator(".mobile-nav summary").click();
     assert.equal(await staticPage.locator(".mobile-nav nav").isVisible(), true);
     await staticPage.goto(base + "obras.html");

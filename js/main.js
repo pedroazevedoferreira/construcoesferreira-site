@@ -1,6 +1,8 @@
 (() => {
   "use strict";
 
+  const WHATSAPP = "5521965906030";
+  const EMAIL = "ferreira@construcoesferreira.com.br";
   const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
   const root = document.documentElement;
@@ -17,7 +19,7 @@
     }
     document
       .querySelector('meta[name="theme-color"]')
-      ?.setAttribute("content", dark ? "#181a18" : "#f8f9f7");
+      ?.setAttribute("content", dark ? "#0c1a22" : "#f5f2ec");
   }
 
   if (themeButton) {
@@ -46,11 +48,10 @@
     node.textContent = new Date().getFullYear();
   });
 
-  // Conversion events become available as soon as GTM or Analytics provides dataLayer.
-  // The site keeps working normally when no analytics container has been configured.
-  // One delegated listener also covers links created later (floating button, form fallback).
+  // Conversion events become available as soon as GTM or Analytics provides
+  // dataLayer. One delegated listener also covers links created later.
   document.addEventListener("click", (event) => {
-    const link = event.target.closest?.('a[href*="wa.me/"]');
+    const link = event.target.closest?.('a[href*="wa.me/"], a[data-analytics-event]');
     if (!link) return;
     window.dataLayer?.push({
       event: link.dataset.analyticsEvent || "whatsapp_click",
@@ -82,42 +83,25 @@
       }
     });
     window
-      .matchMedia("(min-width: 901px)")
+      .matchMedia("(min-width: 1081px)")
       .addEventListener("change", (event) => {
         if (event.matches) menu.open = false;
       });
   }
 
+  // Obras: filter the catalogue by type. Without JavaScript every work shows.
   document.querySelectorAll("[data-filter-scope]").forEach((scope) => {
     const cards = [...scope.querySelectorAll(".project-card")];
-    const grid = scope.querySelector(".project-grid");
     const buttons = [...scope.querySelectorAll("[data-filter]")];
     const select = scope.querySelector("[data-filter-select]");
-    const more = scope.querySelector("[data-show-more]");
     const status = scope.querySelector("[data-filter-status]");
-    const realOnly = scope.querySelector("[data-record-filter]");
-    const empty = scope.querySelector("[data-filter-empty]");
-    const limit = Number(scope.dataset.limit) || cards.length;
     let category = "all";
-    let expanded = false;
 
     function render() {
-      const matching = cards.filter(
-        (card) =>
-          (category === "all" || card.dataset.category === category) &&
-          (!realOnly?.checked || card.dataset.record === "real"),
-      );
-      const visible = expanded ? matching : matching.slice(0, limit);
+      let shown = 0;
       cards.forEach((card) => {
-        card.hidden = !visible.includes(card);
-        card.classList.toggle("project-featured", card === visible[0]);
-      });
-      grid.dataset.count = visible.length;
-      // Real records and illustrated works sit in separate groups.
-      scope.querySelectorAll(".project-grid, .project-list").forEach((group) => {
-        group.dataset.visible = [...group.children].filter(
-          (card) => card.matches(".project-card") && !card.hidden,
-        ).length;
+        card.hidden = category !== "all" && card.dataset.category !== category;
+        if (!card.hidden) shown++;
       });
       buttons.forEach((button) =>
         button.setAttribute(
@@ -126,242 +110,141 @@
         ),
       );
       select.value = category;
-      if (empty) empty.hidden = matching.length > 0;
-      const recordCount = scope.querySelector("[data-record-count]");
-      if (recordCount) {
-        const real = cards.filter(
-          (card) =>
-            card.dataset.record === "real" &&
-            (category === "all" || card.dataset.category === category),
-        ).length;
-        recordCount.textContent = `(${real} ${real === 1 ? "obra" : "obras"})`;
-      }
-      status.textContent =
-        visible.length === matching.length
-          ? `${visible.length} ${visible.length === 1 ? "obra" : "obras"}`
-          : `${visible.length} de ${matching.length} obras`;
-      if (more) {
-        more.hidden = matching.length <= limit;
-        more.setAttribute("aria-expanded", String(expanded));
-        more.querySelector("span").textContent = expanded
-          ? "Mostrar menos"
-          : "Mais projetos";
-      }
+      status.textContent = `${shown} ${shown === 1 ? "obra" : "obras"}`;
     }
-
-    function change(value) {
+    const change = (value) => {
       category = value;
-      expanded = false;
       render();
-    }
+    };
     buttons.forEach((button) =>
       button.addEventListener("click", () => change(button.dataset.filter)),
     );
     select.addEventListener("change", () => change(select.value));
-    realOnly?.addEventListener("change", () => change(category));
-    scope.querySelector("[data-record-reset]")?.addEventListener("click", () => {
-      realOnly.checked = false;
-      change(category);
-      realOnly.focus();
-    });
-    more?.addEventListener("click", () => {
-      expanded = !expanded;
-      render();
-      if (!expanded)
-        more.scrollIntoView({
-          block: "center",
-          behavior: motion.matches ? "instant" : "smooth",
-        });
-    });
     function revealHash() {
-      const card = cards.find((item) => `#${item.id}` === window.location.hash);
-      if (!card) return;
-      category = "all";
-      if (realOnly) realOnly.checked = false;
-      expanded = true;
-      render();
-      requestAnimationFrame(() =>
-        card.scrollIntoView({ block: "start", behavior: "instant" }),
-      );
+      if (cards.some((card) => `#${card.id}` === window.location.hash))
+        change("all");
     }
     scope.querySelector(".project-filters").hidden = false;
     scope.querySelector(".project-select").hidden = false;
-    if (realOnly) realOnly.closest("label").hidden = false;
     render();
     revealHash();
     window.addEventListener("hashchange", revealHash);
   });
 
-  document.querySelectorAll("[data-wa-form]").forEach((form) => {
+  // Quote form: validates, then prepares the message in WhatsApp or e-mail.
+  // Nothing is sent by the site; the visitor confirms the sending there.
+  document.querySelectorAll("[data-quote-form]").forEach((form) => {
     const status = form.querySelector(".form-status");
     const fallback = form.querySelector(".message-fallback");
-    const messageError = (name, message) => {
-      form.querySelector(`#${name}-error`).textContent = message;
-      form.querySelectorAll(`[name="${name}"]`).forEach((field) => {
-        if (message) field.setAttribute("aria-invalid", "true");
-        else field.removeAttribute("aria-invalid");
-      });
+    const count = form.querySelector("[data-char-count]");
+    const message = form.querySelector("#mensagem");
+    const service = form.querySelector("#servico");
+    const setError = (name, text) => {
+      const slot = form.querySelector(`#${name}-error`);
+      if (slot) slot.textContent = text;
+      const field = form.querySelector(`[name="${name}"]`);
+      if (text) field.setAttribute("aria-invalid", "true");
+      else field.removeAttribute("aria-invalid");
     };
-    const clearDraftLink = () => {
+    const reset = () => {
       fallback.hidden = true;
       fallback.removeAttribute("href");
       status.textContent = "";
       status.classList.remove("is-success", "is-error");
     };
-    const count = form.querySelector("[data-char-count]");
-    const message = form.querySelector("#mensagem");
     const updateCount = () => {
-      if (!count || !message) return;
       count.textContent = `${message.value.length.toLocaleString("pt-BR")} de 2.000`;
       count.classList.toggle("is-near", message.value.length > 1800);
     };
+    // A service page can pre-select its service (?servico=slug).
+    const wanted = new URLSearchParams(window.location.search).get("servico");
+    if (wanted && [...service.options].some((option) => option.value === wanted))
+      service.value = wanted;
+
     form.addEventListener("input", (event) => {
-      clearDraftLink();
+      reset();
       updateCount();
-      const name = event.target.name;
-      if (name && form.querySelector(`#${name}-error`)) messageError(name, "");
+      if (event.target.name) setError(event.target.name, "");
     });
-    form.addEventListener("change", clearDraftLink);
+    form.addEventListener("change", reset);
     form.addEventListener("submit", (event) => {
       event.preventDefault();
-      clearDraftLink();
+      reset();
       const data = new FormData(form);
       const value = (name) => String(data.get(name) || "").trim();
       const values = {
         nome: value("nome"),
+        empresa: value("empresa"),
+        telefone: value("telefone"),
+        email: value("email"),
+        servico: value("servico"),
         local: value("local"),
-        tipo: value("tipo"),
-        prazo: value("prazo"),
         mensagem: value("mensagem"),
       };
+      const digits = values.telefone.replace(/\D/g, "");
       const errors = {};
-      if (values.nome.length < 2 || values.nome.length > 100)
-        errors.nome = "Informe seu nome, entre 2 e 100 caracteres.";
-      if (values.local.length < 2 || values.local.length > 100)
-        errors.local = "Informe a cidade ou o bairro.";
-      if (values.mensagem.length > 2000)
-        errors.mensagem = "Use no máximo 2.000 caracteres.";
-      const names = ["nome", "local", "mensagem"];
-      names.forEach((name) => messageError(name, errors[name] || ""));
-      status.classList.toggle("is-error", Object.keys(errors).length > 0);
-      if (Object.keys(errors).length) {
-        status.textContent = "Confira os campos indicados antes de continuar.";
-        form.querySelector(`[name="${Object.keys(errors)[0]}"]`).focus();
+      if (values.nome.length < 2)
+        errors.nome = "Informe seu nome, com pelo menos 2 caracteres.";
+      if (digits.length < 10 || digits.length > 13)
+        errors.telefone = "Informe um telefone com DDD, por exemplo (21) 99999-9999.";
+      if (values.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(values.email))
+        errors.email = "Confira o e-mail ou deixe o campo em branco.";
+      if (!values.servico) errors.servico = "Escolha o serviço de interesse.";
+      if (values.local.length < 2) errors.local = "Informe a cidade ou a região da obra.";
+      if (values.mensagem.length < 10)
+        errors.mensagem = "Descreva a necessidade em pelo menos 10 caracteres.";
+      ["nome", "telefone", "email", "servico", "local", "mensagem"].forEach(
+        (name) => setError(name, errors[name] || ""),
+      );
+      const invalid = Object.keys(errors);
+      if (invalid.length) {
+        status.classList.add("is-error");
+        status.textContent =
+          invalid.length === 1
+            ? "Confira o campo indicado antes de continuar."
+            : `Confira os ${invalid.length} campos indicados antes de continuar.`;
+        form.querySelector(`[name="${invalid[0]}"]`).focus();
         return;
       }
-      // Only what the visitor typed goes into the WhatsApp draft.
-      const service =
-        values.tipo && values.tipo !== "Outro" ? values.tipo.toLowerCase() : "";
+      const serviceLabel =
+        service.options[service.selectedIndex]?.textContent.trim() || "";
+      // Only what the visitor typed goes into the message.
       const lines = [
-        `Olá, Ferreira! Meu nome é ${values.nome}.`,
-        service
-          ? `Tenho interesse em ${service} em ${values.local}.`
-          : `Tenho um projeto em ${values.local}.`,
+        `Olá, Ferreira! Meu nome é ${values.nome}${values.empresa ? `, da empresa ${values.empresa}` : ""}.`,
+        `Serviço de interesse: ${serviceLabel}.`,
+        `Local da obra: ${values.local}.`,
+        `Telefone para contato: ${values.telefone}.`,
       ];
-      if (values.prazo) lines.push(`Quando pretendo começar: ${values.prazo}.`);
-      lines.push("Gostaria de conversar sobre o meu projeto.");
-      if (values.mensagem) lines.push("", values.mensagem);
-      const url = `https://wa.me/5521965906030?text=${encodeURIComponent(lines.join("\n"))}`;
+      if (values.email) lines.push(`E-mail: ${values.email}.`);
+      lines.push("", values.mensagem);
+      const text = lines.join("\n");
+      const channel = event.submitter?.value === "email" ? "email" : "whatsapp";
+      const url =
+        channel === "email"
+          ? `mailto:${EMAIL}?subject=${encodeURIComponent(`Pedido de orçamento: ${serviceLabel}`)}&body=${encodeURIComponent(text)}`
+          : `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
       window.dataLayer?.push({
         event: "quote_form_submit",
+        channel,
         source: window.location.pathname,
       });
       fallback.href = url;
       fallback.hidden = false;
+      fallback.firstChild.textContent =
+        channel === "email" ? "Abrir a mensagem no e-mail" : "Abrir a mensagem no WhatsApp";
+      if (channel === "email") fallback.removeAttribute("target");
+      else fallback.target = "_blank";
       status.classList.add("is-success");
       status.textContent =
-        "Mensagem preparada. Revise e confirme o envio no WhatsApp. Se a janela não abriu, use o link abaixo.";
-      window.open(url, "_blank", "noopener,noreferrer");
+        channel === "email"
+          ? "Mensagem preparada no seu aplicativo de e-mail. Ela só será enviada quando você confirmar o envio por lá. Se nada abriu, use o link abaixo."
+          : "Mensagem preparada no WhatsApp. Ela só será enviada quando você confirmar no aplicativo. Se a janela não abriu, use o link abaixo.";
+      if (channel === "email") window.location.href = url;
+      else window.open(url, "_blank", "noopener,noreferrer");
     });
     updateCount();
     form.hidden = false;
   });
-
-  const testimonial = document.querySelector("[data-testimonial-carousel]");
-  if (testimonial) {
-    const slides = [
-      ...testimonial.querySelectorAll("[data-testimonial-slide]"),
-    ];
-    const dots = [...testimonial.querySelectorAll("[data-testimonial-dot]")];
-    const stage = testimonial.querySelector(".testimonial-stage");
-    const status = testimonial.querySelector("[data-testimonial-status]");
-    let current = 0;
-    let touch = null;
-
-    function showSlide(index, announce = true) {
-      current = (index + slides.length) % slides.length;
-      // Move focus before making an outgoing slide inert.
-      if (slides.some((slide) => slide.contains(document.activeElement)))
-        dots[current].focus({ preventScroll: true });
-      slides.forEach((slide, position) => {
-        const offset = (position - current + slides.length) % slides.length;
-        const active = offset === 0;
-        slide.dataset.position = active
-          ? "active"
-          : offset === 1
-            ? "next"
-            : "previous";
-        slide.inert = !active;
-        slide.setAttribute("aria-hidden", String(!active));
-        slide.hidden = false;
-      });
-      dots.forEach((dot, index) => {
-        if (index === current) dot.setAttribute("aria-current", "true");
-        else dot.removeAttribute("aria-current");
-      });
-      if (announce)
-        status.textContent = `${current + 1} de ${slides.length}: ${slides[current].dataset.slideLabel}.`;
-    }
-
-    testimonial
-      .querySelector("[data-testimonial-prev]")
-      .addEventListener("click", () => showSlide(current - 1));
-    testimonial
-      .querySelector("[data-testimonial-next]")
-      .addEventListener("click", () => showSlide(current + 1));
-    dots.forEach((dot, index) =>
-      dot.addEventListener("click", () => showSlide(index)),
-    );
-    testimonial.addEventListener("keydown", (event) => {
-      if (event.altKey || event.ctrlKey || event.metaKey) return;
-      const target = {
-        ArrowLeft: current - 1,
-        ArrowRight: current + 1,
-        Home: 0,
-        End: slides.length - 1,
-      }[event.key];
-      if (target === undefined) return;
-      event.preventDefault();
-      showSlide(target);
-    });
-    stage.addEventListener(
-      "touchstart",
-      (event) => {
-        touch =
-          event.touches.length === 1
-            ? { x: event.touches[0].clientX, y: event.touches[0].clientY }
-            : null;
-      },
-      { passive: true },
-    );
-    stage.addEventListener(
-      "touchend",
-      (event) => {
-        if (!touch || !event.changedTouches.length) return;
-        const dx = event.changedTouches[0].clientX - touch.x;
-        const dy = event.changedTouches[0].clientY - touch.y;
-        if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5)
-          showSlide(current + (dx < 0 ? 1 : -1));
-        touch = null;
-      },
-      { passive: true },
-    );
-    stage.addEventListener("touchcancel", () => {
-      touch = null;
-    });
-    showSlide(0, false);
-    testimonial.querySelector("[data-testimonial-controls]").hidden = false;
-  }
 
   // Work gallery: pick a category, open a work, browse all of its photos.
   // Without JavaScript every album stays a plain list of photos.
@@ -485,7 +368,7 @@
       open = null;
       viewer.hidden = true;
       grid.hidden = false;
-      bar.hidden = categories.length < 1;
+      bar.hidden = categories.length < 2;
       render();
       history.replaceState(null, "", "#galeria");
       last?.button.focus({ preventScroll: true });
@@ -521,7 +404,7 @@
       },
     );
     bar.append(...chips);
-    bar.hidden = albums.length === 0;
+    bar.hidden = categories.length < 2;
 
     function render() {
       let shown = 0;
@@ -629,39 +512,36 @@
     );
   }
 
-  // Content rises into place once; theme-init.js only hides it when this can run.
-  if (root.classList.contains("reveal-ready")) {
+  // Content below the first screen rises into place once. Nothing visible on
+  // load is hidden, and reduced motion skips the effect entirely.
+  if ("IntersectionObserver" in window && !motion.matches) {
     const targets = [
       ...document.querySelectorAll(
         [
-          "main .section-heading",
-          ".project-card",
-          ".service-summary",
-          ".logo-strip",
-          ".testimonial-heading",
-          ".testimonial-carousel",
-          ".people-photo",
-          ".people-copy",
-          ".cta-layout",
-          ".service-panorama",
-          ".service-detail",
-          ".company-profile > *",
-          ".value-list article",
-          ".partner-grid > div",
-          ".contact-methods > a",
-          ".faq-list details",
-          ".project-story > *",
-          ".gallery-grid > *",
+          "main .section-head",
+          ".work-card",
+          ".service-card",
+          ".step",
+          ".feature-list li",
+          ".about-media",
+          ".about-copy",
+          ".client-quote",
+          ".service-block",
+          ".principles li",
+          ".logo-grid",
+          ".partner-grid",
+          ".row-list li",
+          ".callout",
           ".album",
-          ".why-grid li",
+          ".fit-list li",
         ].join(","),
       ),
-    ];
+    ].filter((node) => node.getBoundingClientRect().top > window.innerHeight);
     const observer = new IntersectionObserver(
       (entries) =>
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
-          entry.target.classList.add("is-revealed");
+          entry.target.classList.add("is-in");
           observer.unobserve(entry.target);
         }),
       { rootMargin: "0px 0px -8% 0px" },
@@ -670,95 +550,29 @@
       const siblings = [...target.parentElement.children].filter((node) =>
         targets.includes(node),
       );
-      const order = Math.min(siblings.indexOf(target), 4);
+      const order = Math.min(siblings.indexOf(target), 3);
       if (order > 0)
-        target.style.setProperty("--reveal-delay", `${order * 90}ms`);
+        target.style.setProperty("--reveal-delay", `${order * 80}ms`);
+      target.classList.add("reveal");
       observer.observe(target);
     });
-    root.classList.add("reveal-live");
-    // Testimonial: stars light up, words arrive, key phrases get marked.
-    const review = document.querySelector(".testimonial-section");
-    const quote = review?.querySelector(".testimonial-single blockquote");
-    if (review && quote) {
-      let word = 0;
-      const wrap = (node) => {
-        [...node.childNodes].forEach((child) => {
-          if (child.nodeType === Node.ELEMENT_NODE) {
-            wrap(child);
-            if (child.classList.contains("quote-mark"))
-              child.style.setProperty(
-                "--mark-delay",
-                `${(word * 28 + 800) / 1000}s`,
-              );
-            return;
-          }
-          if (child.nodeType !== Node.TEXT_NODE || !child.textContent.trim())
-            return;
-          const parts = child.textContent.split(/(\s+)/);
-          const fragment = document.createDocumentFragment();
-          parts.forEach((part) => {
-            if (!part) return;
-            if (/^\s+$/.test(part)) {
-              fragment.append(part);
-              return;
-            }
-            const span = document.createElement("span");
-            span.className = "quote-word";
-            span.textContent = part;
-            span.style.setProperty("--w", word++);
-            fragment.append(span);
-          });
-          child.replaceWith(fragment);
-        });
-      };
-      wrap(quote);
-      review
-        .querySelectorAll(".review-stars .icon")
-        .forEach((star, index) => star.style.setProperty("--i", index));
-      new IntersectionObserver(
-        (entries, watcher) => {
-          if (!entries[0].isIntersecting) return;
-          review.classList.add("is-live");
-          watcher.disconnect();
-        },
-        { threshold: 0.35 },
-      ).observe(review);
-    }
-
-    // Construction drawings beside headings trace themselves once.
-    document.querySelectorAll(".site-art").forEach((art) =>
-      new IntersectionObserver(
-        (entries, watcher) => {
-          if (!entries[0].isIntersecting) return;
-          art.classList.add("is-drawn");
-          watcher.disconnect();
-        },
-        { threshold: 0.5 },
-      ).observe(art),
-    );
-    // "Como funciona" (home and Serviços) draws itself once, step by step.
-    document.querySelectorAll(".process-list").forEach((steps) =>
-      new IntersectionObserver(
-        (entries, watcher) => {
-          if (!entries[0].isIntersecting) return;
-          steps.classList.add("is-drawn");
-          watcher.disconnect();
-        },
-        { threshold: 0.45 },
-      ).observe(steps),
-    );
     motion.addEventListener("change", () => {
-      if (motion.matches)
-        targets.forEach((target) => target.classList.add("is-revealed"));
+      if (motion.matches) targets.forEach((target) => target.classList.add("is-in"));
     });
   }
 
+  // WhatsApp shortcut, lower-right corner. It steps aside where the page
+  // already offers contact or where it would cover controls, and on phones
+  // it also hides while reading downwards.
   const header = document.querySelector(".site-header");
-  const whatsapp = document.querySelector(
-    '.header-actions a[href^="https://wa.me/"]',
-  );
-  let float = null;
-  const svgIcon = (attributes, d) => {
+  const float = document.createElement("a");
+  float.className = "whatsapp-float";
+  float.href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Olá, Ferreira! Vim pelo site e gostaria de solicitar um orçamento.")}`;
+  float.target = "_blank";
+  float.rel = "noopener noreferrer";
+  float.dataset.analyticsEvent = "whatsapp_floating";
+  float.setAttribute("aria-label", "Falar com a Ferreira pelo WhatsApp");
+  {
     const ns = "http://www.w3.org/2000/svg";
     const icon = document.createElementNS(ns, "svg");
     const path = document.createElementNS(ns, "path");
@@ -767,59 +581,16 @@
       focusable: "false",
       class: "icon",
       viewBox: "0 0 24 24",
-      ...attributes,
+      fill: "currentColor",
     }).forEach(([name, value]) => icon.setAttribute(name, value));
-    path.setAttribute("d", d);
+    // WhatsApp glyph (Simple Icons, CC0), reused from the page markup.
+    const glyph = document.querySelector(".icon-wa path");
+    if (glyph) path.setAttribute("d", glyph.getAttribute("d"));
     icon.append(path);
-    return icon;
-  };
-  const shortcut = (className, label) => {
-    const link = document.createElement("a");
-    link.className = className;
-    link.href = whatsapp.href;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.setAttribute("aria-label", label);
-    document.body.append(link);
-    return link;
-  };
-  if (whatsapp) {
-    // One WhatsApp shortcut, lower-right corner, on every screen size.
-    float = shortcut("whatsapp-float", "Falar com a Ferreira pelo WhatsApp");
-    float.dataset.analyticsEvent = "whatsapp_floating";
-    // WhatsApp glyph (Simple Icons, CC0).
-    float.append(
-      svgIcon(
-        { fill: "currentColor" },
-        "M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z",
-      ),
-    );
+    float.append(icon);
   }
-  // The shortcut steps aside where the page already offers WhatsApp or
-  // where it would cover controls: hero, calls to action, the contact
-  // area, the works filters, small link rows and the footer. Large card
-  // links underneath stay usable around it.
-  const busyZones = [
-    ".hero",
-    ".contact-cta",
-    ".contact-layout",
-    ".project-toolbar",
-    ".project-pager",
-    ".faq-list",
-    ".site-footer",
-  ].flatMap((selector) => [...document.querySelectorAll(selector)]);
+  document.body.append(float);
   const busy = new Set();
-  if (float && "IntersectionObserver" in window)
-    busyZones.forEach((zone) =>
-      new IntersectionObserver((entries) => {
-        entries.forEach((entry) =>
-          entry.isIntersecting ? busy.add(zone) : busy.delete(zone),
-        );
-        syncScroll();
-      }).observe(zone),
-    );
-  // On phones it also hides while reading downwards and returns on the
-  // way back up, so it never sits over the text being read.
   const phone = window.matchMedia("(max-width: 640px)");
   let lastY = window.scrollY;
   let goingDown = false;
@@ -830,13 +601,30 @@
       lastY = y;
     }
     header?.classList.toggle("is-scrolled", y > 8);
-    // Compact only once the header's own spot has scrolled away (no jump).
-    header?.classList.toggle("is-compact", y > 160);
-    float?.classList.toggle(
+    float.classList.toggle(
       "is-visible",
-      busy.size === 0 && !(phone.matches && goingDown),
+      y > 240 && busy.size === 0 && !(phone.matches && goingDown),
     );
   }
+  if ("IntersectionObserver" in window)
+    [
+      ".hero",
+      ".cta-band",
+      ".contact-section",
+      ".project-toolbar",
+      ".project-pager",
+      ".faq-list",
+      ".site-footer",
+    ]
+      .flatMap((selector) => [...document.querySelectorAll(selector)])
+      .forEach((zone) =>
+        new IntersectionObserver((entries) => {
+          entries.forEach((entry) =>
+            entry.isIntersecting ? busy.add(zone) : busy.delete(zone),
+          );
+          syncScroll();
+        }).observe(zone),
+      );
   window.addEventListener("scroll", syncScroll, { passive: true });
   syncScroll();
 
@@ -845,9 +633,8 @@
   const touch = window.matchMedia("(hover: none)");
   if (touch.matches && "IntersectionObserver" in window) {
     const focusable = document.querySelectorAll(
-      ".route, .service-row, .service-card, .service-detail, .case, .project-link, .chooser-card, .album.is-card, .work-row, .hero-proof, .contact-methods > a, .why-grid li, .opener-mosaic a",
+      ".work-link, .service-card, .album.is-card, .row-link, .channel-list a",
     );
-    // Only one item at a time: the one closest to the middle.
     const near = new Set();
     let current = null;
     const pick = () => {
@@ -882,96 +669,11 @@
     });
   }
 
-  // Serviços: the sticky area nav sits right under the header and marks
-  // the service being read.
-  const serviceNav = document.querySelector("[data-service-nav]");
-  if (serviceNav && header) {
-    const setHeaderHeight = () =>
-      document.documentElement.style.setProperty(
-        "--header-h",
-        `${Math.round(header.getBoundingClientRect().height)}px`,
-      );
-    setHeaderHeight();
-    window.addEventListener("scroll", setHeaderHeight, { passive: true });
-    window.addEventListener("resize", setHeaderHeight);
-    const navLinks = [...serviceNav.querySelectorAll('a[href^="#"]')];
-    const mark = (id) =>
-      navLinks.forEach((link) => {
-        if (link.hash === `#${id}`) {
-          link.setAttribute("aria-current", "true");
-          link.scrollIntoView({ block: "nearest", inline: "nearest" });
-        } else link.removeAttribute("aria-current");
-      });
-    // The bar shows only after the comparison cards have scrolled away
-    // and while the service details are on screen.
-    const chooser = document.querySelector(".service-chooser");
-    const details = document.querySelector(".service-details");
-    if (chooser && details && "IntersectionObserver" in window) {
-      const state = { chooser: true, details: false };
-      const toggle = () =>
-        serviceNav.classList.toggle("is-active", !state.chooser && state.details);
-      new IntersectionObserver(([entry]) => {
-        state.chooser = entry.isIntersecting;
-        toggle();
-      }).observe(chooser);
-      new IntersectionObserver(([entry]) => {
-        state.details = entry.isIntersecting;
-        toggle();
-      }).observe(details);
-    } else serviceNav.classList.add("is-active");
-    if ("IntersectionObserver" in window) {
-      const spy = new IntersectionObserver(
-        (entries) =>
-          entries.forEach((entry) => entry.isIntersecting && mark(entry.target.id)),
-        { rootMargin: "-35% 0px -60% 0px" },
-      );
-      navLinks.forEach((link) => {
-        const target = document.querySelector(link.hash);
-        if (target) spy.observe(target);
-      });
-    }
-  }
-
-  // Back to top, next to the privacy link.
-  const privacy = document.querySelector(".footer-bottom > a:last-child");
-  if (privacy) {
-    const links = document.createElement("div");
-    links.className = "footer-links";
-    const top = document.createElement("button");
-    top.type = "button";
-    top.className = "footer-top";
-    top.append(
-      "Voltar ao topo",
-      svgIcon(
-        {
-          fill: "none",
-          stroke: "currentColor",
-          "stroke-width": "2",
-          "stroke-linecap": "round",
-          "stroke-linejoin": "round",
-        },
-        "m5 12 7-7 7 7M12 19V5",
-      ),
-    );
-    top.addEventListener("click", () => {
-      window.scrollTo({
-        top: 0,
-        behavior: motion.matches ? "instant" : "smooth",
-      });
-      document.querySelector(".brand")?.focus({ preventScroll: true });
-    });
-    privacy.replaceWith(links);
-    links.append(privacy, top);
-  }
-
   // Lazy images fade in instead of popping.
   document.querySelectorAll('img[loading="lazy"]').forEach((image) => {
     if (image.complete) return;
-    image.classList.add("is-loading");
-    const done = () => {
-      image.classList.add("is-loaded");
-      image.classList.remove("is-loading");
-    };
+    image.classList.add("lazy-fade");
+    const done = () => image.classList.add("is-loaded");
     image.addEventListener("load", done, { once: true });
     image.addEventListener("error", done, { once: true });
   });

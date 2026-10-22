@@ -17,7 +17,6 @@ Nao apague imagens antigas enquanto houver referencias a elas. Nenhuma compilaca
 
 | Ficha                          | Imagem atual                                                                    | Situacao                                                                                                            |
 | ------------------------------ | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| Home                           | `ilustrativa-corporativo.webp`                                                  | Ilustrativa; substituir por uma boa foto horizontal autorizada.                                                     |
 | `projetos/corporativo.html`    | `otimizada-sala-reuniao.webp`, `otimizada-recepcao.webp`, `obra-escritorio.jpg` | A reforma das salas da CBKC e documentada no PDF. Estas fotos nao foram confirmadas como sendo dessa obra.          |
 | `projetos/residencial.html`    | `ilustrativa-residencial.webp`                                                  | Area de atuacao, nao um projeto especifico executado. Ao criar um caso real, atualizar tambem nome, local e escopo. |
 | `projetos/otavio-kelly.html`   | `obras/reforco-otavio-kelly.webp`                                               | Registro da galeria institucional anterior.                                                                         |
@@ -28,7 +27,8 @@ Nao apague imagens antigas enquanto houver referencias a elas. Nenhuma compilaca
 | `projetos/ufrj.html`           | `obra-escritorio.jpg`                                                           | Ampliacao de laboratorio documentada; imagem ilustrativa.                                                           |
 | `projetos/technip.html`        | `hero-fachada.webp`                                                             | Gerenciamento de reforma documentado; imagem ilustrativa.                                                           |
 | Empresa                        | `sandro-ferreira.webp`                                                          | Retrato selecionado para esta pagina.                                                                               |
-| Home                           | `otimizada-sandro-obra.webp`                                                    | Registro de Sandro no canteiro enviado pelo usuario.                                                                |
+| Home (hero)                    | `otimizada-sandro-obra.webp`                                                    | Registro de Sandro no canteiro enviado pelo usuario. Confirmar que e foto real.                                     |
+| Home e A empresa               | `sandro-ferreira.webp` (640 px)                                                 | Retrato. Confirmar que e foto real; enviar versao maior (1200 px ou mais).                                          |
 
 `ilustrativa-residencial.webp` tambem aparece na pagina Servicos. Uma mesma referencia pode ser usada em mais de um lugar: pesquise todas as ocorrencias antes de trocar o arquivo.
 
@@ -37,7 +37,7 @@ Nao apague imagens antigas enquanto houver referencias a elas. Nenhuma compilaca
 - **Obras realizadas** (Obras, home e fichas com "Tipo: Obra realizada"): Otávio Kelly, Campo da Areia, Clínica LAB'S, Salas da CBKC, Technip, UFRJ COPPETEC e Caminho seguro · Ipiranga.
 - **Áreas de atuação** (seção "Áreas de atuação" em Serviços, fichas com "Tipo: Área de atuação"): Construção residencial e Salas técnicas e CPD. Usam imagens ilustrativas e não representam obras executadas.
 
-Ao incluir ou retirar uma obra realizada, atualize também o número "7" da faixa de números na home (`experience-grid`). Os três cases da home (`case-list`) usam obras com foto real; troque-os quando houver casos mais fortes, sempre com fatos documentados.
+As três obras da home (`#portfolio`, componente `work-card`) usam obras com foto real; troque-as quando houver casos mais fortes, sempre com fatos documentados. Cada página de serviço (`servicos/*.html`) também lista obras relacionadas.
 
 Não mova uma área de atuação para "Obras realizadas" sem uma obra real, com cliente, local e escopo confirmados.
 
@@ -52,13 +52,13 @@ A troca não muda layout, proporção nem componentes. Em cada lugar onde a obra
 
 ## Ordem das obras em Obras
 
-A primeira obra visível em `obras.html` aparece em destaque, ocupando a largura toda; as demais seguem em linhas de três. Para mudar o destaque, mova o `<article class="project-card">` desejado para o início do `project-grid`. Para incluir uma obra, copie um `<article class="project-card">` inteiro e troque link, imagem, categoria (`data-category`), título e local. A abertura da página (`opener-mosaic`) mostra três obras: troque os links e as fotos ali também quando quiser outras em evidência.
+As obras aparecem em `obras.html` na ordem do `project-grid`, em linhas de três. Para mudar a ordem, mova o `<article class="work-card project-card">` desejado. Para incluir uma obra, copie um `<article>` inteiro e troque link, imagem, categoria (`data-category`), título, local e a linha "Atuação da Ferreira". O cartão "Não encontrou uma obra parecida" fica sempre por último.
 
-As fichas têm, em comentário HTML, os blocos opcionais "O desafio" e "Resultado". Use-os somente com informações reais e autorizadas.
+As fichas têm, em comentário HTML, os blocos opcionais "Contexto e desafio" e "Resultado". Use-os somente com informações reais e autorizadas.
 
 ## Mais imagens na galeria
 
-Use o bloco `gallery-grid` da ficha corporativa como modelo. Cada link com `data-lightbox`, `href` e `data-caption` entra automaticamente na navegacao da galeria, sem alterar o JavaScript. Nao duplique a foto da capa na grade: a capa ja faz parte da sequencia.
+Use o bloco `gallery-grid` da ficha corporativa (`projetos/corporativo.html`) como modelo. Cada link com `data-lightbox`, `href` e `data-caption` entra automaticamente na navegacao da galeria, sem alterar o JavaScript. Nao duplique a foto da capa na grade: a capa ja faz parte da sequencia.
 
 ## Galeria de obras
 
