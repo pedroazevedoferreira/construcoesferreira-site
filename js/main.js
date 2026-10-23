@@ -142,10 +142,24 @@
     const setError = (name, text) => {
       const slot = form.querySelector(`#${name}-error`);
       if (slot) slot.textContent = text;
-      const field = form.querySelector(`[name="${name}"]`);
+      // Checkbox groups carry the state on their fieldset.
+      const input = form.querySelector(`[name="${name}"]`);
+      const field = input.type === "checkbox" ? input.closest("fieldset") : input;
       if (text) field.setAttribute("aria-invalid", "true");
       else field.removeAttribute("aria-invalid");
     };
+    const checked = (name) =>
+      [...form.querySelectorAll(`[name="${name}"]:checked`)].map((box) => box.value);
+    // "Ainda não tenho" excludes the other options of its group and vice versa.
+    form.querySelectorAll("fieldset[data-exclusive]").forEach((group) =>
+      group.addEventListener("change", (event) => {
+        if (!event.target.checked) return;
+        group.querySelectorAll('input[type="checkbox"]').forEach((box) => {
+          if (box !== event.target && box.hasAttribute("data-none") !== event.target.hasAttribute("data-none"))
+            box.checked = false;
+        });
+      }),
+    );
     const reset = () => {
       fallback.hidden = true;
       fallback.removeAttribute("href");
@@ -179,6 +193,8 @@
         email: value("email"),
         servico: value("servico"),
         local: value("local"),
+        projetos: checked("projetos"),
+        documentos: checked("documentos"),
         mensagem: value("mensagem"),
       };
       const digits = values.telefone.replace(/\D/g, "");
@@ -190,10 +206,14 @@
       if (values.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(values.email))
         errors.email = "Confira o e-mail ou deixe o campo em branco.";
       if (!values.servico) errors.servico = "Escolha o serviço de interesse.";
-      if (values.local.length < 2) errors.local = "Informe a cidade ou a região da obra.";
-      if (values.mensagem.length < 10)
-        errors.mensagem = "Descreva a necessidade em pelo menos 10 caracteres.";
-      ["nome", "telefone", "email", "servico", "local", "mensagem"].forEach(
+      if (values.local.length < 2) errors.local = "Informe a cidade da obra.";
+      if (!values.projetos.length)
+        errors.projetos = "Marque os projetos disponíveis ou “Ainda não tenho projetos”.";
+      if (!values.documentos.length)
+        errors.documentos = "Marque a documentação disponível ou “Não tenho documentação técnica”.";
+      if (values.mensagem.length < 20)
+        errors.mensagem = "Descreva o serviço em pelo menos 20 caracteres.";
+      ["nome", "telefone", "email", "servico", "local", "projetos", "documentos", "mensagem"].forEach(
         (name) => setError(name, errors[name] || ""),
       );
       const invalid = Object.keys(errors);
@@ -212,11 +232,17 @@
       const lines = [
         `Olá, Ferreira! Meu nome é ${values.nome}${values.empresa ? `, da empresa ${values.empresa}` : ""}.`,
         `Serviço de interesse: ${serviceLabel}.`,
-        `Local da obra: ${values.local}.`,
+        `Cidade da obra: ${values.local}.`,
         `Telefone para contato: ${values.telefone}.`,
       ];
       if (values.email) lines.push(`E-mail: ${values.email}.`);
-      lines.push("", values.mensagem);
+      lines.push(
+        `Projetos disponíveis: ${values.projetos.join(", ")}.`,
+        `Documentação técnica: ${values.documentos.join(", ")}.`,
+        "",
+        "Descrição do serviço:",
+        values.mensagem,
+      );
       const text = lines.join("\n");
       const channel = event.submitter?.value === "email" ? "email" : "whatsapp";
       const url =
@@ -541,8 +567,16 @@
       (entries) =>
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
-          entry.target.classList.add("is-in");
-          observer.unobserve(entry.target);
+          const target = entry.target;
+          target.classList.add("is-in");
+          observer.unobserve(target);
+          // Once it has arrived, the element gets its own transitions and
+          // hover effects back.
+          const delay = parseFloat(target.style.getPropertyValue("--reveal-delay")) || 0;
+          setTimeout(() => {
+            target.classList.remove("reveal", "is-in");
+            target.style.removeProperty("--reveal-delay");
+          }, 760 + delay);
         }),
       { rootMargin: "0px 0px -8% 0px" },
     );

@@ -366,7 +366,10 @@ async function main() {
           .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
           .analyze();
         assert.deepEqual(
-          audit.violations,
+          audit.violations.map((item) => ({
+            id: item.id,
+            nodes: item.nodes.map((node) => [node.target, node.any.map((check) => check.message)]),
+          })),
           [],
           `testimonial ${width} ${colorScheme}`,
         );
@@ -400,6 +403,24 @@ async function main() {
           field,
         );
       assert.equal(await page.locator("#email").getAttribute("aria-invalid"), null);
+      for (const group of ["projetos", "documentos"])
+        assert.equal(
+          await page
+            .locator(`fieldset:has([name=${group}])`)
+            .getAttribute("aria-invalid"),
+          "true",
+          group,
+        );
+      // "Ainda não tenho" and the other options exclude each other.
+      await page.locator('label:has-text("Projeto estrutural")').click();
+      await page.locator('label:has-text("Ainda não tenho projetos")').click();
+      assert.equal(
+        await page.locator('[name=projetos][value="Projeto estrutural"]').isChecked(),
+        false,
+      );
+      await page.locator('label:has-text("Projeto arquitetônico")').click();
+      assert.equal(await page.locator("[name=projetos][data-none]").isChecked(), false);
+      await page.locator('label:has-text("Não tenho documentação técnica")').click();
       assert.equal(await page.locator(".message-fallback").isVisible(), false);
       await page.locator("#nome").fill("Teste & Validação");
       await page.locator("#telefone").fill("(21) 99999-0000");
@@ -423,6 +444,14 @@ async function main() {
       assert.ok(text.includes("Serviço de interesse: Engenharia estrutural."));
       assert.ok(text.includes("Telefone para contato: (21) 99999-0000."));
       assert.ok(!text.includes("E-mail:"));
+      assert.ok(text.includes("Cidade da obra: Tijuca."));
+      assert.ok(text.includes("Projetos disponíveis: Projeto arquitetônico."));
+      assert.ok(text.includes("Documentação técnica: Não tenho documentação técnica."));
+      // No upload is offered: documents go through WhatsApp.
+      assert.equal(await page.locator('input[type="file"]').count(), 0);
+      assert.ok(
+        (await page.locator(".form-notes").innerText()).includes("não recebe arquivos"),
+      );
       assert.ok(
         (await page.locator(".form-status").innerText()).includes("só será enviada"),
       );
@@ -445,6 +474,17 @@ async function main() {
     await page.goto(base);
     assert.ok((await page.locator(".reveal").count()) > 0);
     assert.equal(await page.locator(".hero .reveal").count(), 0);
+    // After arriving, a card drops the reveal styles so its hover works again.
+    const card = page.locator(".service-card").nth(1);
+    await card.scrollIntoViewIfNeeded();
+    await page.waitForFunction(
+      (node) => !node.classList.contains("reveal"),
+      await card.elementHandle(),
+      { timeout: 4000 },
+    );
+    await card.hover();
+    await page.waitForTimeout(400);
+    assert.notEqual(await card.evaluate((node) => getComputedStyle(node).transform), "none");
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto(base);
     assert.equal(await page.locator(".reveal").count(), 0);

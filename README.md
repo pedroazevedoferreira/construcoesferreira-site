@@ -8,7 +8,7 @@ Publicado no Cloudflare Workers (static assets):
 
 - `main` publica o site oficial: https://construcoesferreira-site.pedroazevedoferreira2006.workers.dev/
 - `reformulacao` gera a previa da reformulacao, sem afetar o site oficial: https://reformulacao-construcoesferreira-site.pedroazevedoferreira2006.workers.dev/
-- A tag `v1.0` guarda o site anterior a reformulacao.
+- A tag `v1.0` guarda o site anterior a reformulacao; a tag `v2.0` marca a primeira publicacao da reformulacao.
 
 ## Executar localmente
 
