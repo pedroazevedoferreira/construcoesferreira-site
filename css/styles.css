@@ -727,13 +727,8 @@ main:focus {
 
 /* ---------- Hero (home) ---------- */
 .hero {
-  padding-block: 56px 88px;
-}
-.hero-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 46fr) minmax(0, 54fr);
-  gap: 64px;
-  align-items: center;
+  position: relative;
+  isolation: isolate;
 }
 .hero-copy h1 {
   max-width: 640px;
@@ -779,38 +774,278 @@ main:focus {
 .button-secondary .icon-wa {
   color: #1c8a4b;
 }
-.hero-media {
+
+/* ---------- Hero carousel ----------
+   Desktop: the slides fill the hero and the copy sits over a dark veil.
+   Phones: the slides come first and the copy follows on the page colour.
+   Without JavaScript only the first slide shows and the controls stay hidden. */
+.hero-carousel {
+  --carousel-interval: 6s;
+  --edge: max(var(--gutter), calc((100% - var(--container)) / 2));
   position: relative;
-  height: clamp(460px, 42vw, 580px);
   overflow: hidden;
-  border-radius: var(--radius-lg);
-  background: var(--surface-soft);
+  background: var(--blue-deep);
+  color: #fff;
 }
-.hero-media img {
+.carousel-track {
+  position: relative;
+  height: 100%;
+  touch-action: pan-y;
+}
+.carousel-slide {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.9s var(--ease),
+    visibility 0s linear 0.9s;
+}
+.carousel-slide.is-active {
+  z-index: 1;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.9s var(--ease);
+}
+.carousel-slide img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 60% 30%;
+  transform: scale(1.06);
+  transition: transform 7s linear;
 }
-.hero-media figcaption {
+.carousel-slide.is-active img {
+  transform: none;
+}
+.carousel-slide::after {
+  content: "";
   position: absolute;
-  left: 16px;
-  bottom: 16px;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(10, 25, 34, 0.82) 0%, rgba(10, 25, 34, 0) 38%);
+  pointer-events: none;
+}
+.carousel-slide figcaption {
+  position: absolute;
+  z-index: 2;
   display: grid;
   gap: 2px;
-  padding: 12px 16px;
+  padding-left: 16px;
   border-left: 3px solid var(--accent);
-  border-radius: 4px;
-  background: rgba(14, 34, 45, 0.86);
-  color: #fff;
-  font-size: 14px;
-  line-height: 1.35;
+  font-size: 14.5px;
+  line-height: 1.4;
 }
-.hero-media figcaption strong {
+.slide-tag {
+  color: #f3a774;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.carousel-slide figcaption strong {
+  font-size: 18px;
   font-weight: 650;
 }
-.hero-media figcaption span {
+.slide-meta {
   color: #cdd6db;
+}
+.carousel-slide figcaption a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  min-height: 32px;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.45);
+  text-underline-offset: 4px;
+}
+.carousel-slide figcaption a:hover {
+  text-decoration-color: var(--accent);
+}
+.carousel-slide figcaption .icon {
+  width: 16px;
+  height: 16px;
+}
+.carousel-controls {
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  bottom: 28px;
+  left: 0;
+}
+.carousel-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.carousel-arrow,
+.carousel-toggle {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 50%;
+  background: rgba(14, 34, 45, 0.55);
+  color: #fff;
+  cursor: pointer;
+  transition:
+    background-color 0.2s var(--ease),
+    border-color 0.2s var(--ease);
+}
+.carousel-arrow:hover,
+.carousel-toggle:hover {
+  border-color: var(--action);
+  background: var(--action);
+}
+.carousel-arrow .icon {
+  width: 22px;
+  height: 22px;
+}
+.carousel-toggle {
+  margin-left: 8px;
+}
+.carousel-toggle .icon {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  stroke: none;
+}
+.carousel-toggle .icon-play,
+.hero-carousel:not(.is-playing) .carousel-toggle .icon-pause {
+  display: none;
+}
+.hero-carousel:not(.is-playing) .carousel-toggle .icon-play {
+  display: block;
+}
+.carousel-dots {
+  display: flex;
+}
+.carousel-dot {
+  display: grid;
+  place-items: center;
+  height: 48px;
+  padding: 0 6px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.carousel-dot span {
+  position: relative;
+  display: block;
+  width: 22px;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.38);
+  transition:
+    width 0.3s var(--ease),
+    background-color 0.2s;
+}
+.carousel-dot:hover span {
+  background: rgba(255, 255, 255, 0.7);
+}
+.carousel-dot[aria-current="true"] span {
+  width: 44px;
+}
+/* The active indicator fills up while the slide waits for the next one. */
+.carousel-dot span::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.carousel-dot[aria-current="true"] span::after {
+  transform: none;
+}
+.hero-carousel.is-playing .carousel-dot[aria-current="true"] span::after {
+  animation: carousel-progress var(--carousel-interval) linear both;
+}
+.hero-carousel.is-held .carousel-dot[aria-current="true"] span::after {
+  animation-play-state: paused;
+}
+@keyframes carousel-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: none;
+  }
+}
+.hero-carousel :focus-visible {
+  outline-color: #fff;
+}
+
+@media (min-width: 901px) {
+  .hero {
+    display: flex;
+    align-items: center;
+    min-height: clamp(620px, calc(100svh - var(--header-h)), 860px);
+    padding-block: 64px 176px;
+    background: var(--blue-deep);
+  }
+  .hero-carousel {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  .carousel-slide::after {
+    background:
+      linear-gradient(90deg, rgba(10, 25, 34, 0.9) 0%, rgba(10, 25, 34, 0.8) 36%, rgba(10, 25, 34, 0.42) 60%, rgba(10, 25, 34, 0.08) 82%),
+      linear-gradient(0deg, rgba(10, 25, 34, 0.85) 0%, rgba(10, 25, 34, 0) 34%);
+  }
+  .carousel-slide figcaption {
+    bottom: 28px;
+    left: var(--edge);
+    max-width: min(460px, calc(100% - 2 * var(--edge) - 380px));
+  }
+  /* The copy layer lets clicks and swipes reach the slides around it. */
+  .hero-grid {
+    pointer-events: none;
+  }
+  .hero-copy {
+    max-width: 660px;
+    pointer-events: auto;
+  }
+  .hero .eyebrow {
+    color: #d8e0e4;
+  }
+  .hero-copy h1 {
+    color: #fff;
+  }
+  .hero .lead {
+    color: #dbe2e6;
+  }
+  .hero .button-secondary {
+    border-color: rgba(255, 255, 255, 0.5);
+    color: #fff;
+  }
+  .hero .button-secondary:hover {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .hero .button-secondary .icon-wa {
+    color: #4ade80;
+  }
+  .hero-contact {
+    color: #c3ced4;
+  }
+  .hero-contact a {
+    color: #fff;
+    text-decoration-color: rgba(255, 255, 255, 0.45);
+  }
+  .hero-contact .icon {
+    color: #f3a774;
+  }
+  .hero :focus-visible {
+    outline-color: #fff;
+  }
 }
 
 /* ---------- Features band ---------- */
@@ -2986,7 +3221,32 @@ main:focus {
 
 @media (max-width: 900px) {
   .hero {
-    padding-block: 32px 64px;
+    padding-block: 0 64px;
+  }
+  .hero-grid {
+    padding-top: 36px;
+  }
+  .carousel-track {
+    aspect-ratio: 16 / 10;
+    max-height: 62svh;
+    min-height: 260px;
+  }
+  .carousel-slide::after {
+    background: linear-gradient(0deg, rgba(10, 25, 34, 0.92) 0%, rgba(10, 25, 34, 0.62) 34%, rgba(10, 25, 34, 0) 62%);
+  }
+  .carousel-slide figcaption {
+    right: var(--gutter);
+    bottom: 14px;
+    left: var(--gutter);
+    text-shadow: 0 1px 8px rgba(10, 25, 34, 0.6);
+  }
+  .carousel-controls {
+    position: static;
+    padding-block: 4px;
+    border-bottom: 3px solid var(--accent);
+  }
+  .carousel-bar {
+    justify-content: center;
   }
   .hero-grid,
   .audience-grid,
@@ -3000,10 +3260,6 @@ main:focus {
   .policy-layout,
   .page-hero-grid.has-aside {
     grid-template-columns: minmax(0, 1fr);
-  }
-  .hero-media {
-    height: auto;
-    aspect-ratio: 4 / 3;
   }
   .about-media {
     max-width: 520px;
@@ -3074,7 +3330,53 @@ main:focus {
 
 @media (max-width: 640px) {
   .hero {
-    padding-block: 24px 48px;
+    padding-block: 0 48px;
+  }
+  .hero-grid {
+    padding-top: 28px;
+  }
+  /* Arrows move onto the image so the indicators keep full-size targets. */
+  .hero-carousel {
+    --track-h: max(260px, min(75vw, 62svh));
+  }
+  .carousel-track {
+    height: var(--track-h);
+    aspect-ratio: auto;
+    max-height: none;
+  }
+  .slide-meta {
+    display: none;
+  }
+  .carousel-slide figcaption strong {
+    font-size: 16.5px;
+  }
+  .carousel-arrow,
+  .carousel-toggle {
+    width: 44px;
+    height: 44px;
+  }
+  .carousel-arrow {
+    position: absolute;
+    z-index: 3;
+    top: calc(var(--track-h) * 0.4 - 22px);
+    left: 8px;
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(14, 34, 45, 0.6);
+  }
+  .carousel-arrow[data-carousel-next] {
+    right: 8px;
+    left: auto;
+  }
+  .carousel-dot {
+    width: 40px;
+    height: 44px;
+    padding: 0;
+  }
+  .carousel-dot span {
+    width: 16px;
+  }
+  .carousel-dot[aria-current="true"] span {
+    width: 32px;
   }
   .lead {
     margin-top: 18px;
@@ -3102,16 +3404,6 @@ main:focus {
   }
   .choices span {
     display: flex;
-  }
-  .hero-media {
-    aspect-ratio: 4 / 5;
-    max-height: 520px;
-  }
-  .hero-media figcaption {
-    left: 12px;
-    bottom: 12px;
-    padding: 10px 14px;
-    font-size: 13.5px;
   }
   .features {
     padding-block: 48px;

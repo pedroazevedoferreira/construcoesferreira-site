@@ -538,6 +538,127 @@
     );
   }
 
+  // Home carousel: arrows, indicators, swipe and automatic advance. It holds
+  // still while its controls are hovered or focused from the keyboard, off
+  // screen or in a background tab; it starts paused with reduced motion, and
+  // the visitor can pause it for good.
+  document.querySelectorAll("[data-carousel]").forEach((carousel) => {
+    const slides = [...carousel.querySelectorAll(".carousel-slide")];
+    const dots = [...carousel.querySelectorAll(".carousel-dot")];
+    const track = carousel.querySelector(".carousel-track");
+    const toggle = carousel.querySelector("[data-carousel-toggle]");
+    if (slides.length < 2) return;
+    const interval = 6000;
+    const holds = new Set();
+    let index = 0;
+    let playing = !motion.matches;
+    let timer = 0;
+    let remaining = interval;
+    let startedAt = 0;
+
+    slides.forEach((slide) => {
+      const image = slide.querySelector("img");
+      if (image?.dataset.position) image.style.objectPosition = image.dataset.position;
+    });
+
+    function sync() {
+      carousel.classList.toggle("is-playing", playing);
+      carousel.classList.toggle("is-held", holds.size > 0);
+      track.setAttribute("aria-live", playing ? "off" : "polite");
+      toggle.setAttribute(
+        "aria-label",
+        playing
+          ? "Pausar a troca automática de imagens"
+          : "Retomar a troca automática de imagens",
+      );
+    }
+    function run() {
+      clearTimeout(timer);
+      if (!playing || holds.size) return;
+      startedAt = performance.now();
+      timer = setTimeout(() => show(index + 1), remaining);
+    }
+    function show(next) {
+      index = (next + slides.length) % slides.length;
+      slides.forEach((slide, i) => slide.classList.toggle("is-active", i === index));
+      dots.forEach((dot, i) =>
+        i === index ? dot.setAttribute("aria-current", "true") : dot.removeAttribute("aria-current"),
+      );
+      // The following image starts loading before its turn.
+      const upcoming = slides[(index + 1) % slides.length].querySelector("img");
+      if (upcoming) upcoming.loading = "eager";
+      remaining = interval;
+      run();
+    }
+    function hold(reason, on) {
+      if (on === holds.has(reason)) return;
+      if (on) {
+        if (!holds.size && playing) remaining -= performance.now() - startedAt;
+        holds.add(reason);
+        clearTimeout(timer);
+      } else {
+        holds.delete(reason);
+      }
+      sync();
+      run();
+    }
+
+    carousel.querySelector("[data-carousel-prev]").addEventListener("click", () => show(index - 1));
+    carousel.querySelector("[data-carousel-next]").addEventListener("click", () => show(index + 1));
+    dots.forEach((dot, i) => dot.addEventListener("click", () => i !== index && show(i)));
+    toggle.addEventListener("click", () => {
+      playing = !playing;
+      remaining = interval;
+      sync();
+      run();
+    });
+    carousel.addEventListener("keydown", (event) => {
+      if (!event.target.closest(".carousel-controls")) return;
+      if (event.key === "ArrowLeft") show(index - 1);
+      else if (event.key === "ArrowRight") show(index + 1);
+      else return;
+      event.preventDefault();
+    });
+
+    // Swipe sideways on touch screens; vertical scrolling stays untouched.
+    let start = null;
+    track.addEventListener("pointerdown", (event) => {
+      start = { x: event.clientX, y: event.clientY };
+    });
+    track.addEventListener("pointerup", (event) => {
+      if (!start) return;
+      const dx = event.clientX - start.x;
+      const dy = event.clientY - start.y;
+      start = null;
+      if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) show(dx < 0 ? index + 1 : index - 1);
+    });
+    track.addEventListener("pointercancel", () => (start = null));
+
+    // Reading a caption or reaching for a control pauses the countdown.
+    carousel.querySelectorAll(".carousel-controls, figcaption").forEach((zone) => {
+      zone.addEventListener("pointerenter", (event) => event.pointerType === "mouse" && hold("hover", true));
+      zone.addEventListener("pointerleave", () => hold("hover", false));
+    });
+    carousel.addEventListener("focusin", (event) => {
+      if (event.target.matches(":focus-visible")) hold("focus", true);
+    });
+    carousel.addEventListener("focusout", (event) => {
+      if (!carousel.contains(event.relatedTarget)) hold("focus", false);
+    });
+    document.addEventListener("visibilitychange", () => hold("tab", document.hidden));
+    if ("IntersectionObserver" in window)
+      new IntersectionObserver(([entry]) => hold("view", !entry.isIntersecting), {
+        threshold: 0.25,
+      }).observe(carousel);
+    motion.addEventListener("change", () => {
+      if (motion.matches && playing) toggle.click();
+    });
+
+    carousel.querySelector(".carousel-controls").hidden = false;
+    sync();
+    run();
+  });
+
   // Content below the first screen rises into place once. Nothing visible on
   // load is hidden, and reduced motion skips the effect entirely.
   if ("IntersectionObserver" in window && !motion.matches) {

@@ -22,13 +22,20 @@ Nao apague imagens antigas enquanto houver referencias a elas. Nenhuma compilaca
 | `projetos/otavio-kelly.html`   | `obras/reforco-otavio-kelly.webp`                                               | Registro da galeria institucional anterior.                                                                         |
 | `projetos/campo-da-areia.html` | `obras/reforco-campo-da-areia.webp`                                             | Registro da galeria institucional anterior.                                                                         |
 | `projetos/clinica-labs.html`   | `obras/reforco-clinica-labs.webp`                                               | Registro da galeria institucional anterior.                                                                         |
-| `projetos/salas-tecnicas.html` | `otimizada-cpd.webp`                                                            | Referencia de servico; sem atribuicao a cliente.                                                                    |
+| `projetos/salas-tecnicas.html` | `ilustrativa-sala-tecnica.webp`                                                 | Ilustracao ficticia gerada para o site (area de atuacao, sem cliente). Substituiu a foto pequena `otimizada-cpd.webp`. |
 | `projetos/acessibilidade.html` | `otimizada-acessibilidade.webp`                                                 | Caminho seguro da Ipiranga documentado; foto de referencia, nao comprovada como sendo do local.                     |
 | `projetos/ufrj.html`           | `obra-escritorio.jpg`                                                           | Ampliacao de laboratorio documentada; imagem ilustrativa.                                                           |
 | `projetos/technip.html`        | `hero-fachada.webp`                                                             | Gerenciamento de reforma documentado; imagem ilustrativa.                                                           |
 | Empresa                        | `sandro-ferreira.webp`                                                          | Retrato selecionado para esta pagina.                                                                               |
-| Home (hero)                    | `otimizada-sandro-obra.webp`                                                    | Registro de Sandro no canteiro enviado pelo usuario. Confirmar que e foto real.                                     |
+| Home (carrossel)               | `ilustrativa-obra-corporativa.webp`, `ilustrativa-obra-industrial.webp`, `ilustrativa-residencial.webp` | Ilustracoes ficticias dos servicos em destaque, com a etiqueta "Imagem ilustrativa". Nao representam obras executadas. |
+| Home (carrossel)               | `obras/reforco-clinica-labs.webp`, `otimizada-sandro-obra.webp`                 | Obra realizada e registro de Sandro no canteiro. Confirmar que a foto de Sandro e real.                             |
 | Home e A empresa               | `sandro-ferreira.webp` (640 px)                                                 | Retrato. Confirmar que e foto real; enviar versao maior (1200 px ou mais).                                          |
+
+## Carrossel da home
+
+O topo da home e um carrossel com cinco imagens (`HERO_SLIDES`): obras corporativas, obras industriais e construcao de casas (ilustracoes), Clinica LAB'S (obra realizada) e Sandro em campo. Cada slide tem etiqueta, titulo, linha de apoio e link. Use imagens com 1600 px ou mais de largura e uma versao `-960.webp` para celular (`srcset`). O enquadramento de cada imagem fica em `data-position` (por exemplo `62% 50%`), aplicado pelo JavaScript.
+
+As ilustracoes `ilustrativa-obra-corporativa`, `ilustrativa-obra-industrial` e `ilustrativa-sala-tecnica` foram desenhadas para o site e sao ficticias. Elas aparecem sempre como imagem ilustrativa ou area de atuacao, nunca no lugar da foto de uma obra com nome de cliente. Quando houver foto real de uma obra corporativa ou industrial, troque o slide e a etiqueta.
 
 `ilustrativa-residencial.webp` tambem aparece na pagina Servicos. Uma mesma referencia pode ser usada em mais de um lugar: pesquise todas as ocorrencias antes de trocar o arquivo.
 

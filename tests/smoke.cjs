@@ -361,6 +361,15 @@ async function main() {
           (theme) => (document.documentElement.dataset.theme = theme),
           colorScheme,
         );
+        // Colours ease between themes; measure once they have settled.
+        await page.evaluate(() =>
+          Promise.all(
+            document
+              .getAnimations({ subtree: true })
+              .filter((item) => item.effect?.target?.closest?.("#depoimento"))
+              .map((item) => item.finished.catch(() => {})),
+          ),
+        );
         const audit = await new AxeBuilder({ page })
           .include("#depoimento")
           .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
@@ -490,6 +499,48 @@ async function main() {
     assert.equal(await page.locator(".reveal").count(), 0);
     report.interactions.push("reveal only below the fold; none with reduced motion");
 
+    // Hero carousel: starts paused with reduced motion, arrows and indicators
+    // move it, and with motion allowed it advances on its own until paused.
+    const activeSlide = () =>
+      page.evaluate(() =>
+        [...document.querySelectorAll(".carousel-slide")].findIndex((slide) =>
+          slide.classList.contains("is-active"),
+        ),
+      );
+    assert.equal(await page.locator(".carousel-slide").count(), 5);
+    assert.equal(await page.locator(".carousel-dot").count(), 5);
+    assert.match(
+      await page.locator("[data-carousel-toggle]").getAttribute("aria-label"),
+      /Retomar/,
+    );
+    await page.locator("[data-carousel-next]").click();
+    assert.equal(await activeSlide(), 1);
+    await page.locator("[data-carousel-prev]").click();
+    await page.locator("[data-carousel-prev]").click();
+    assert.equal(await activeSlide(), 4);
+    await page.locator(".carousel-dot").nth(2).click();
+    assert.equal(await activeSlide(), 2);
+    assert.equal(
+      await page.locator(".carousel-dot").nth(2).getAttribute("aria-current"),
+      "true",
+    );
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await page.goto(base);
+    await page.mouse.move(700, 300);
+    await page.waitForFunction(
+      () => document.querySelector(".carousel-slide.is-active") !==
+        document.querySelector(".carousel-slide"),
+      null,
+      { timeout: 8000 },
+    );
+    await page.locator("[data-carousel-toggle]").click();
+    await page.mouse.move(700, 300);
+    const paused = await activeSlide();
+    await page.waitForTimeout(6500);
+    assert.equal(await activeSlide(), paused);
+    assert.equal(await page.locator(".carousel-track").getAttribute("aria-live"), "polite");
+    report.interactions.push("hero carousel: arrows, indicators, autoplay and pause");
+
     const nojs = await browser.newContext({
       javaScriptEnabled: false,
       viewport: { width: 390, height: 844 },
@@ -507,6 +558,8 @@ async function main() {
       0,
     );
     assert.equal(await staticPage.locator("#portfolio .work-card").count(), 3);
+    assert.equal(await staticPage.locator(".carousel-slide:visible").count(), 1);
+    assert.equal(await staticPage.locator(".carousel-controls").isVisible(), false);
     await staticPage.locator(".mobile-nav summary").click();
     assert.equal(await staticPage.locator(".mobile-nav nav").isVisible(), true);
     await staticPage.goto(base + "obras.html");
