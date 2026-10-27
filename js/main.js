@@ -540,13 +540,11 @@
 
   // Home carousel: arrows, indicators, swipe and automatic advance. It holds
   // still while its controls are hovered or focused from the keyboard, off
-  // screen or in a background tab; it starts paused with reduced motion, and
-  // the visitor can pause it for good.
+  // screen or in a background tab, and respects reduced-motion preferences.
   document.querySelectorAll("[data-carousel]").forEach((carousel) => {
     const slides = [...carousel.querySelectorAll(".carousel-slide")];
     const dots = [...carousel.querySelectorAll(".carousel-dot")];
     const track = carousel.querySelector(".carousel-track");
-    const toggle = carousel.querySelector("[data-carousel-toggle]");
     if (slides.length < 2) return;
     const interval = 6000;
     const holds = new Set();
@@ -565,12 +563,6 @@
       carousel.classList.toggle("is-playing", playing);
       carousel.classList.toggle("is-held", holds.size > 0);
       track.setAttribute("aria-live", playing ? "off" : "polite");
-      toggle.setAttribute(
-        "aria-label",
-        playing
-          ? "Pausar a troca automática de imagens"
-          : "Retomar a troca automática de imagens",
-      );
     }
     function run() {
       clearTimeout(timer);
@@ -606,12 +598,6 @@
     carousel.querySelector("[data-carousel-prev]").addEventListener("click", () => show(index - 1));
     carousel.querySelector("[data-carousel-next]").addEventListener("click", () => show(index + 1));
     dots.forEach((dot, i) => dot.addEventListener("click", () => i !== index && show(i)));
-    toggle.addEventListener("click", () => {
-      playing = !playing;
-      remaining = interval;
-      sync();
-      run();
-    });
     carousel.addEventListener("keydown", (event) => {
       if (!event.target.closest(".carousel-controls")) return;
       if (event.key === "ArrowLeft") show(index - 1);
@@ -651,7 +637,10 @@
         threshold: 0.25,
       }).observe(carousel);
     motion.addEventListener("change", () => {
-      if (motion.matches && playing) toggle.click();
+      playing = !motion.matches;
+      remaining = interval;
+      sync();
+      run();
     });
 
     carousel.querySelector(".carousel-controls").hidden = false;

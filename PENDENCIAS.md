@@ -54,7 +54,7 @@ Mantidos como estão por orientação do responsável; seguem para validação f
 - [ ] Fotos provisórias em CBKC, Technip, UFRJ COPPETEC e Ipiranga (veja `IMAGENS.md`).
 - [ ] Fotos do Sandro (`otimizada-sandro-obra.webp`, `sandro-ferreira.webp`): confirmar que são fotos reais e autorizadas. O briefing não permite fotos geradas apresentadas como reais.
 - [ ] Imagens de "Construção residencial" e "Salas técnicas e CPD" são áreas de atuação, não obras executadas.
-- [ ] Carrossel da home: três ilustrações fictícias (obras corporativas, obras industriais, construção de casas), marcadas como "Imagem ilustrativa". Trocar por fotos reais e autorizadas quando houver; confirmar se a Clínica LAB'S e a foto do Sandro podem seguir no topo.
+- [ ] Carrossel da home: quatro cenas conceituais (corporativo, industrial, residencial e clínica). Trocar por fotos reais e autorizadas quando houver; confirmar se a Clínica LAB'S e a foto do Sandro podem seguir no topo.
 
 ## Marcas e terceiros
 

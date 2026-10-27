@@ -1,6 +1,6 @@
 # Fotos e portfolio
 
-O layout esta pronto. As obras aparecem no site sem etiqueta de origem da imagem: algumas fotos ainda sao provisorias (veja a coluna "Situacao" no mapa abaixo) e devem ser trocadas pela foto da propria obra. A troca e so de arquivo e texto; nenhum componente muda.
+O site usa cenas fotorrealistas como prévia visual. As fichas continuam descrevendo os trabalhos documentados, mas suas imagens não são registros das obras nomeadas. Não há selo visual nas imagens; os textos alternativos preservam essa distinção para leitores de tela. Retratos, marcas de clientes e parceiros foram preservados.
 
 ## Troca de uma foto
 
@@ -15,36 +15,31 @@ Nao apague imagens antigas enquanto houver referencias a elas. Nenhuma compilaca
 
 ## Mapa das imagens
 
-| Ficha                          | Imagem atual                                                                    | Situacao                                                                                                            |
-| ------------------------------ | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `projetos/corporativo.html`    | `otimizada-sala-reuniao.webp`, `otimizada-recepcao.webp`, `obra-escritorio.jpg` | A reforma das salas da CBKC e documentada no PDF. Estas fotos nao foram confirmadas como sendo dessa obra.          |
-| `projetos/residencial.html`    | `ilustrativa-residencial.webp`                                                  | Area de atuacao, nao um projeto especifico executado. Ao criar um caso real, atualizar tambem nome, local e escopo. |
-| `projetos/otavio-kelly.html`   | `obras/reforco-otavio-kelly.webp`                                               | Registro da galeria institucional anterior.                                                                         |
-| `projetos/campo-da-areia.html` | `obras/reforco-campo-da-areia.webp`                                             | Registro da galeria institucional anterior.                                                                         |
-| `projetos/clinica-labs.html`   | `obras/reforco-clinica-labs.webp`                                               | Registro da galeria institucional anterior.                                                                         |
-| `projetos/salas-tecnicas.html` | `ilustrativa-sala-tecnica.webp`                                                 | Ilustracao ficticia gerada para o site (area de atuacao, sem cliente). Substituiu a foto pequena `otimizada-cpd.webp`. |
-| `projetos/acessibilidade.html` | `otimizada-acessibilidade.webp`                                                 | Caminho seguro da Ipiranga documentado; foto de referencia, nao comprovada como sendo do local.                     |
-| `projetos/ufrj.html`           | `obra-escritorio.jpg`                                                           | Ampliacao de laboratorio documentada; imagem ilustrativa.                                                           |
-| `projetos/technip.html`        | `hero-fachada.webp`                                                             | Gerenciamento de reforma documentado; imagem ilustrativa.                                                           |
-| Empresa                        | `sandro-ferreira.webp`                                                          | Retrato selecionado para esta pagina.                                                                               |
-| Home (carrossel)               | `ilustrativa-obra-corporativa.webp`, `ilustrativa-obra-industrial.webp`, `ilustrativa-residencial.webp` | Ilustracoes ficticias dos servicos em destaque, com a etiqueta "Imagem ilustrativa". Nao representam obras executadas. |
-| Home (carrossel)               | `obras/reforco-clinica-labs.webp`, `otimizada-sandro-obra.webp`                 | Obra realizada e registro de Sandro no canteiro. Confirmar que a foto de Sandro e real.                             |
-| Home e A empresa               | `sandro-ferreira.webp` (640 px)                                                 | Retrato. Confirmar que e foto real; enviar versao maior (1200 px ou mais).                                          |
+| Uso / ficha                         | Imagens ilustrativas                                                                                           | Observação |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------- | ---------- |
+| Home e serviços                     | `ilustrativa-fachada-corporativa`, `ilustrativa-industrial`, `ilustrativa-residencial-v2`                     | Carrossel e cartões de áreas de atuação. |
+| Reforço estrutural                   | `ilustrativa-reforco-metalico`, `ilustrativa-reforco-residencial`                                              | Prévia visual nas fichas e cartões; não retrata Otávio Kelly ou Campo da Areia. |
+| Reforma de clínica                   | `ilustrativa-reforma-clinica`                                                                                 | Prévia visual; não retrata a Clínica LAB'S. |
+| Escritórios corporativos             | `ilustrativa-sala-reuniao`, `ilustrativa-recepcao`                                                            | Prévia visual; não identifica a reforma da CBKC. |
+| Áreas técnicas e acessibilidade      | `ilustrativa-sala-tecnica-v2`, `ilustrativa-acessibilidade-v2`                                                | Exemplos conceituais. |
+| Laboratório e fachada corporativa    | `ilustrativa-laboratorio`, `ilustrativa-fachada-corporativa`                                                  | Prévia visual; não retrata UFRJ COPPETEC ou Technip. |
+| Retrato da empresa                   | `sandro-ferreira.webp`                                                                                        | Retrato existente preservado. |
+| Logos de empresas e parceiros        | `assets/images/logos/` e `parceiro-*`                                                                         | Marcas existentes preservadas. |
 
 ## Carrossel da home
 
-O topo da home e um carrossel com cinco imagens (`HERO_SLIDES`): obras corporativas, obras industriais e construcao de casas (ilustracoes), Clinica LAB'S (obra realizada) e Sandro em campo. Cada slide tem etiqueta, titulo, linha de apoio e link. Use imagens com 1600 px ou mais de largura e uma versao `-960.webp` para celular (`srcset`). O enquadramento de cada imagem fica em `data-position` (por exemplo `62% 50%`), aplicado pelo JavaScript.
+O topo da home é um carrossel com cinco imagens (`HERO_SLIDES`): quatro cenas ilustrativas de serviços e obras, mais o retrato existente de Sandro no canteiro. Cada slide tem etiqueta, título, linha de apoio e link. As imagens principais têm versão `-960.webp` para celular (`srcset`). O enquadramento de cada imagem fica em `data-position` (por exemplo `62% 50%`), aplicado pelo JavaScript.
 
-As ilustracoes `ilustrativa-obra-corporativa`, `ilustrativa-obra-industrial` e `ilustrativa-sala-tecnica` foram desenhadas para o site e sao ficticias. Elas aparecem sempre como imagem ilustrativa ou area de atuacao, nunca no lugar da foto de uma obra com nome de cliente. Quando houver foto real de uma obra corporativa ou industrial, troque o slide e a etiqueta.
+As imagens com prefixo `ilustrativa-` são cenas conceituais geradas para esta prévia e não representam obras executadas. Quando chegarem fotos reais, atualize arquivo, texto alternativo, legenda e referências de ampliação.
 
-`ilustrativa-residencial.webp` tambem aparece na pagina Servicos. Uma mesma referencia pode ser usada em mais de um lugar: pesquise todas as ocorrencias antes de trocar o arquivo.
+Uma mesma referência aparece em várias páginas. Pesquise todas as ocorrências antes de trocar ou remover um arquivo.
 
 ## Obras realizadas x áreas de atuação
 
 - **Obras realizadas** (Obras, home e fichas com "Tipo: Obra realizada"): Otávio Kelly, Campo da Areia, Clínica LAB'S, Salas da CBKC, Technip, UFRJ COPPETEC e Caminho seguro · Ipiranga.
 - **Áreas de atuação** (seção "Áreas de atuação" em Serviços, fichas com "Tipo: Área de atuação"): Construção residencial e Salas técnicas e CPD. Usam imagens ilustrativas e não representam obras executadas.
 
-As três obras da home (`#portfolio`, componente `work-card`) usam obras com foto real; troque-as quando houver casos mais fortes, sempre com fatos documentados. Cada página de serviço (`servicos/*.html`) também lista obras relacionadas.
+Os cartões e galerias de obras exibem imagens ilustrativas nesta prévia. Troque cada imagem pela foto real correspondente quando estiver disponível, mantendo os dados do projeto documentados.
 
 Não mova uma área de atuação para "Obras realizadas" sem uma obra real, com cliente, local e escopo confirmados.
 
@@ -52,10 +47,10 @@ Não mova uma área de atuação para "Obras realizadas" sem uma obra real, com 
 
 A troca não muda layout, proporção nem componentes. Em cada lugar onde a obra aparece (home, Obras, fichas relacionadas e a própria ficha):
 
-1. Troque `src` (e o `href` de ampliação, na ficha) pelo arquivo novo. Mantenha `width` e `height` proporcionais à foto.
+1. Troque `src`, `srcset` e o `href` de ampliação pelo arquivo novo. Mantenha `width` e `height` proporcionais à foto.
 2. Atualize o `alt` e o `data-caption` descrevendo o que a foto mostra.
 3. Se o assunto ficar mal enquadrado no corte, use `data-focus="top"`, `"bottom"`, `"left"` ou `"right"` na `<img>`. Não use `style=""`: a política de segurança bloqueia estilos inline.
-4. Atualize a coluna "Situação" do mapa acima.
+4. Atualize este mapa com a situação da foto substituta.
 
 ## Ordem das obras em Obras
 
