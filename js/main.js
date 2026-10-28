@@ -657,7 +657,6 @@
           "main .section-head",
           ".work-card",
           ".service-card",
-          ".step",
           ".feature-list li",
           ".about-media",
           ".about-copy",
@@ -702,6 +701,31 @@
     });
     motion.addEventListener("change", () => {
       if (motion.matches) targets.forEach((target) => target.classList.add("is-in"));
+    });
+  }
+
+  // Method steps light up one at a time, once: the circle lights, its text
+  // follows, then the line runs on to the next step.
+  if ("IntersectionObserver" in window && !motion.matches) {
+    const pace = 1100;
+    document.querySelectorAll(".steps").forEach((list) => {
+      const steps = [...list.querySelectorAll(".step")];
+      list.classList.add("is-pending");
+      new IntersectionObserver(
+        (entries, watcher) => {
+          if (!entries[0].isIntersecting) return;
+          watcher.disconnect();
+          steps.forEach((step, i) => {
+            setTimeout(() => step.classList.add("is-lit"), i * pace);
+            setTimeout(() => step.classList.add("is-done"), i * pace + 350);
+          });
+          setTimeout(() => list.classList.remove("is-pending"), steps.length * pace + 600);
+        },
+        { threshold: 0.35 },
+      ).observe(list);
+      motion.addEventListener("change", () => {
+        if (motion.matches) list.classList.remove("is-pending");
+      });
     });
   }
 

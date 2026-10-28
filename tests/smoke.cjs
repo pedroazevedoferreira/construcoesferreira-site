@@ -283,7 +283,10 @@ async function main() {
     await page.goto(base);
     assert.equal(await page.locator("#portfolio .work-card").count(), 3);
     assert.equal(await page.locator(".project-card").count(), 0);
-    assert.equal(await page.locator(".service-card").count(), 6);
+    assert.equal(await page.locator(".service-links-home a").count(), 6);
+    assert.ok((await page.locator(".clients .logo-grid img").count()) > 0);
+    assert.equal(await page.locator(".cta-checklist li").count(), 4);
+    assert.equal(await page.locator('.hero a[href^="tel:"]').count(), 1);
     assert.equal(await page.locator(".steps .step").count(), 4);
     await page.goto(base + "obras.html");
     assert.equal(await page.locator(".project-card:visible").count(), 7);
@@ -484,7 +487,7 @@ async function main() {
     assert.ok((await page.locator(".reveal").count()) > 0);
     assert.equal(await page.locator(".hero .reveal").count(), 0);
     // After arriving, a card drops the reveal styles so its hover works again.
-    const card = page.locator(".service-card").nth(1);
+    const card = page.locator("#portfolio .work-card").nth(1);
     await card.scrollIntoViewIfNeeded();
     await page.waitForFunction(
       (node) => !node.classList.contains("reveal"),
@@ -497,6 +500,7 @@ async function main() {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto(base);
     assert.equal(await page.locator(".reveal").count(), 0);
+    assert.equal(await page.locator(".steps.is-pending").count(), 0);
     report.interactions.push("reveal only below the fold; none with reduced motion");
 
     // Hero carousel: starts paused with reduced motion, arrows and indicators
@@ -540,6 +544,19 @@ async function main() {
     assert.equal(await activeSlide(), paused);
     assert.equal(await page.locator(".carousel-track").getAttribute("aria-live"), "polite");
     report.interactions.push("hero carousel: arrows, indicators, autoplay and pause");
+
+    // Method steps light up one at a time, once, when the list comes into view.
+    await page.goto(base);
+    assert.equal(await page.locator(".steps.is-pending").count(), 1);
+    assert.equal(await page.locator(".step.is-lit").count(), 0);
+    await page.locator(".steps").scrollIntoViewIfNeeded();
+    await page.waitForFunction(() => document.querySelectorAll(".step.is-lit").length === 1);
+    assert.ok((await page.locator(".step.is-lit").count()) < 4);
+    await page.waitForFunction(() => !document.querySelector(".steps.is-pending"), null, {
+      timeout: 8000,
+    });
+    assert.equal(await page.locator(".step.is-lit").count(), 4);
+    report.interactions.push("method steps light up one by one");
 
     const nojs = await browser.newContext({
       javaScriptEnabled: false,
